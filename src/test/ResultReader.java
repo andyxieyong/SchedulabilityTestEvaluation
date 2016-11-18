@@ -27,6 +27,7 @@ public class ResultReader {
 				try {
 					lines = Files.readAllLines(Paths.get(filepath), StandardCharsets.UTF_8);
 				} catch (IOException e) {
+					System.out.println("no such file: " + filepath);
 				}
 				result += bigSet + "" + smallSet + "" + lines.get(0) + "\n";
 			}
