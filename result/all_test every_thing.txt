@@ -1,0 +1,98 @@
+Work Load 
+access: 2 and rsf: 0.2
+11number of tasks: 16 ; System number: 1000 ; New MrsP: 1.0  Original MrsP: 1.0  MSRP: 1.0 No Blocking: 1.0 fifo np lp: 1.0 fifo p lp: 1.0
+12number of tasks: 32 ; System number: 1000 ; New MrsP: 1.0  Original MrsP: 1.0  MSRP: 1.0 No Blocking: 1.0 fifo np lp: 1.0 fifo p lp: 1.0
+13number of tasks: 48 ; System number: 1000 ; New MrsP: 1.0  Original MrsP: 1.0  MSRP: 1.0 No Blocking: 1.0 fifo np lp: 1.0 fifo p lp: 1.0
+14number of tasks: 64 ; System number: 1000 ; New MrsP: 1.0  Original MrsP: 1.0  MSRP: 1.0 No Blocking: 1.0 fifo np lp: 1.0 fifo p lp: 1.0
+15number of tasks: 80 ; System number: 1000 ; New MrsP: 0.881  Original MrsP: 0.599  MSRP: 0.599 No Blocking: 1.0 fifo np lp: 0.881 fifo p lp: 0.879
+16number of tasks: 96 ; System number: 1000 ; New MrsP: 0.888  Original MrsP: 0.49  MSRP: 0.49 No Blocking: 1.0 fifo np lp: 0.888 fifo p lp: 0.881
+17number of tasks: 112 ; System number: 1000 ; New MrsP: 0.878  Original MrsP: 0.339  MSRP: 0.339 No Blocking: 1.0 fifo np lp: 0.878 fifo p lp: 0.872
+18number of tasks: 128 ; System number: 1000 ; New MrsP: 0.844  Original MrsP: 0.147  MSRP: 0.147 No Blocking: 0.999 fifo np lp: 0.844 fifo p lp: 0.795
+19number of tasks: 144 ; System number: 1000 ; New MrsP: 0.194  Original MrsP: 0.01  MSRP: 0.01 No Blocking: 0.489 fifo np lp: 0.193 fifo p lp: 0.065
+
+access: 5 and rsf: 0.5
+21number of tasks: 16 ; System number: 1000 ; New MrsP: 1.0  Original MrsP: 1.0  MSRP: 1.0 No Blocking: 1.0 fifo np lp: 1.0 fifo p lp: 1.0
+22number of tasks: 32 ; System number: 1000 ; New MrsP: 0.871  Original MrsP: 0.669  MSRP: 0.669 No Blocking: 1.0 fifo np lp: 0.871 fifo p lp: 0.865
+23number of tasks: 48 ; System number: 1000 ; New MrsP: 0.851  Original MrsP: 0.618  MSRP: 0.618 No Blocking: 1.0 fifo np lp: 0.851 fifo p lp: 0.831
+24number of tasks: 64 ; System number: 1000 ; New MrsP: 0.277  Original MrsP: 0.068  MSRP: 0.068 No Blocking: 1.0 fifo np lp: 0.26 fifo p lp: 0.251
+25number of tasks: 80 ; System number: 1000 ; New MrsP: 0.254  Original MrsP: 0.038  MSRP: 0.038 No Blocking: 1.0 fifo np lp: 0.234 fifo p lp: 0.217
+26number of tasks: 96 ; System number: 1000 ; New MrsP: 0.016  Original MrsP: 0.0  MSRP: 0.0 No Blocking: 1.0 fifo np lp: 0.015 fifo p lp: 0.007
+27number of tasks: 112 ; System number: 1000 ; New MrsP: 0.016  Original MrsP: 0.0  MSRP: 0.0 No Blocking: 1.0 fifo np lp: 0.014 fifo p lp: 0.004
+28number of tasks: 128 ; System number: 1000 ; New MrsP: 0.0  Original MrsP: 0.0  MSRP: 0.0 No Blocking: 1.0 fifo np lp: 0.0 fifo p lp: 0.0
+29number of tasks: 144 ; System number: 1000 ; New MrsP: 0.0  Original MrsP: 0.0  MSRP: 0.0 No Blocking: 0.485 fifo np lp: 0.0 fifo p lp: 0.0
+
+access: 8 and rsf: 0.8
+31number of tasks: 16 ; System number: 1000 ; New MrsP: 1.0  Original MrsP: 1.0  MSRP: 1.0 No Blocking: 1.0 fifo np lp: 1.0 fifo p lp: 1.0
+32number of tasks: 32 ; System number: 1000 ; New MrsP: 0.861  Original MrsP: 0.636  MSRP: 0.636 No Blocking: 1.0 fifo np lp: 0.861 fifo p lp: 0.844
+33number of tasks: 48 ; System number: 1000 ; New MrsP: 0.19  Original MrsP: 0.042  MSRP: 0.041 No Blocking: 1.0 fifo np lp: 0.169 fifo p lp: 0.176
+34number of tasks: 64 ; System number: 1000 ; New MrsP: 0.013  Original MrsP: 0.0  MSRP: 0.0 No Blocking: 1.0 fifo np lp: 0.01 fifo p lp: 0.009
+35number of tasks: 80 ; System number: 1000 ; New MrsP: 0.001  Original MrsP: 0.0  MSRP: 0.0 No Blocking: 1.0 fifo np lp: 0.001 fifo p lp: 0.0
+36number of tasks: 96 ; System number: 1000 ; New MrsP: 0.0  Original MrsP: 0.0  MSRP: 0.0 No Blocking: 1.0 fifo np lp: 0.0 fifo p lp: 0.0
+37number of tasks: 112 ; System number: 1000 ; New MrsP: 0.0  Original MrsP: 0.0  MSRP: 0.0 No Blocking: 1.0 fifo np lp: 0.0 fifo p lp: 0.0
+38number of tasks: 128 ; System number: 1000 ; New MrsP: 0.0  Original MrsP: 0.0  MSRP: 0.0 No Blocking: 0.999 fifo np lp: 0.0 fifo p lp: 0.0
+39number of tasks: 128 ; System number: 1000 ; New MrsP: 0.0  Original MrsP: 0.0  MSRP: 0.0 No Blocking: 0.999 fifo np lp: 0.0 fifo p lp: 0.0
+
+
+ 
+ CS Length 
+tasks per core: 3
+11cs _len: VERY_SHORT_CS_LEN ; System number: 1000 ; New MrsP: 1.0  Original MrsP: 1.0  MSRP: 1.0 NO BLOCKING: 1.0 fifo np lp: 1.0 fifo p lp: 1.0
+12cs _len: SHORT_CS_LEN ; System number: 1000 ; New MrsP: 1.0  Original MrsP: 1.0  MSRP: 1.0 NO BLOCKING: 1.0 fifo np lp: 1.0 fifo p lp: 1.0
+13cs _len: MEDIUM_CS_LEN ; System number: 1000 ; New MrsP: 1.0  Original MrsP: 1.0  MSRP: 1.0 NO BLOCKING: 1.0 fifo np lp: 1.0 fifo p lp: 1.0
+14cs _len: LONG_CSLEN ; System number: 1000 ; New MrsP: 1.0  Original MrsP: 1.0  MSRP: 1.0 NO BLOCKING: 1.0 fifo np lp: 1.0 fifo p lp: 1.0
+15cs _len: VERY_LONG_CSLEN ; System number: 1000 ; New MrsP: 1.0  Original MrsP: 1.0  MSRP: 1.0 NO BLOCKING: 1.0 fifo np lp: 1.0 fifo p lp: 1.0
+
+tasks per core: 5
+21cs _len: VERY_SHORT_CS_LEN ; System number: 1000 ; New MrsP: 0.955  Original MrsP: 0.64  MSRP: 0.64 NO BLOCKING: 1.0 fifo np lp: 0.955 fifo p lp: 0.953
+22cs _len: SHORT_CS_LEN ; System number: 1000 ; New MrsP: 0.741  Original MrsP: 0.396  MSRP: 0.396 NO BLOCKING: 1.0 fifo np lp: 0.741 fifo p lp: 0.691
+23cs _len: MEDIUM_CS_LEN ; System number: 1000 ; New MrsP: 0.6  Original MrsP: 0.295  MSRP: 0.172 NO BLOCKING: 1.0 fifo np lp: 0.346 fifo p lp: 0.471
+24cs _len: LONG_CSLEN ; System number: 1000 ; New MrsP: 0.459  Original MrsP: 0.237  MSRP: 0.01 NO BLOCKING: 1.0 fifo np lp: 0.014 fifo p lp: 0.322
+25cs _len: VERY_LONG_CSLEN ; System number: 1000 ; New MrsP: 0.392  Original MrsP: 0.175  MSRP: 0.0 NO BLOCKING: 1.0 fifo np lp: 0.0 fifo p lp: 0.23
+
+tasks per core: 7
+31cs _len: VERY_SHORT_CS_LEN ; System number: 1000 ; New MrsP: 0.517  Original MrsP: 0.028  MSRP: 0.028 NO BLOCKING: 1.0 fifo np lp: 0.497 fifo p lp: 0.492
+32cs _len: SHORT_CS_LEN ; System number: 1000 ; New MrsP: 0.084  Original MrsP: 0.004  MSRP: 0.004 NO BLOCKING: 1.0 fifo np lp: 0.064 fifo p lp: 0.04
+33cs _len: MEDIUM_CS_LEN ; System number: 1000 ; New MrsP: 0.029  Original MrsP: 0.001  MSRP: 0.0 NO BLOCKING: 1.0 fifo np lp: 0.003 fifo p lp: 0.008
+34cs _len: LONG_CSLEN ; System number: 1000 ; New MrsP: 0.004  Original MrsP: 0.0  MSRP: 0.0 NO BLOCKING: 1.0 fifo np lp: 0.0 fifo p lp: 0.0
+35cs _len: VERY_LONG_CSLEN ; System number: 1000 ; New MrsP: 0.0  Original MrsP: 0.0  MSRP: 0.0 NO BLOCKING: 1.0 fifo np lp: 0.0 fifo p lp: 0.0
+
+
+ 
+ Resource Access 
+tasks per core: 3
+11number of access: 1 ; System number: 1000 ; New MrsP: 1.0  Original MrsP: 1.0  MSRP: 1.0 NO BLOCKING: 1.0 fifo np lp: 1.0 fifo p lp: 1.0
+12number of access: 6 ; System number: 1000 ; New MrsP: 1.0  Original MrsP: 1.0  MSRP: 1.0 NO BLOCKING: 1.0 fifo np lp: 1.0 fifo p lp: 1.0
+13number of access: 11 ; System number: 1000 ; New MrsP: 1.0  Original MrsP: 1.0  MSRP: 1.0 NO BLOCKING: 1.0 fifo np lp: 1.0 fifo p lp: 1.0
+14number of access: 16 ; System number: 1000 ; New MrsP: 1.0  Original MrsP: 1.0  MSRP: 1.0 NO BLOCKING: 1.0 fifo np lp: 1.0 fifo p lp: 1.0
+15number of access: 21 ; System number: 1000 ; New MrsP: 1.0  Original MrsP: 1.0  MSRP: 1.0 NO BLOCKING: 1.0 fifo np lp: 1.0 fifo p lp: 1.0
+16number of access: 26 ; System number: 1000 ; New MrsP: 1.0  Original MrsP: 1.0  MSRP: 1.0 NO BLOCKING: 1.0 fifo np lp: 1.0 fifo p lp: 1.0
+17number of access: 31 ; System number: 1000 ; New MrsP: 1.0  Original MrsP: 1.0  MSRP: 1.0 NO BLOCKING: 1.0 fifo np lp: 1.0 fifo p lp: 1.0
+18number of access: 36 ; System number: 1000 ; New MrsP: 1.0  Original MrsP: 1.0  MSRP: 1.0 NO BLOCKING: 1.0 fifo np lp: 1.0 fifo p lp: 1.0
+19number of access: 41 ; System number: 1000 ; New MrsP: 1.0  Original MrsP: 1.0  MSRP: 1.0 NO BLOCKING: 1.0 fifo np lp: 1.0 fifo p lp: 1.0
+110number of access: 46 ; System number: 1000 ; New MrsP: 1.0  Original MrsP: 1.0  MSRP: 1.0 NO BLOCKING: 1.0 fifo np lp: 1.0 fifo p lp: 1.0
+
+tasks per core: 5
+21number of access: 1 ; System number: 1000 ; New MrsP: 0.996  Original MrsP: 0.871  MSRP: 0.871 NO BLOCKING: 1.0 fifo np lp: 0.996 fifo p lp: 0.996
+22number of access: 6 ; System number: 1000 ; New MrsP: 0.867  Original MrsP: 0.529  MSRP: 0.529 NO BLOCKING: 1.0 fifo np lp: 0.867 fifo p lp: 0.863
+23number of access: 11 ; System number: 1000 ; New MrsP: 0.796  Original MrsP: 0.414  MSRP: 0.414 NO BLOCKING: 1.0 fifo np lp: 0.796 fifo p lp: 0.765
+24number of access: 16 ; System number: 1000 ; New MrsP: 0.737  Original MrsP: 0.373  MSRP: 0.373 NO BLOCKING: 1.0 fifo np lp: 0.737 fifo p lp: 0.703
+25number of access: 21 ; System number: 1000 ; New MrsP: 0.723  Original MrsP: 0.346  MSRP: 0.346 NO BLOCKING: 1.0 fifo np lp: 0.723 fifo p lp: 0.666
+26number of access: 26 ; System number: 1000 ; New MrsP: 0.685  Original MrsP: 0.314  MSRP: 0.314 NO BLOCKING: 1.0 fifo np lp: 0.685 fifo p lp: 0.636
+27number of access: 31 ; System number: 1000 ; New MrsP: 0.64  Original MrsP: 0.258  MSRP: 0.258 NO BLOCKING: 1.0 fifo np lp: 0.64 fifo p lp: 0.596
+28number of access: 36 ; System number: 1000 ; New MrsP: 0.606  Original MrsP: 0.24  MSRP: 0.24 NO BLOCKING: 1.0 fifo np lp: 0.606 fifo p lp: 0.554
+29number of access: 41 ; System number: 1000 ; New MrsP: 0.578  Original MrsP: 0.236  MSRP: 0.236 NO BLOCKING: 1.0 fifo np lp: 0.578 fifo p lp: 0.536
+210number of access: 46 ; System number: 1000 ; New MrsP: 0.56  Original MrsP: 0.231  MSRP: 0.231 NO BLOCKING: 1.0 fifo np lp: 0.56 fifo p lp: 0.503
+
+tasks per core: 7
+31number of access: 1 ; System number: 1000 ; New MrsP: 0.997  Original MrsP: 0.621  MSRP: 0.621 NO BLOCKING: 1.0 fifo np lp: 0.997 fifo p lp: 0.996
+32number of access: 6 ; System number: 1000 ; New MrsP: 0.853  Original MrsP: 0.27  MSRP: 0.27 NO BLOCKING: 1.0 fifo np lp: 0.853 fifo p lp: 0.815
+33number of access: 11 ; System number: 1000 ; New MrsP: 0.771  Original MrsP: 0.188  MSRP: 0.188 NO BLOCKING: 1.0 fifo np lp: 0.771 fifo p lp: 0.715
+34number of access: 16 ; System number: 1000 ; New MrsP: 0.674  Original MrsP: 0.148  MSRP: 0.148 NO BLOCKING: 1.0 fifo np lp: 0.674 fifo p lp: 0.619
+35number of access: 21 ; System number: 1000 ; New MrsP: 0.623  Original MrsP: 0.119  MSRP: 0.119 NO BLOCKING: 1.0 fifo np lp: 0.623 fifo p lp: 0.557
+36number of access: 26 ; System number: 1000 ; New MrsP: 0.519  Original MrsP: 0.094  MSRP: 0.094 NO BLOCKING: 1.0 fifo np lp: 0.519 fifo p lp: 0.46
+37number of access: 31 ; System number: 1000 ; New MrsP: 0.521  Original MrsP: 0.099  MSRP: 0.099 NO BLOCKING: 1.0 fifo np lp: 0.521 fifo p lp: 0.437
+38number of access: 36 ; System number: 1000 ; New MrsP: 0.502  Original MrsP: 0.08  MSRP: 0.08 NO BLOCKING: 1.0 fifo np lp: 0.502 fifo p lp: 0.428
+39number of access: 41 ; System number: 1000 ; New MrsP: 0.43  Original MrsP: 0.059  MSRP: 0.059 NO BLOCKING: 1.0 fifo np lp: 0.43 fifo p lp: 0.364
+310number of access: 46 ; System number: 1000 ; New MrsP: 0.418  Original MrsP: 0.065  MSRP: 0.065 NO BLOCKING: 1.0 fifo np lp: 0.418 fifo p lp: 0.342
+
+

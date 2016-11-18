@@ -59,7 +59,7 @@ public class Analysiser {
 		if (args.length == 3) {
 			experiment = Integer.parseInt(args[0]);
 			bigSet = Integer.parseInt(args[1]);
-			smallSet = Integer.parseInt(args[2]); 
+			smallSet = Integer.parseInt(args[2]);
 
 			switch (experiment) {
 			case 1:
@@ -94,8 +94,8 @@ public class Analysiser {
 
 		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD,
 				0.1 * (double) NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, TOTAL_PARTITIONS,
-				NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, CS_LENGTH_RANGE.VERY_SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS,
-				RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
+				NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, CS_LENGTH_RANGE.VERY_SHORT_CS_LEN,
+				RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 
 		String result = "";
 		int schedulableSystem_New_MrsP_Analysis2 = 0;
@@ -111,29 +111,43 @@ public class Analysiser {
 			generator.generateResourceUsage(tasks, resources);
 
 			Ris = noblocking.NewMrsPRTATest(tasks, resources, false);
-			if (isSystemSchedulable(tasks, Ris))
+			if (isSystemSchedulable(tasks, Ris)) {
 				schedulableSystem_No_Blocking++;
 
-			Ris = original_mrsp.NewMrsPRTATest(tasks, resources, false);
-			if (isSystemSchedulable(tasks, Ris))
-				schedulableSystem_Original_MrsP_Analysis++;
+				Ris = original_mrsp.NewMrsPRTATest(tasks, resources, false);
+				if (isSystemSchedulable(tasks, Ris))
+					schedulableSystem_Original_MrsP_Analysis++;
 
-			Ris = msrp.NewMrsPRTATest(tasks, resources, false);
-			if (isSystemSchedulable(tasks, Ris))
-				schedulableSystem_MSRP_Analysis++;
+				Ris = msrp.NewMrsPRTATest(tasks, resources, false);
+				if (isSystemSchedulable(tasks, Ris)) {
+					schedulableSystem_MSRP_Analysis++;
+					schedulableSystem_New_MrsP_Analysis2++;
+					sfnp++;
+					sfp++;
 
-			Ris = new_mrsp.NewMrsPRTATest(tasks, resources, false);
-			if (isSystemSchedulable(tasks, Ris))
-				schedulableSystem_New_MrsP_Analysis2++;
+					// if original msrp can schedule, others can.
+				} else {
+					Ris = new_mrsp.NewMrsPRTATest(tasks, resources, false);
+					if (isSystemSchedulable(tasks, Ris)) {
+						schedulableSystem_New_MrsP_Analysis2++;
 
-			Ris = fnp.NewMrsPRTATest(tasks, resources, false, false);
-			if (isSystemSchedulable(tasks, Ris))
-				sfnp++;
+						Ris = fnp.NewMrsPRTATest(tasks, resources, false, false);
+						if (isSystemSchedulable(tasks, Ris)) {
+							sfnp++;
 
-			Ris = fnp.NewMrsPRTATest(tasks, resources, true, false);
-			if (isSystemSchedulable(tasks, Ris))
-				sfp++;
-			
+							Ris = fnp.NewMrsPRTATest(tasks, resources, true, false);
+							if (isSystemSchedulable(tasks, Ris))
+								sfp++;
+						} else {
+							// if lnp is not able to schedule, then lp is not.
+						}
+
+					}
+				}
+			} else {
+				// if no blocking is not able to schedule, then others cannot.
+			}
+
 			System.out.println(1 + "" + bigSet + " " + smallSet + " times: " + i);
 
 		}
@@ -149,7 +163,7 @@ public class Analysiser {
 
 		writeSystem((1 + " " + bigSet + " " + smallSet), result);
 	}
-	
+
 	public static void experimentIncreasingCriticalSectionLength(int bigSet, int smallSet) {
 		double RESOURCE_SHARING_FACTOR = 0.3;
 		int NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE = 3;
@@ -178,7 +192,8 @@ public class Analysiser {
 
 		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD,
 				0.1 * (double) NUMBER_OF_TASKS_ON_EACH_PARTITION, TOTAL_PARTITIONS, NUMBER_OF_TASKS_ON_EACH_PARTITION,
-				true, range, RESOURCES_RANGE.HALF_PARITIONS, RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
+				true, range, RESOURCES_RANGE.HALF_PARITIONS, RESOURCE_SHARING_FACTOR,
+				NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 		long[][] Ris;
 
 		NewMrsPRTA new_mrsp = new NewMrsPRTA();
@@ -201,29 +216,47 @@ public class Analysiser {
 			generator.generateResourceUsage(tasks, resources);
 
 			Ris = noblocking.NewMrsPRTATest(tasks, resources, false);
-			if (isSystemSchedulable(tasks, Ris))
+			if (isSystemSchedulable(tasks, Ris)) {
 				schedulableSystem_No_Blocking++;
 
-			Ris = original_mrsp.NewMrsPRTATest(tasks, resources, false);
-			if (isSystemSchedulable(tasks, Ris))
-				schedulableSystem_Original_MrsP_Analysis++;
+				Ris = msrp.NewMrsPRTATest(tasks, resources, false);
+				if (isSystemSchedulable(tasks, Ris)) {
+					schedulableSystem_MSRP_Analysis++;
+					schedulableSystem_New_MrsP_Analysis2++;
+					sfnp++;
+					sfp++;
+					schedulableSystem_Original_MrsP_Analysis++;
+				} else {
+					Ris = original_mrsp.NewMrsPRTATest(tasks, resources, false);
+					if (isSystemSchedulable(tasks, Ris)){
+						schedulableSystem_Original_MrsP_Analysis++;
+						schedulableSystem_New_MrsP_Analysis2++;
+						sfnp++;
+						sfp++;
+					}
+					else{
+						Ris = new_mrsp.NewMrsPRTATest(tasks, resources, false);
+						if (isSystemSchedulable(tasks, Ris)) {
+							schedulableSystem_New_MrsP_Analysis2++;
 
-			Ris = msrp.NewMrsPRTATest(tasks, resources, false);
-			if (isSystemSchedulable(tasks, Ris))
-				schedulableSystem_MSRP_Analysis++;
+							Ris = fnp.NewMrsPRTATest(tasks, resources, false, false);
+							if (isSystemSchedulable(tasks, Ris))
+								sfnp++;
+							
+							Ris = fnp.NewMrsPRTATest(tasks, resources, true, false);
+							if (isSystemSchedulable(tasks, Ris))
+								sfp++;
+						}
+						else{
+							// if mew mrsp is not able to schedule, then others cannot.
+						}
+					}
+				}
+				
+			} else {
+				// if no blocking is not able to schedule, then others cannot.
+			}
 
-			Ris = new_mrsp.NewMrsPRTATest(tasks, resources, false);
-			if (isSystemSchedulable(tasks, Ris))
-				schedulableSystem_New_MrsP_Analysis2++;
-
-			Ris = fnp.NewMrsPRTATest(tasks, resources, false, false);
-			if (isSystemSchedulable(tasks, Ris))
-				sfnp++;
-
-			Ris = fnp.NewMrsPRTATest(tasks, resources, true, false);
-			if (isSystemSchedulable(tasks, Ris))
-				sfp++;
-			
 			System.out.println(2 + "" + bigSet + " " + smallSet + " times: " + i);
 		}
 
@@ -271,29 +304,43 @@ public class Analysiser {
 			generator.generateResourceUsage(tasks, resources);
 
 			Ris = noblocking.NewMrsPRTATest(tasks, resources, false);
-			if (isSystemSchedulable(tasks, Ris))
+			if (isSystemSchedulable(tasks, Ris)) {
 				schedulableSystem_No_Blocking++;
 
-			Ris = original_mrsp.NewMrsPRTATest(tasks, resources, false);
-			if (isSystemSchedulable(tasks, Ris))
-				schedulableSystem_Original_MrsP_Analysis++;
+				Ris = original_mrsp.NewMrsPRTATest(tasks, resources, false);
+				if (isSystemSchedulable(tasks, Ris))
+					schedulableSystem_Original_MrsP_Analysis++;
 
-			Ris = msrp.NewMrsPRTATest(tasks, resources, false);
-			if (isSystemSchedulable(tasks, Ris))
-				schedulableSystem_MSRP_Analysis++;
+				Ris = msrp.NewMrsPRTATest(tasks, resources, false);
+				if (isSystemSchedulable(tasks, Ris)) {
+					schedulableSystem_MSRP_Analysis++;
+					schedulableSystem_New_MrsP_Analysis2++;
+					sfnp++;
+					sfp++;
 
-			Ris = new_mrsp.NewMrsPRTATest(tasks, resources, false);
-			if (isSystemSchedulable(tasks, Ris))
-				schedulableSystem_New_MrsP_Analysis2++;
+					// if original msrp can schedule, others can.
+				} else {
+					Ris = new_mrsp.NewMrsPRTATest(tasks, resources, false);
+					if (isSystemSchedulable(tasks, Ris)) {
+						schedulableSystem_New_MrsP_Analysis2++;
 
-			Ris = fnp.NewMrsPRTATest(tasks, resources, false, false);
-			if (isSystemSchedulable(tasks, Ris))
-				sfnp++;
+						Ris = fnp.NewMrsPRTATest(tasks, resources, false, false);
+						if (isSystemSchedulable(tasks, Ris)) {
+							sfnp++;
 
-			Ris = fnp.NewMrsPRTATest(tasks, resources, true, false);
-			if (isSystemSchedulable(tasks, Ris))
-				sfp++;
-			
+							Ris = fnp.NewMrsPRTATest(tasks, resources, true, false);
+							if (isSystemSchedulable(tasks, Ris))
+								sfp++;
+						} else {
+							// if lnp is not able to schedule, then lp is not.
+						}
+
+					}
+				}
+			} else {
+				// if no blocking is not able to schedule, then others cannot.
+			}
+
 			System.out.println(3 + "" + bigSet + " " + smallSet + " times: " + i);
 		}
 
