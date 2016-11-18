@@ -43,8 +43,8 @@ public class Analysiser {
 
 		if (args.length == 0) {
 			experimentIncreasingWorkLoad();
-			experimentIncreasingCriticalSectionLength();
-			experimentIncreasingContention();
+//			experimentIncreasingCriticalSectionLength();
+//			experimentIncreasingContention();
 		}
 
 		if (args.length == 1) {
@@ -384,7 +384,7 @@ public class Analysiser {
 			generator.rsf = RESOURCE_SHARING_FACTOR;
 			generator.number_of_max_access = NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE;
 
-			for (int j = NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION; j > 0; j--) {
+			for (int j = 1; j <= NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION; j++) {
 				int schedulableSystem_New_MrsP_Analysis2 = 0;
 				int schedulableSystem_Original_MrsP_Analysis = 0;
 				int schedulableSystem_MSRP_Analysis = 0;
