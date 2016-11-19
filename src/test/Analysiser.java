@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-
 import analysis.FIFONonPreemptiveLinearC;
 import analysis.MSRPRTA;
 import analysis.NewMrsPRTA;
@@ -43,8 +42,8 @@ public class Analysiser {
 
 		if (args.length == 0) {
 			experimentIncreasingWorkLoad();
-//			experimentIncreasingCriticalSectionLength();
-//			experimentIncreasingContention();
+			experimentIncreasingCriticalSectionLength();
+			experimentIncreasingContention();
 		}
 
 		if (args.length == 1) {
@@ -111,49 +110,41 @@ public class Analysiser {
 			generator.generateResourceUsage(tasks, resources);
 
 			Ris = noblocking.NewMrsPRTATest(tasks, resources, false);
-			if (isSystemSchedulable(tasks, Ris)) {
+			if (isSystemSchedulable(tasks, Ris)){
 				schedulableSystem_No_Blocking++;
-
+				
 				Ris = original_mrsp.NewMrsPRTATest(tasks, resources, false);
-				if (isSystemSchedulable(tasks, Ris))
+				if (isSystemSchedulable(tasks, Ris)) {
 					schedulableSystem_Original_MrsP_Analysis++;
+					schedulableSystem_New_MrsP_Analysis2++;
+				} else {
+					Ris = new_mrsp.NewMrsPRTATest(tasks, resources, false);
+					if (isSystemSchedulable(tasks, Ris))
+						schedulableSystem_New_MrsP_Analysis2++;
+				}
 
 				Ris = msrp.NewMrsPRTATest(tasks, resources, false);
 				if (isSystemSchedulable(tasks, Ris)) {
 					schedulableSystem_MSRP_Analysis++;
-					schedulableSystem_New_MrsP_Analysis2++;
 					sfnp++;
-					sfp++;
-
-					// if original msrp can schedule, others can.
 				} else {
-					Ris = new_mrsp.NewMrsPRTATest(tasks, resources, false);
-					if (isSystemSchedulable(tasks, Ris)) {
-						schedulableSystem_New_MrsP_Analysis2++;
-
-						Ris = fnp.NewMrsPRTATest(tasks, resources, false, false);
-						if (isSystemSchedulable(tasks, Ris)) {
-							sfnp++;
-
-							Ris = fnp.NewMrsPRTATest(tasks, resources, true, false);
-							if (isSystemSchedulable(tasks, Ris))
-								sfp++;
-						} else {
-							// if lnp is not able to schedule, then lp is not.
-						}
-
-					}
+					Ris = fnp.NewMrsPRTATest(tasks, resources, false, false);
+					if (isSystemSchedulable(tasks, Ris))
+						sfnp++;
 				}
-			} else {
-				// if no blocking is not able to schedule, then others cannot.
+
+				Ris = fnp.NewMrsPRTATest(tasks, resources, true, false);
+				if (isSystemSchedulable(tasks, Ris))
+					sfp++;
 			}
+
+
 
 			System.out.println(1 + "" + bigSet + " " + smallSet + " times: " + i);
 
 		}
 
-		result += "number of tasks: " + TOTAL_PARTITIONS * NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION + " ; System number: "
-				+ TOTAL_NUMBER_OF_SYSTEMS + " ; New MrsP: "
+		result += "number of tasks: " + " ; System number: " + TOTAL_NUMBER_OF_SYSTEMS + " ; New MrsP: "
 				+ (double) schedulableSystem_New_MrsP_Analysis2 / (double) TOTAL_NUMBER_OF_SYSTEMS + "  Original MrsP: "
 				+ (double) schedulableSystem_Original_MrsP_Analysis / (double) TOTAL_NUMBER_OF_SYSTEMS + "  MSRP: "
 				+ (double) schedulableSystem_MSRP_Analysis / (double) TOTAL_NUMBER_OF_SYSTEMS + " No Blocking: "
@@ -164,13 +155,13 @@ public class Analysiser {
 		writeSystem((1 + " " + bigSet + " " + smallSet), result);
 	}
 
-	public static void experimentIncreasingCriticalSectionLength(int bigSet, int smallSet) {
+	public static void experimentIncreasingCriticalSectionLength(int tasksNumConfig, int csLenConfig) {
 		double RESOURCE_SHARING_FACTOR = 0.3;
 		int NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE = 3;
-		int NUMBER_OF_TASKS_ON_EACH_PARTITION = 3 + 2 * (bigSet - 1);
+		int NUMBER_OF_TASKS_ON_EACH_PARTITION = 3 + 2 * (tasksNumConfig - 1);
 
 		CS_LENGTH_RANGE range = null;
-		switch (smallSet) {
+		switch (csLenConfig) {
 		case 1:
 			range = CS_LENGTH_RANGE.VERY_SHORT_CS_LEN;
 			break;
@@ -216,51 +207,38 @@ public class Analysiser {
 			generator.generateResourceUsage(tasks, resources);
 
 			Ris = noblocking.NewMrsPRTATest(tasks, resources, false);
-			if (isSystemSchedulable(tasks, Ris)) {
+			if (isSystemSchedulable(tasks, Ris)){
 				schedulableSystem_No_Blocking++;
+				
+				Ris = original_mrsp.NewMrsPRTATest(tasks, resources, false);
+				if (isSystemSchedulable(tasks, Ris)) {
+					schedulableSystem_Original_MrsP_Analysis++;
+					schedulableSystem_New_MrsP_Analysis2++;
+				} else {
+					Ris = new_mrsp.NewMrsPRTATest(tasks, resources, false);
+					if (isSystemSchedulable(tasks, Ris))
+						schedulableSystem_New_MrsP_Analysis2++;
+				}
 
 				Ris = msrp.NewMrsPRTATest(tasks, resources, false);
 				if (isSystemSchedulable(tasks, Ris)) {
 					schedulableSystem_MSRP_Analysis++;
-					schedulableSystem_New_MrsP_Analysis2++;
 					sfnp++;
-					sfp++;
-					schedulableSystem_Original_MrsP_Analysis++;
 				} else {
-					Ris = original_mrsp.NewMrsPRTATest(tasks, resources, false);
-					if (isSystemSchedulable(tasks, Ris)){
-						schedulableSystem_Original_MrsP_Analysis++;
-						schedulableSystem_New_MrsP_Analysis2++;
+					Ris = fnp.NewMrsPRTATest(tasks, resources, false, false);
+					if (isSystemSchedulable(tasks, Ris))
 						sfnp++;
-						sfp++;
-					}
-					else{
-						Ris = new_mrsp.NewMrsPRTATest(tasks, resources, false);
-						if (isSystemSchedulable(tasks, Ris)) {
-							schedulableSystem_New_MrsP_Analysis2++;
-
-							Ris = fnp.NewMrsPRTATest(tasks, resources, false, false);
-							if (isSystemSchedulable(tasks, Ris))
-								sfnp++;
-							
-							Ris = fnp.NewMrsPRTATest(tasks, resources, true, false);
-							if (isSystemSchedulable(tasks, Ris))
-								sfp++;
-						}
-						else{
-							// if mew mrsp is not able to schedule, then others cannot.
-						}
-					}
 				}
-				
-			} else {
-				// if no blocking is not able to schedule, then others cannot.
+
+				Ris = fnp.NewMrsPRTATest(tasks, resources, true, false);
+				if (isSystemSchedulable(tasks, Ris))
+					sfp++;
 			}
 
-			System.out.println(2 + "" + bigSet + " " + smallSet + " times: " + i);
+			System.out.println(2 + "" + tasksNumConfig + " " + csLenConfig + " times: " + i);
 		}
 
-		result += "cs _len: " + range.toString() + " ; System number: " + TOTAL_NUMBER_OF_SYSTEMS + " ; New MrsP: "
+		result += "cs _len: " + range.toString() + " ; New MrsP: "
 				+ (double) schedulableSystem_New_MrsP_Analysis2 / (double) TOTAL_NUMBER_OF_SYSTEMS + "  Original MrsP: "
 				+ (double) schedulableSystem_Original_MrsP_Analysis / (double) TOTAL_NUMBER_OF_SYSTEMS + "  MSRP: "
 				+ (double) schedulableSystem_MSRP_Analysis / (double) TOTAL_NUMBER_OF_SYSTEMS + " NO BLOCKING: "
@@ -268,7 +246,7 @@ public class Analysiser {
 				+ (double) sfnp / (double) TOTAL_NUMBER_OF_SYSTEMS + " fifo p lp: "
 				+ (double) sfp / (double) TOTAL_NUMBER_OF_SYSTEMS + "\n";
 
-		writeSystem((2 + " " + bigSet + " " + smallSet), result);
+		writeSystem((2 + " " + tasksNumConfig + " " + csLenConfig), result);
 	}
 
 	public static void experimentIncreasingContention(int bigSet, int smallSet) {
@@ -304,48 +282,38 @@ public class Analysiser {
 			generator.generateResourceUsage(tasks, resources);
 
 			Ris = noblocking.NewMrsPRTATest(tasks, resources, false);
-			if (isSystemSchedulable(tasks, Ris)) {
+			if (isSystemSchedulable(tasks, Ris)){
 				schedulableSystem_No_Blocking++;
-
+				
 				Ris = original_mrsp.NewMrsPRTATest(tasks, resources, false);
-				if (isSystemSchedulable(tasks, Ris))
+				if (isSystemSchedulable(tasks, Ris)) {
 					schedulableSystem_Original_MrsP_Analysis++;
+					schedulableSystem_New_MrsP_Analysis2++;
+				} else {
+					Ris = new_mrsp.NewMrsPRTATest(tasks, resources, false);
+					if (isSystemSchedulable(tasks, Ris))
+						schedulableSystem_New_MrsP_Analysis2++;
+				}
 
 				Ris = msrp.NewMrsPRTATest(tasks, resources, false);
 				if (isSystemSchedulable(tasks, Ris)) {
 					schedulableSystem_MSRP_Analysis++;
-					schedulableSystem_New_MrsP_Analysis2++;
 					sfnp++;
-					sfp++;
-
-					// if original msrp can schedule, others can.
 				} else {
-					Ris = new_mrsp.NewMrsPRTATest(tasks, resources, false);
-					if (isSystemSchedulable(tasks, Ris)) {
-						schedulableSystem_New_MrsP_Analysis2++;
-
-						Ris = fnp.NewMrsPRTATest(tasks, resources, false, false);
-						if (isSystemSchedulable(tasks, Ris)) {
-							sfnp++;
-
-							Ris = fnp.NewMrsPRTATest(tasks, resources, true, false);
-							if (isSystemSchedulable(tasks, Ris))
-								sfp++;
-						} else {
-							// if lnp is not able to schedule, then lp is not.
-						}
-
-					}
+					Ris = fnp.NewMrsPRTATest(tasks, resources, false, false);
+					if (isSystemSchedulable(tasks, Ris))
+						sfnp++;
 				}
-			} else {
-				// if no blocking is not able to schedule, then others cannot.
+
+				Ris = fnp.NewMrsPRTATest(tasks, resources, true, false);
+				if (isSystemSchedulable(tasks, Ris))
+					sfp++;
 			}
 
 			System.out.println(3 + "" + bigSet + " " + smallSet + " times: " + i);
 		}
 
-		result += "number of access: " + NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE + " ; System number: "
-				+ TOTAL_NUMBER_OF_SYSTEMS + " ; New MrsP: "
+		result += "number of access: " + NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE + " ; New MrsP: "
 				+ (double) schedulableSystem_New_MrsP_Analysis2 / (double) TOTAL_NUMBER_OF_SYSTEMS + "  Original MrsP: "
 				+ (double) schedulableSystem_Original_MrsP_Analysis / (double) TOTAL_NUMBER_OF_SYSTEMS + "  MSRP: "
 				+ (double) schedulableSystem_MSRP_Analysis / (double) TOTAL_NUMBER_OF_SYSTEMS + " NO BLOCKING: "
@@ -435,15 +403,21 @@ public class Analysiser {
 					// System.out.println(i);
 				}
 
-				System.err.println("number of tasks: " + TOTAL_PARTITIONS * j + " ; System number: "
-						+ TOTAL_NUMBER_OF_SYSTEMS + " ; New MrsP: "
-						+ (double) schedulableSystem_New_MrsP_Analysis2 / (double) TOTAL_NUMBER_OF_SYSTEMS
-						+ "  Original MrsP: "
-						+ (double) schedulableSystem_Original_MrsP_Analysis / (double) TOTAL_NUMBER_OF_SYSTEMS
-						+ "  MSRP: " + (double) schedulableSystem_MSRP_Analysis / (double) TOTAL_NUMBER_OF_SYSTEMS
-						+ " No Blocking: " + (double) schedulableSystem_No_Blocking / (double) TOTAL_NUMBER_OF_SYSTEMS
-						+ " fifo np lp: " + (double) sfnp / (double) TOTAL_NUMBER_OF_SYSTEMS + " fifo p lp: "
-						+ (double) sfp / (double) TOTAL_NUMBER_OF_SYSTEMS);
+				System.err
+						.println(
+								"number of tasks: " + TOTAL_PARTITIONS * j + " ; System number: "
+										+ TOTAL_NUMBER_OF_SYSTEMS + " ; New MrsP: "
+										+ (double) schedulableSystem_New_MrsP_Analysis2
+												/ (double) TOTAL_NUMBER_OF_SYSTEMS
+										+ "  Original MrsP: "
+										+ (double) schedulableSystem_Original_MrsP_Analysis
+												/ (double) TOTAL_NUMBER_OF_SYSTEMS
+										+ "  MSRP: "
+										+ (double) schedulableSystem_MSRP_Analysis / (double) TOTAL_NUMBER_OF_SYSTEMS
+										+ " No Blocking: "
+										+ (double) schedulableSystem_No_Blocking / (double) TOTAL_NUMBER_OF_SYSTEMS
+										+ " fifo np lp: " + (double) sfnp / (double) TOTAL_NUMBER_OF_SYSTEMS
+										+ " fifo p lp: " + (double) sfp / (double) TOTAL_NUMBER_OF_SYSTEMS);
 				result += "number of tasks: " + TOTAL_PARTITIONS * j + " ; System number: " + TOTAL_NUMBER_OF_SYSTEMS
 						+ " ; New MrsP: "
 						+ (double) schedulableSystem_New_MrsP_Analysis2 / (double) TOTAL_NUMBER_OF_SYSTEMS
@@ -540,15 +514,21 @@ public class Analysiser {
 					}
 				}
 
-				System.err.println("number of access: " + j + " ; System number: " + TOTAL_NUMBER_OF_SYSTEMS
-						+ " ; New MrsP: "
-						+ (double) schedulableSystem_New_MrsP_Analysis2 / (double) TOTAL_NUMBER_OF_SYSTEMS
-						+ "  Original MrsP: "
-						+ (double) schedulableSystem_Original_MrsP_Analysis / (double) TOTAL_NUMBER_OF_SYSTEMS
-						+ "  MSRP: " + (double) schedulableSystem_MSRP_Analysis / (double) TOTAL_NUMBER_OF_SYSTEMS
-						+ " NO BLOCKING: " + (double) schedulableSystem_No_Blocking / (double) TOTAL_NUMBER_OF_SYSTEMS
-						+ " fifo np lp: " + (double) sfnp / (double) TOTAL_NUMBER_OF_SYSTEMS + " fifo p lp: "
-						+ (double) sfp / (double) TOTAL_NUMBER_OF_SYSTEMS);
+				System.err
+						.println(
+								"number of access: " + j + " ; System number: " + TOTAL_NUMBER_OF_SYSTEMS
+										+ " ; New MrsP: "
+										+ (double) schedulableSystem_New_MrsP_Analysis2
+												/ (double) TOTAL_NUMBER_OF_SYSTEMS
+										+ "  Original MrsP: "
+										+ (double) schedulableSystem_Original_MrsP_Analysis
+												/ (double) TOTAL_NUMBER_OF_SYSTEMS
+										+ "  MSRP: "
+										+ (double) schedulableSystem_MSRP_Analysis / (double) TOTAL_NUMBER_OF_SYSTEMS
+										+ " NO BLOCKING: "
+										+ (double) schedulableSystem_No_Blocking / (double) TOTAL_NUMBER_OF_SYSTEMS
+										+ " fifo np lp: " + (double) sfnp / (double) TOTAL_NUMBER_OF_SYSTEMS
+										+ " fifo p lp: " + (double) sfp / (double) TOTAL_NUMBER_OF_SYSTEMS);
 				result += "number of access: " + j + " ; System number: " + TOTAL_NUMBER_OF_SYSTEMS + " ; New MrsP: "
 						+ (double) schedulableSystem_New_MrsP_Analysis2 / (double) TOTAL_NUMBER_OF_SYSTEMS
 						+ "  Original MrsP: "
@@ -669,15 +649,21 @@ public class Analysiser {
 					// System.out.println(i);
 				}
 
-				System.err.println("cs _len " + (j + 1) * 100 + " ; System number: " + TOTAL_NUMBER_OF_SYSTEMS
-						+ " ; New MrsP: "
-						+ (double) schedulableSystem_New_MrsP_Analysis2 / (double) TOTAL_NUMBER_OF_SYSTEMS
-						+ "  Original MrsP: "
-						+ (double) schedulableSystem_Original_MrsP_Analysis / (double) TOTAL_NUMBER_OF_SYSTEMS
-						+ "  MSRP: " + (double) schedulableSystem_MSRP_Analysis / (double) TOTAL_NUMBER_OF_SYSTEMS
-						+ " NO BLOCKING: " + (double) schedulableSystem_No_Blocking / (double) TOTAL_NUMBER_OF_SYSTEMS
-						+ " fifo np lp: " + (double) sfnp / (double) TOTAL_NUMBER_OF_SYSTEMS + " fifo p lp: "
-						+ (double) sfp / (double) TOTAL_NUMBER_OF_SYSTEMS);
+				System.err
+						.println(
+								"cs _len " + (j + 1) * 100 + " ; System number: " + TOTAL_NUMBER_OF_SYSTEMS
+										+ " ; New MrsP: "
+										+ (double) schedulableSystem_New_MrsP_Analysis2
+												/ (double) TOTAL_NUMBER_OF_SYSTEMS
+										+ "  Original MrsP: "
+										+ (double) schedulableSystem_Original_MrsP_Analysis
+												/ (double) TOTAL_NUMBER_OF_SYSTEMS
+										+ "  MSRP: "
+										+ (double) schedulableSystem_MSRP_Analysis / (double) TOTAL_NUMBER_OF_SYSTEMS
+										+ " NO BLOCKING: "
+										+ (double) schedulableSystem_No_Blocking / (double) TOTAL_NUMBER_OF_SYSTEMS
+										+ " fifo np lp: " + (double) sfnp / (double) TOTAL_NUMBER_OF_SYSTEMS
+										+ " fifo p lp: " + (double) sfp / (double) TOTAL_NUMBER_OF_SYSTEMS);
 				result += "cs _len " + (j + 1) * 100 + " ; System number: " + TOTAL_NUMBER_OF_SYSTEMS + " ; New MrsP: "
 						+ (double) schedulableSystem_New_MrsP_Analysis2 / (double) TOTAL_NUMBER_OF_SYSTEMS
 						+ "  Original MrsP: "

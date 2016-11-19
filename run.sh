@@ -24,10 +24,10 @@ for bigset in 1 2 3
     	done
 done
 
-#for bigset in 1 2 3
-#	do
-#		for smallset in 1 2 3 4 5 6 7 8 9 10
- #  			do
-  # 				LD_LIBRARY_PATH=src nohup java -cp /usr/userfs/z/zs673/TestMrsPAnalysis/bin -Djava.library.path="/usr/userfs/z/zs673/TestMrsPAnalysis/src" test.Analysiser 3 ${bigset} ${smallset} &
-   # 	done
-#done
+for bigset in 1 2 3
+	do
+		for smallset in 1 2 3 4 5 6 7 8 9 10
+   			do
+   				LD_LIBRARY_PATH=src nohup java -cp /usr/userfs/z/zs673/TestMrsPAnalysis/bin -Djava.library.path="/usr/userfs/z/zs673/TestMrsPAnalysis/src" test.Analysiser 3 ${bigset} ${smallset} &
+    	done
+done
