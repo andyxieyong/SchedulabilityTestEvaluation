@@ -143,6 +143,8 @@ public class FixedTaskSet {
 		// task.local);
 		// }
 		// }
+		
+		new NewMrsPRTA().NewMrsPRTATest(tasks, resources, true);
 		new FIFONonPreemptiveLinearC().NewMrsPRTATest(tasks, resources,true,true);
 		new FIFONonPreemptiveLinearC().NewMrsPRTATest(tasks, resources,false,true);
 		System.out.println();
@@ -232,6 +234,7 @@ public class FixedTaskSet {
 		// false);
 		// new FIFOPreemptiveLinear().NewMrsPRTATest(tasks, resources, true,
 		// false);
+		new NewMrsPRTA().NewMrsPRTATest(tasks, resources, true);
 		new FIFONonPreemptiveLinearC().NewMrsPRTATest(tasks, resources,true,true);
 		new FIFONonPreemptiveLinearC().NewMrsPRTATest(tasks, resources,false, true);
 		System.out.println();
@@ -342,9 +345,9 @@ public class FixedTaskSet {
 		// false);
 		//// new FIFOPreemptiveLinear().NewMrsPRTATest(tasks, resources, true,
 		// false);
+		new NewMrsPRTA().NewMrsPRTATest(tasks, resources, true);
 		new FIFONonPreemptiveLinearC().NewMrsPRTATest(tasks, resources,true,true);
 		new FIFONonPreemptiveLinearC().NewMrsPRTATest(tasks, resources,false, true);
 		System.out.println();
-		new NewMrsPRTA().NewMrsPRTATest(tasks, resources, true);
 	}
 }
