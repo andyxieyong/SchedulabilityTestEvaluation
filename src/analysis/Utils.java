@@ -18,7 +18,7 @@ public class Utils {
 			for (int j = 0; j < task_on_a_partition.size(); j++) {
 				SporadicTask t = task_on_a_partition.get(j);
 				Ri[j] = t.Ri = t.WCET + t.pure_resource_execution_time;
-				t.interference = t.local = t.spin = t.total_blocking = 0;
+				t.interference = t.local = t.spin = t.total_blocking = t.different_with_FIFONP = 0;
 			}
 			response_times[i] = Ri;
 		}

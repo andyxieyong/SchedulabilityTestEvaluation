@@ -2,6 +2,7 @@ package test;
 
 import java.util.ArrayList;
 
+import analysis.FIFONPLinearJava;
 import analysis.FIFONonPreemptiveLinearC;
 import analysis.NewMrsPRTA;
 import entity.Resource;
@@ -144,9 +145,10 @@ public class FixedTaskSet {
 		// }
 		// }
 		
-		new NewMrsPRTA().NewMrsPRTATest(tasks, resources, true);
-		new FIFONonPreemptiveLinearC().NewMrsPRTATest(tasks, resources,true,true);
+//		new NewMrsPRTA().NewMrsPRTATest(tasks, resources, true);
+//		new FIFONonPreemptiveLinearC().NewMrsPRTATest(tasks, resources,true,true);
 		new FIFONonPreemptiveLinearC().NewMrsPRTATest(tasks, resources,false,true);
+		new FIFONPLinearJava().NewMrsPRTATest(tasks, resources, true);
 		System.out.println();
 //		new FIFONonPreemptiveLinear().NewMrsPRTATest(tasks, resources, true, false);
 	}
@@ -234,9 +236,10 @@ public class FixedTaskSet {
 		// false);
 		// new FIFOPreemptiveLinear().NewMrsPRTATest(tasks, resources, true,
 		// false);
-		new NewMrsPRTA().NewMrsPRTATest(tasks, resources, true);
-		new FIFONonPreemptiveLinearC().NewMrsPRTATest(tasks, resources,true,true);
+//		new NewMrsPRTA().NewMrsPRTATest(tasks, resources, true);
+//		new FIFONonPreemptiveLinearC().NewMrsPRTATest(tasks, resources,true,true);
 		new FIFONonPreemptiveLinearC().NewMrsPRTATest(tasks, resources,false, true);
+		new FIFONPLinearJava().NewMrsPRTATest(tasks, resources, true);
 		System.out.println();
 //		new FIFONonPreemptiveLinear().NewMrsPRTATest(tasks, resources, true, false);
 	}
@@ -345,9 +348,10 @@ public class FixedTaskSet {
 		// false);
 		//// new FIFOPreemptiveLinear().NewMrsPRTATest(tasks, resources, true,
 		// false);
-		new NewMrsPRTA().NewMrsPRTATest(tasks, resources, true);
-		new FIFONonPreemptiveLinearC().NewMrsPRTATest(tasks, resources,true,true);
+//		new NewMrsPRTA().NewMrsPRTATest(tasks, resources, true);
+//		new FIFONonPreemptiveLinearC().NewMrsPRTATest(tasks, resources,true,true);
 		new FIFONonPreemptiveLinearC().NewMrsPRTATest(tasks, resources,false, true);
+		new FIFONPLinearJava().NewMrsPRTATest(tasks, resources, true);
 		System.out.println();
 	}
 }
