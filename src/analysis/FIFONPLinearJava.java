@@ -36,12 +36,14 @@ public class FIFONPLinearJava {
 					if (response_time[i][j] != response_time_plus[i][j])
 						isEqual = false;
 
-//					if (response_time_plus[i][j] > tasks.get(i).get(j).deadline)
-//						missDeadline = true;
+					// if (response_time_plus[i][j] >
+					// tasks.get(i).get(j).deadline)
+					// missDeadline = true;
 				}
 			}
 
 			count++;
+			// System.out.println(count);
 			new Utils().cloneList(response_time_plus, response_time);
 
 			if (missDeadline)
@@ -50,7 +52,8 @@ public class FIFONPLinearJava {
 
 		if (printDebug) {
 			if (missDeadline)
-				System.out.println("FIFONP JAVA    after " + count + " tims of recursion, the tasks miss the deadline.");
+				System.out
+						.println("FIFONP JAVA    after " + count + " tims of recursion, the tasks miss the deadline.");
 			else
 				System.out.println("FIFONP JAVA    after " + count + " tims of recursion, we got the response time.");
 
@@ -71,14 +74,19 @@ public class FIFONPLinearJava {
 		for (int i = 0; i < tasks.size(); i++) {
 			for (int j = 0; j < tasks.get(i).size(); j++) {
 				SporadicTask task = tasks.get(i).get(j);
+				
+
 				task.spin = directRemoteDelay(task, tasks, resources, response_time, response_time[i][j]);
 				task.interference = highPriorityInterference(task, tasks, response_time[i][j], response_time,
 						resources);
-				task.local = localBlockingFIFONP(task, tasks, resources, response_time, response_time[i][j]);
+				task.local = localBlocking(task, tasks, resources, response_time, response_time[i][j]);
+
 				response_time_plus[i][j] = task.Ri = task.WCET + task.pure_resource_execution_time + task.spin
 						+ task.interference + task.local;
-//				if (task.Ri > task.deadline)
-//					return response_time_plus;
+
+				// if (task.Ri > task.deadline)
+				// return response_time_plus;
+				
 			}
 		}
 		return response_time_plus;
@@ -97,10 +105,7 @@ public class FIFONPLinearJava {
 		for (int i = 0; i < tasks.size(); i++) {
 			if (tasks.get(i).priority > t.priority) {
 				SporadicTask hpTask = tasks.get(i);
-				interference += Math.ceil((double) (Ri) / (double) hpTask.period)
-						* (hpTask.WCET /*
-										 * + hpTask.pure_resource_execution_time
-										 */);
+				interference += Math.ceil((double) (Ri) / (double) hpTask.period) * (hpTask.WCET);
 
 				long btb_interference = getIndirectSpinDelay(hpTask, Ri, Ris[partition][i], Ris, allTasks, resources);
 				interference += btb_interference;
@@ -160,9 +165,9 @@ public class FIFONPLinearJava {
 		return spin_delay;
 	}
 
-	private long localBlockingFIFONP(SporadicTask t, ArrayList<ArrayList<SporadicTask>> tasks,
-			ArrayList<Resource> resources, long[][] Ris, long Ri) {
-		ArrayList<Resource> LocalBlockingResources = FIFONPLocalResource(t, resources);
+	private long localBlocking(SporadicTask t, ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources,
+			long[][] Ris, long Ri) {
+		ArrayList<Resource> LocalBlockingResources = getLocalBlockingResources(t, resources);
 		ArrayList<Long> local_blocking_each_resource = new ArrayList<>();
 
 		for (int i = 0; i < LocalBlockingResources.size(); i++) {
@@ -191,7 +196,7 @@ public class FIFONPLinearJava {
 		return local_blocking_each_resource.size() > 0 ? local_blocking_each_resource.get(0) : 0;
 	}
 
-	private ArrayList<Resource> FIFONPLocalResource(SporadicTask task, ArrayList<Resource> resources) {
+	private ArrayList<Resource> getLocalBlockingResources(SporadicTask task, ArrayList<Resource> resources) {
 		ArrayList<Resource> localBlockingResources = new ArrayList<>();
 		int partition = task.partition;
 

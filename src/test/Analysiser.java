@@ -110,9 +110,9 @@ public class Analysiser {
 			generator.generateResourceUsage(tasks, resources);
 
 			Ris = noblocking.NewMrsPRTATest(tasks, resources, false);
-			if (isSystemSchedulable(tasks, Ris)){
+			if (isSystemSchedulable(tasks, Ris)) {
 				schedulableSystem_No_Blocking++;
-				
+
 				Ris = original_mrsp.NewMrsPRTATest(tasks, resources, false);
 				if (isSystemSchedulable(tasks, Ris)) {
 					schedulableSystem_Original_MrsP_Analysis++;
@@ -137,8 +137,6 @@ public class Analysiser {
 				if (isSystemSchedulable(tasks, Ris))
 					sfp++;
 			}
-
-
 
 			System.out.println(1 + "" + bigSet + " " + smallSet + " times: " + i);
 
@@ -207,9 +205,9 @@ public class Analysiser {
 			generator.generateResourceUsage(tasks, resources);
 
 			Ris = noblocking.NewMrsPRTATest(tasks, resources, false);
-			if (isSystemSchedulable(tasks, Ris)){
+			if (isSystemSchedulable(tasks, Ris)) {
 				schedulableSystem_No_Blocking++;
-				
+
 				Ris = original_mrsp.NewMrsPRTATest(tasks, resources, false);
 				if (isSystemSchedulable(tasks, Ris)) {
 					schedulableSystem_Original_MrsP_Analysis++;
@@ -282,9 +280,9 @@ public class Analysiser {
 			generator.generateResourceUsage(tasks, resources);
 
 			Ris = noblocking.NewMrsPRTATest(tasks, resources, false);
-			if (isSystemSchedulable(tasks, Ris)){
+			if (isSystemSchedulable(tasks, Ris)) {
 				schedulableSystem_No_Blocking++;
-				
+
 				Ris = original_mrsp.NewMrsPRTATest(tasks, resources, false);
 				if (isSystemSchedulable(tasks, Ris)) {
 					schedulableSystem_Original_MrsP_Analysis++;

@@ -11,7 +11,7 @@ import generatorTools.SystemGenerator;
 public class EqualTest {
 
 	public static int TOTAL_NUMBER_OF_SYSTEMS = 9999999;
-	public static int TOTAL_PARTITIONS = 10;
+	public static int TOTAL_PARTITIONS = 5;
 	public static int MIN_PERIOD = 1;
 	public static int MAX_PERIOD = 1000;
 	public static int NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION = 5;
