@@ -1,12 +1,7 @@
 /native/
-/javaToC_MIPSolverC.h
-/libglpk.a
-/libglpk.la
-/libglpk.so
-/libglpk.so.40
-/libglpk.so.40.1.0
-/libmipsolverc.dylib
-/libmipsolverc.so
-/entity/
 /analysis/
+/discardAnalysis/
+/entity/
+/generatorTools/
+/javaToC/
 /test/
