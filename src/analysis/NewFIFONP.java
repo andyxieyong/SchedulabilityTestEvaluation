@@ -67,8 +67,8 @@ public class NewFIFONP {
 				if (oldRi[i][j] != newRi[i][j]) {
 					is_equal = false;
 					System.out.println("not equal: " + oldRi[i][j] + " vs " + newRi[i][j]);
-					System.out.println("T" + tasks.get(i).get(j).id + " old: S = " + tasks.get(i).get(j).spin + ", I = " + tasks.get(i).get(j).interference + ", Local ="
-							+ tasks.get(i).get(j).local);
+					System.out.println("T" + tasks.get(i).get(j).id + " old: S = " + tasks.get(i).get(j).spin + ", I = "
+							+ tasks.get(i).get(j).interference + ", Local =" + tasks.get(i).get(j).local);
 					problemtask = tasks.get(i).get(j);
 				}
 			}
@@ -99,9 +99,11 @@ public class NewFIFONP {
 	}
 
 	/*
-	 * Calculate the local high priority tasks' interference for a given task t. CI is a set of computation time of local tasks, including spin delay.
+	 * Calculate the local high priority tasks' interference for a given task t.
+	 * CI is a set of computation time of local tasks, including spin delay.
 	 */
-	private long highPriorityInterference(SporadicTask t, ArrayList<ArrayList<SporadicTask>> allTasks, long Ri, long[][] Ris, ArrayList<Resource> resources) {
+	private long highPriorityInterference(SporadicTask t, ArrayList<ArrayList<SporadicTask>> allTasks, long Ri, long[][] Ris,
+			ArrayList<Resource> resources) {
 		long interference = 0;
 		int partition = t.partition;
 		ArrayList<SporadicTask> tasks = allTasks.get(partition);
@@ -119,9 +121,11 @@ public class NewFIFONP {
 	}
 
 	/*
-	 * for a high priority task hpTask, return its back to back hit time when the given task is pending
+	 * for a high priority task hpTask, return its back to back hit time when
+	 * the given task is pending
 	 */
-	private long getIndirectSpinDelay(SporadicTask hpTask, long Ri, long Rihp, long[][] Ris, ArrayList<ArrayList<SporadicTask>> allTasks, ArrayList<Resource> resources) {
+	private long getIndirectSpinDelay(SporadicTask hpTask, long Ri, long Rihp, long[][] Ris, ArrayList<ArrayList<SporadicTask>> allTasks,
+			ArrayList<Resource> resources) {
 		long BTBhit = 0;
 
 		for (int i = 0; i < hpTask.resource_required_index.size(); i++) {
@@ -129,7 +133,8 @@ public class NewFIFONP {
 			Resource resource = resources.get(hpTask.resource_required_index.get(i));
 
 			int number_of_higher_request = getNoRFromHP(resource, hpTask, allTasks.get(hpTask.partition), Ris[hpTask.partition], Ri);
-			int number_of_request_with_btb = (int) Math.ceil((double) (Ri + (use_deadline_insteadof_Ri ? hpTask.deadline : Rihp)) / (double) hpTask.period)
+			int number_of_request_with_btb = (int) Math
+					.ceil((double) (Ri + (use_deadline_insteadof_Ri ? hpTask.deadline : Rihp)) / (double) hpTask.period)
 					* hpTask.number_of_access_in_one_release.get(i);
 
 			for (int j = 0; j < resource.partitions.size(); j++) {
@@ -137,7 +142,8 @@ public class NewFIFONP {
 					int remote_partition = resource.partitions.get(j);
 					int number_of_remote_request = getNoRRemote(resource, allTasks.get(remote_partition), Ris[remote_partition], Ri);
 
-					int possible_spin_delay = number_of_remote_request - number_of_higher_request < 0 ? 0 : number_of_remote_request - number_of_higher_request;
+					int possible_spin_delay = number_of_remote_request - number_of_higher_request < 0 ? 0
+							: number_of_remote_request - number_of_higher_request;
 
 					int spin_delay_with_btb = Integer.min(possible_spin_delay, number_of_request_with_btb);
 
@@ -175,7 +181,8 @@ public class NewFIFONP {
 				for (int parition_index = 0; parition_index < res.partitions.size(); parition_index++) {
 					int partition = res.partitions.get(parition_index);
 					int norHP = getNoRFromHP(res, t, tasks.get(t.partition), Ris[t.partition], Ri);
-					int norT = t.resource_required_index.contains(res.id - 1) ? t.number_of_access_in_one_release.get(t.resource_required_index.indexOf(res.id - 1)) : 0;
+					int norT = t.resource_required_index.contains(res.id - 1)
+							? t.number_of_access_in_one_release.get(t.resource_required_index.indexOf(res.id - 1)) : 0;
 					int norR = getNoRRemote(res, tasks.get(partition), Ris[partition], Ri);
 
 					if (partition != t.partition && (norHP + norT) < norR) {
@@ -194,7 +201,8 @@ public class NewFIFONP {
 	}
 
 	/*
-	 * gives the number of requests from remote partitions for a resource that is required by the given task.
+	 * gives the number of requests from remote partitions for a resource that
+	 * is required by the given task.
 	 */
 	private int getNoSpinDelay(SporadicTask task, Resource resource, ArrayList<ArrayList<SporadicTask>> tasks, long[][] Ris, long Ri) {
 		int number_of_spin_dealy = 0;
@@ -207,7 +215,8 @@ public class NewFIFONP {
 					if (tasks.get(i).get(j).resource_required_index.contains(resource.id - 1)) {
 						SporadicTask remote_task = tasks.get(i).get(j);
 						int indexR = getIndexRInTask(remote_task, resource);
-						int number_of_release = (int) Math.ceil((double) (Ri + (use_deadline_insteadof_Ri ? remote_task.deadline : Ris[i][j])) / (double) remote_task.period);
+						int number_of_release = (int) Math
+								.ceil((double) (Ri + (use_deadline_insteadof_Ri ? remote_task.deadline : Ris[i][j])) / (double) remote_task.period);
 						number_of_request_by_Remote_P += number_of_release * remote_task.number_of_access_in_one_release.get(indexR);
 					}
 				}
@@ -228,7 +237,8 @@ public class NewFIFONP {
 			if (tasks.get(i).resource_required_index.contains(resource.id - 1)) {
 				SporadicTask remote_task = tasks.get(i);
 				int indexR = getIndexRInTask(remote_task, resource);
-				number_of_request_by_Remote_P += Math.ceil((double) (Ri + (use_deadline_insteadof_Ri ? remote_task.deadline : Ris[i])) / (double) remote_task.period)
+				number_of_request_by_Remote_P += Math
+						.ceil((double) (Ri + (use_deadline_insteadof_Ri ? remote_task.deadline : Ris[i])) / (double) remote_task.period)
 						* remote_task.number_of_access_in_one_release.get(indexR);
 			}
 		}
@@ -236,7 +246,8 @@ public class NewFIFONP {
 	}
 
 	/*
-	 * gives that number of requests from HP local tasks for a resource that is required by the given task.
+	 * gives that number of requests from HP local tasks for a resource that is
+	 * required by the given task.
 	 */
 	private int getNoRFromHP(Resource resource, SporadicTask task, ArrayList<SporadicTask> tasks, long[] Ris, long Ri) {
 		int number_of_request_by_HP = 0;

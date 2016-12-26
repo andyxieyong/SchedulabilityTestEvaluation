@@ -29,8 +29,8 @@ public class ResultReader {
 				} catch (IOException e) {
 					System.out.println("no such file: " + filepath);
 				}
-				if(lines != null)
-				result += bigSet + "" + smallSet + "" + lines.get(0) + "\n";
+				if (lines != null)
+					result += bigSet + "" + smallSet + "" + lines.get(0) + "\n";
 			}
 
 			result += "\n";
@@ -49,8 +49,8 @@ public class ResultReader {
 					lines = Files.readAllLines(Paths.get(filepath), StandardCharsets.UTF_8);
 				} catch (IOException e) {
 				}
-				if(lines != null)
-				result += bigSet + "" + smallSet + "" + lines.get(0) + "\n";
+				if (lines != null)
+					result += bigSet + "" + smallSet + "" + lines.get(0) + "\n";
 			}
 
 			result += "\n";
@@ -69,9 +69,9 @@ public class ResultReader {
 					lines = Files.readAllLines(Paths.get(filepath), StandardCharsets.UTF_8);
 				} catch (IOException e) {
 				}
-				
-				if(lines != null)
-				result += bigSet + "" + smallSet + "" + lines.get(0) + "\n";
+
+				if (lines != null)
+					result += bigSet + "" + smallSet + "" + lines.get(0) + "\n";
 			}
 
 			result += "\n";

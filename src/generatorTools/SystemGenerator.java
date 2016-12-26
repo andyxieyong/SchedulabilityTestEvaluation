@@ -243,9 +243,9 @@ public class SystemGenerator {
 					task.WCET = task.WCET - total_resource_execution_time;
 					task.pure_resource_execution_time = total_resource_execution_time;
 
-					if(task.resource_required_index.size() > 0){
+					if (task.resource_required_index.size() > 0) {
 						task.hasResource = 1;
-						
+
 						task.resource_required_index_cpoy = new int[task.resource_required_index.size()];
 						task.number_of_access_in_one_release_copy = new int[task.number_of_access_in_one_release.size()];
 						if (task.number_of_access_in_one_release_copy.length != task.resource_required_index_cpoy.length) {
@@ -254,8 +254,7 @@ public class SystemGenerator {
 						}
 						for (int resource_index = 0; resource_index < task.resource_required_index.size(); resource_index++) {
 							task.resource_required_index_cpoy[resource_index] = task.resource_required_index.get(resource_index);
-							task.number_of_access_in_one_release_copy[resource_index] = task.number_of_access_in_one_release
-									.get(resource_index);
+							task.number_of_access_in_one_release_copy[resource_index] = task.number_of_access_in_one_release.get(resource_index);
 						}
 					}
 
@@ -324,8 +323,8 @@ public class SystemGenerator {
 				SporadicTask task = tasks.get(i).get(j);
 				String usage = "T" + task.id + ": ";
 				for (int k = 0; k < task.resource_required_index.size(); k++) {
-					usage = usage + "R" + resources.get(task.resource_required_index.get(k)).id + " - "
-							+ task.number_of_access_in_one_release.get(k) + ";  ";
+					usage = usage + "R" + resources.get(task.resource_required_index.get(k)).id + " - " + task.number_of_access_in_one_release.get(k)
+							+ ";  ";
 				}
 				usage += "\n";
 				if (task.resource_required_index.size() > 0)

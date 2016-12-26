@@ -29,14 +29,13 @@ public class DifferentTest {
 		NewMrsPRTA new_mrsp = new NewMrsPRTA();
 		FIFONPLinearJava fnp = new FIFONPLinearJava();
 
-		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD,
-				0.1 * (double) NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, TOTAL_PARTITIONS,
-				NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, Analysiser.CS_LENGTH_RANGE.VERY_SHORT_CS_LEN,
+		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION,
+				TOTAL_PARTITIONS, NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, Analysiser.CS_LENGTH_RANGE.VERY_SHORT_CS_LEN,
 				Analysiser.RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 
 		long[][] r1, r2, diff;
 		double[][] totaldiff;
-		long[][] diffs= new long[TOTAL_PARTITIONS * NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION][TOTAL_NUMBER_OF_SYSTEMS];
+		long[][] diffs = new long[TOTAL_PARTITIONS * NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION][TOTAL_NUMBER_OF_SYSTEMS];
 
 		totaldiff = new double[TOTAL_PARTITIONS][NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION];
 
@@ -48,17 +47,17 @@ public class DifferentTest {
 			r1 = fnp.NewMrsPRTATest(tasks, resources, false);
 			System.out.println(i);
 			r2 = new_mrsp.NewMrsPRTATest(tasks, resources, false);
-//			System.out.println(i+"*");
+			// System.out.println(i+"*");
 			diff = diff(r1, r2);
 
 			for (int j = 0; j < diff.length; j++) {
 				for (int k = 0; k < diff[j].length; k++) {
 					totaldiff[j][k] += diff[j][k];
-					diffs[j*NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION + k][i] = diff[j][k];
+					diffs[j * NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION + k][i] = diff[j][k];
 				}
 			}
 		}
-		
+
 		PrintWriter writer = null;
 		try {
 			writer = new PrintWriter(new FileWriter(new File("result/diff.txt"), false));
@@ -69,7 +68,7 @@ public class DifferentTest {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		PrintWriter writer1 = null;
 		try {
 			writer1 = new PrintWriter(new FileWriter(new File("result/diffname.txt"), false));
@@ -81,22 +80,21 @@ public class DifferentTest {
 			e.printStackTrace();
 		}
 
-		for(int i=0;i<diffs.length;i++){
-			for(int j=0;j<diffs[i].length;j++){
+		for (int i = 0; i < diffs.length; i++) {
+			for (int j = 0; j < diffs[i].length; j++) {
 				writer.println(diffs[i][j]);
-				writer1.println("T"+(i + 1));
+				writer1.println("T" + (i + 1));
 			}
 		}
 
 		for (int j = 0; j < totaldiff.length; j++) {
-			
+
 			for (int k = 0; k < totaldiff[j].length; k++) {
 				totaldiff[j][k] = (double) totaldiff[j][k] / (double) TOTAL_NUMBER_OF_SYSTEMS;
-				System.out.println("task id: " + (j * NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION + k + 1) + " diff: "
-						+ totaldiff[j][k]);
+				System.out.println("task id: " + (j * NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION + k + 1) + " diff: " + totaldiff[j][k]);
 			}
 		}
-		
+
 		writer.close();
 		writer1.close();
 
@@ -110,7 +108,7 @@ public class DifferentTest {
 
 			for (int j = 0; j < r1[i].length; j++) {
 				diff[i][j] = r1[i][j] - r2[i][j];
-				if(diff[i][j]<0){
+				if (diff[i][j] < 0) {
 					System.out.println("error");
 					System.exit(0);
 				}

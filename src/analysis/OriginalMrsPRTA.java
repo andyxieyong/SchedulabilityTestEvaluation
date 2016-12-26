@@ -77,7 +77,8 @@ public class OriginalMrsPRTA {
 	}
 
 	/*
-	 * Calculate the local high priority tasks' interference for a given task t. CI is a set of computation time of local tasks, including spin delay.
+	 * Calculate the local high priority tasks' interference for a given task t.
+	 * CI is a set of computation time of local tasks, including spin delay.
 	 */
 	private long highPriorityInterference(SporadicTask t, ArrayList<ArrayList<SporadicTask>> allTasks, long Ri) {
 		long interference = 0;

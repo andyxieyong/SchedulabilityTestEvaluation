@@ -2,8 +2,8 @@ package test;
 
 import java.util.ArrayList;
 
-import analysis.FIFONPLinearJava;
-import analysis.FIFONonPreemptiveLinearC;
+import analysis.NewMrsPRTA;
+import analysis.NewMrsPRTAWithMigrationCostAsIndividual;
 import entity.Resource;
 import entity.SporadicTask;
 
@@ -143,13 +143,15 @@ public class FixedTaskSet {
 		// task.local);
 		// }
 		// }
-		
-//		new NewMrsPRTA().NewMrsPRTATest(tasks, resources, true);
-//		new FIFONonPreemptiveLinearC().NewMrsPRTATest(tasks, resources,true,true);
-		new FIFONonPreemptiveLinearC().NewMrsPRTATest(tasks, resources,false,true);
-		new FIFONPLinearJava().NewMrsPRTATest(tasks, resources, true);
+
+		// new NewMrsPRTA().NewMrsPRTATest(tasks, resources, true);
+		// new FIFONonPreemptiveLinearC().NewMrsPRTATest(tasks,
+		// resources,true,true);
+		new NewMrsPRTA().NewMrsPRTATest(tasks, resources, true);
+		new NewMrsPRTAWithMigrationCostAsIndividual().NewMrsPRTATest(tasks, resources, false, 0,true);
 		System.out.println();
-//		new FIFONonPreemptiveLinear().NewMrsPRTATest(tasks, resources, true, false);
+		// new FIFONonPreemptiveLinear().NewMrsPRTATest(tasks, resources, true,
+		// false);
 	}
 
 	public static void fixed_system_2() {
@@ -235,12 +237,14 @@ public class FixedTaskSet {
 		// false);
 		// new FIFOPreemptiveLinear().NewMrsPRTATest(tasks, resources, true,
 		// false);
-//		new NewMrsPRTA().NewMrsPRTATest(tasks, resources, true);
-//		new FIFONonPreemptiveLinearC().NewMrsPRTATest(tasks, resources,true,true);
-		new FIFONonPreemptiveLinearC().NewMrsPRTATest(tasks, resources,false, true);
-		new FIFONPLinearJava().NewMrsPRTATest(tasks, resources, true);
+		// new NewMrsPRTA().NewMrsPRTATest(tasks, resources, true);
+		// new FIFONonPreemptiveLinearC().NewMrsPRTATest(tasks,
+		// resources,true,true);
+		new NewMrsPRTA().NewMrsPRTATest(tasks, resources, true);
+		new NewMrsPRTAWithMigrationCostAsIndividual().NewMrsPRTATest(tasks, resources, false, 0, true);
 		System.out.println();
-//		new FIFONonPreemptiveLinear().NewMrsPRTATest(tasks, resources, true, false);
+		// new FIFONonPreemptiveLinear().NewMrsPRTATest(tasks, resources, true,
+		// false);
 	}
 
 	public static void hard_system1() {
@@ -347,10 +351,11 @@ public class FixedTaskSet {
 		// false);
 		//// new FIFOPreemptiveLinear().NewMrsPRTATest(tasks, resources, true,
 		// false);
-//		new NewMrsPRTA().NewMrsPRTATest(tasks, resources, true);
-//		new FIFONonPreemptiveLinearC().NewMrsPRTATest(tasks, resources,true,true);
-		new FIFONonPreemptiveLinearC().NewMrsPRTATest(tasks, resources,false, true);
-		new FIFONPLinearJava().NewMrsPRTATest(tasks, resources, true);
+		// new NewMrsPRTA().NewMrsPRTATest(tasks, resources, true);
+		// new FIFONonPreemptiveLinearC().NewMrsPRTATest(tasks,
+		// resources,true,true);
+		new NewMrsPRTA().NewMrsPRTATest(tasks, resources, true);
+		new NewMrsPRTAWithMigrationCostAsIndividual().NewMrsPRTATest(tasks, resources, false, 0,true);
 		System.out.println();
 	}
 }
