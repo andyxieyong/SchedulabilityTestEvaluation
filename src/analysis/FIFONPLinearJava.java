@@ -35,9 +35,8 @@ public class FIFONPLinearJava {
 					if (response_time[i][j] != response_time_plus[i][j])
 						isEqual = false;
 
-					// if (response_time_plus[i][j] >
-					// tasks.get(i).get(j).deadline)
-					// missDeadline = true;
+					if (response_time_plus[i][j] > tasks.get(i).get(j).deadline)
+						missDeadline = true;
 				}
 			}
 
@@ -78,8 +77,8 @@ public class FIFONPLinearJava {
 
 				response_time_plus[i][j] = task.Ri = task.WCET + task.pure_resource_execution_time + task.spin + task.interference + task.local;
 
-				// if (task.Ri > task.deadline)
-				// return response_time_plus;
+				if (task.Ri > task.deadline)
+					return response_time_plus;
 
 			}
 		}

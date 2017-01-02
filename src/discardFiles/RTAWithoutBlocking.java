@@ -1,4 +1,4 @@
-package discardAnalysis;
+package discardFiles;
 
 import java.util.ArrayList;
 

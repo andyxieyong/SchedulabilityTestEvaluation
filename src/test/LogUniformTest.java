@@ -3,7 +3,7 @@ package test;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class LogUniform {
+public class LogUniformTest {
 
 	public static void main(String[] args) {
 		Random random = new Random();

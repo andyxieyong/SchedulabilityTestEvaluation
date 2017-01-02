@@ -6,7 +6,7 @@ import entity.Resource;
 import entity.SporadicTask;
 import javaToC.MIPSolverC;
 
-public class FIFONonPreemptiveLinearC {
+public class FIFOLinearC {
 
 	long count = 0;
 	SporadicTask problemtask = null;
@@ -27,8 +27,8 @@ public class FIFONonPreemptiveLinearC {
 				SporadicTask t = tasks.get(i).get(j);
 				t.Ri = init_Ri[i][j];
 				t.interference = t.local = t.spin = t.total_blocking = 0;
-				// if (t.Ri > t.deadline)
-				// return init_Ri;
+				if (t.Ri > t.deadline)
+					return init_Ri;
 			}
 		}
 
@@ -52,9 +52,8 @@ public class FIFONonPreemptiveLinearC {
 					if (response_time[i][j] != response_time_plus[i][j])
 						isEqual = false;
 
-					// if (response_time_plus[i][j] >
-					// tasks.get(i).get(j).deadline)
-					// missDeadline = true;
+					if (response_time_plus[i][j] > tasks.get(i).get(j).deadline)
+						missDeadline = true;
 				}
 			}
 
@@ -103,8 +102,8 @@ public class FIFONonPreemptiveLinearC {
 				SporadicTask task = tasks.get(i).get(j);
 				task.interference = highPriorityInterference(task, tasks, response_time[i][j], response_time, resources);
 				response_time_plus[i][j] = task.Ri = task.WCET + task.pure_resource_execution_time + task.spin + task.interference + task.local;
-				// if (task.Ri > task.deadline)
-				// return response_time_plus;
+				if (task.Ri > task.deadline)
+					return response_time_plus;
 			}
 		}
 		return response_time_plus;

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import entity.Resource;
 import entity.SporadicTask;
-import test.Analysiser;
+import test.SchedulabilityTest;
 
 public class SystemGenerator {
 	public int task_id = 1;
@@ -14,14 +14,14 @@ public class SystemGenerator {
 	public int total_partitions;
 	public int number_of_tasks_per_processor;
 	public boolean isLogUni;
-	public Analysiser.CS_LENGTH_RANGE cs_len_range;
-	public Analysiser.RESOURCES_RANGE range;
+	public SchedulabilityTest.CS_LENGTH_RANGE cs_len_range;
+	public SchedulabilityTest.RESOURCES_RANGE range;
 
 	public double rsf;
 	public int number_of_max_access;
 
 	public SystemGenerator(int minT, int maxT, double util, int total_partitions, int number_of_tasks_per_processor, boolean isLogUni,
-			Analysiser.CS_LENGTH_RANGE cs_len_range, Analysiser.RESOURCES_RANGE range, double rsf, int number_of_max_access) {
+			SchedulabilityTest.CS_LENGTH_RANGE cs_len_range, SchedulabilityTest.RESOURCES_RANGE range, double rsf, int number_of_max_access) {
 		this.minT = minT;
 		this.maxT = maxT;
 		this.util = util;

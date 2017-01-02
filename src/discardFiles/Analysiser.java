@@ -1,4 +1,4 @@
-package test;
+package discardFiles;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -7,28 +7,21 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import analysis.FIFONonPreemptiveLinearC;
+
+import analysis.FIFOLinearC;
+import analysis.FIFONPLinearJava;
 import analysis.MSRPRTA;
 import analysis.NewMrsPRTA;
+import analysis.NewMrsPRTAWithMigrationCostAsIndividual;
 import analysis.OriginalMrsPRTA;
 import analysis.RTAWithoutBlocking;
 import entity.Resource;
 import entity.SporadicTask;
 import generatorTools.SystemGenerator;
+import test.SchedulabilityTest.CS_LENGTH_RANGE;
+import test.SchedulabilityTest.RESOURCES_RANGE;
 
 public class Analysiser {
-
-	/* define how long the critical section can be */
-	public static enum CS_LENGTH_RANGE {
-		VERY_LONG_CSLEN, LONG_CSLEN, MEDIUM_CS_LEN, SHORT_CS_LEN, VERY_SHORT_CS_LEN
-	};
-
-	/* define how many resources in the system */
-	public static enum RESOURCES_RANGE {
-		HALF_PARITIONS, /* partitions / 2 us */
-		PARTITIONS, /* partitions us */
-		DOUBLE_PARTITIONS, /* partitions * 2 us */
-	};
 
 	public static int TOTAL_NUMBER_OF_SYSTEMS = 1000;
 	public static int TOTAL_PARTITIONS = 16;
@@ -89,13 +82,16 @@ public class Analysiser {
 		OriginalMrsPRTA original_mrsp = new OriginalMrsPRTA();
 		MSRPRTA msrp = new MSRPRTA();
 		RTAWithoutBlocking noblocking = new RTAWithoutBlocking();
-		FIFONonPreemptiveLinearC fnp = new FIFONonPreemptiveLinearC();
+		FIFOLinearC fp = new FIFOLinearC();
+		FIFONPLinearJava fnp = new FIFONPLinearJava();
+		NewMrsPRTAWithMigrationCostAsIndividual new_mrsp_mig = new NewMrsPRTAWithMigrationCostAsIndividual();
 
 		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION,
 				TOTAL_PARTITIONS, NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, CS_LENGTH_RANGE.VERY_SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS,
 				RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 
 		String result = "";
+//		int mrsp_mig_1 = 0; int mrsp_mig_10 = 0; int mrsp_mig_50 = 0; int mrsp_mig_100 = 0;
 		int schedulableSystem_New_MrsP_Analysis2 = 0;
 		int schedulableSystem_Original_MrsP_Analysis = 0;
 		int schedulableSystem_MSRP_Analysis = 0;
@@ -127,14 +123,19 @@ public class Analysiser {
 					schedulableSystem_MSRP_Analysis++;
 					sfnp++;
 				} else {
-					Ris = fnp.NewMrsPRTATest(tasks, resources, false, false);
+					Ris = fnp.NewMrsPRTATest(tasks, resources, false);
 					if (isSystemSchedulable(tasks, Ris))
 						sfnp++;
 				}
 
-				Ris = fnp.NewMrsPRTATest(tasks, resources, true, false);
+				Ris = fp.NewMrsPRTATest(tasks, resources, true, false);
 				if (isSystemSchedulable(tasks, Ris))
 					sfp++;
+				
+				Ris = new_mrsp_mig.NewMrsPRTATest(tasks, resources, 100, false);
+				if(isSystemSchedulable(tasks, Ris)){
+//					mrsp_mig_100++;
+				}
 			}
 
 			System.out.println(1 + "" + bigSet + " " + smallSet + " times: " + i);
@@ -186,7 +187,7 @@ public class Analysiser {
 		OriginalMrsPRTA original_mrsp = new OriginalMrsPRTA();
 		MSRPRTA msrp = new MSRPRTA();
 		RTAWithoutBlocking noblocking = new RTAWithoutBlocking();
-		FIFONonPreemptiveLinearC fnp = new FIFONonPreemptiveLinearC();
+		FIFOLinearC fnp = new FIFOLinearC();
 		String result = "";
 
 		int schedulableSystem_New_MrsP_Analysis2 = 0;
@@ -256,7 +257,7 @@ public class Analysiser {
 		OriginalMrsPRTA original_mrsp = new OriginalMrsPRTA();
 		MSRPRTA msrp = new MSRPRTA();
 		RTAWithoutBlocking noblocking = new RTAWithoutBlocking();
-		FIFONonPreemptiveLinearC fnp = new FIFONonPreemptiveLinearC();
+		FIFOLinearC fnp = new FIFOLinearC();
 
 		String result = "";
 
@@ -325,7 +326,7 @@ public class Analysiser {
 		OriginalMrsPRTA original_mrsp = new OriginalMrsPRTA();
 		MSRPRTA msrp = new MSRPRTA();
 		RTAWithoutBlocking noblocking = new RTAWithoutBlocking();
-		FIFONonPreemptiveLinearC fnp = new FIFONonPreemptiveLinearC();
+		FIFOLinearC fnp = new FIFOLinearC();
 
 		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) 1, TOTAL_PARTITIONS, 1, true,
 				CS_LENGTH_RANGE.VERY_SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
@@ -431,7 +432,7 @@ public class Analysiser {
 		OriginalMrsPRTA original_mrsp = new OriginalMrsPRTA();
 		MSRPRTA msrp = new MSRPRTA();
 		RTAWithoutBlocking noblocking = new RTAWithoutBlocking();
-		FIFONonPreemptiveLinearC fnp = new FIFONonPreemptiveLinearC();
+		FIFOLinearC fnp = new FIFOLinearC();
 
 		String result = "";
 
@@ -532,7 +533,7 @@ public class Analysiser {
 		OriginalMrsPRTA original_mrsp = new OriginalMrsPRTA();
 		MSRPRTA msrp = new MSRPRTA();
 		RTAWithoutBlocking noblocking = new RTAWithoutBlocking();
-		FIFONonPreemptiveLinearC fnp = new FIFONonPreemptiveLinearC();
+		FIFOLinearC fnp = new FIFOLinearC();
 
 		String result = "";
 
@@ -740,7 +741,7 @@ public class Analysiser {
 		double RESOURCE_SHARING_FACTOR = .8; // 0.1, 0.25, 0.4, 0.75
 		int NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION = 9; // 1,2,5,10,15
 
-		FIFONonPreemptiveLinearC lip_fifo_np = new FIFONonPreemptiveLinearC();
+		FIFOLinearC lip_fifo_np = new FIFOLinearC();
 
 		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, UTIL_PER_PARTITION, TOTAL_PARTITIONS,
 				NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, CS_LENGTH_RANGE.SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR,
@@ -771,7 +772,7 @@ public class Analysiser {
 		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, UTIL_PER_PARTITION, TOTAL_PARTITIONS,
 				NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, CS_LENGTH_RANGE.SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR,
 				NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
-		FIFONonPreemptiveLinearC lip_fifo_np = new FIFONonPreemptiveLinearC();
+		FIFOLinearC lip_fifo_np = new FIFOLinearC();
 
 		ArrayList<ArrayList<SporadicTask>> tasks = generator.generateTasks();
 		ArrayList<Resource> resources = generator.generateResources();

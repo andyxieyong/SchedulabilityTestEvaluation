@@ -1,11 +1,12 @@
-package analysis;
+package discardFiles;
 
 import java.util.ArrayList;
 
+import analysis.Utils;
 import entity.Resource;
 import entity.SporadicTask;
 
-public class NewFIFONP {
+public class FIFOPLinearJava {
 
 	private boolean use_deadline_insteadof_Ri = false;
 	long count = 0;
@@ -49,32 +50,14 @@ public class NewFIFONP {
 
 		if (printDebug) {
 			if (missDeadline)
-				System.out.println("NewFIFONP    after " + count + " tims of recursion, the tasks miss the deadline.");
+				System.out.println("FIFONP JAVA    after " + count + " tims of recursion, the tasks miss the deadline.");
 			else
-				System.out.println("NewFIFONP    after " + count + " tims of recursion, we got the response time.");
+				System.out.println("FIFONP JAVA    after " + count + " tims of recursion, we got the response time.");
 
 			new Utils().printResponseTime(response_time, tasks);
 		}
 
 		return response_time;
-	}
-
-	public boolean isResponseTimeEqual(long[][] oldRi, long[][] newRi, ArrayList<ArrayList<SporadicTask>> tasks) {
-		boolean is_equal = true;
-
-		for (int i = 0; i < oldRi.length; i++) {
-			for (int j = 0; j < oldRi[i].length; j++) {
-				if (oldRi[i][j] != newRi[i][j]) {
-					is_equal = false;
-					System.out.println("not equal: " + oldRi[i][j] + " vs " + newRi[i][j]);
-					System.out.println("T" + tasks.get(i).get(j).id + " old: S = " + tasks.get(i).get(j).spin + ", I = "
-							+ tasks.get(i).get(j).interference + ", Local =" + tasks.get(i).get(j).local);
-					problemtask = tasks.get(i).get(j);
-				}
-			}
-		}
-		System.out.println();
-		return is_equal;
 	}
 
 	private long[][] busyWindow(ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, long[][] response_time) {
@@ -89,7 +72,7 @@ public class NewFIFONP {
 				SporadicTask task = tasks.get(i).get(j);
 				task.spin = directRemoteDelay(task, tasks, resources, response_time, response_time[i][j]);
 				task.interference = highPriorityInterference(task, tasks, response_time[i][j], response_time, resources);
-				task.local = localBlocking(task, tasks, resources, response_time, response_time[i][j]);
+				task.local = localBlockingFIFONP(task, tasks, resources, response_time, response_time[i][j]);
 				response_time_plus[i][j] = task.Ri = task.WCET + task.pure_resource_execution_time + task.spin + task.interference + task.local;
 				if (task.Ri > task.deadline)
 					return response_time_plus;
@@ -111,7 +94,7 @@ public class NewFIFONP {
 		for (int i = 0; i < tasks.size(); i++) {
 			if (tasks.get(i).priority > t.priority) {
 				SporadicTask hpTask = tasks.get(i);
-				interference += Math.ceil((double) (Ri) / (double) hpTask.period) * (hpTask.WCET + hpTask.pure_resource_execution_time);
+				interference += Math.ceil((double) (Ri) / (double) hpTask.period) * (hpTask.WCET);
 
 				long btb_interference = getIndirectSpinDelay(hpTask, Ri, Ris[partition][i], Ris, allTasks, resources);
 				interference += btb_interference;
@@ -136,6 +119,8 @@ public class NewFIFONP {
 			int number_of_request_with_btb = (int) Math
 					.ceil((double) (Ri + (use_deadline_insteadof_Ri ? hpTask.deadline : Rihp)) / (double) hpTask.period)
 					* hpTask.number_of_access_in_one_release.get(i);
+
+			BTBhit += number_of_request_with_btb * resource.csl;
 
 			for (int j = 0; j < resource.partitions.size(); j++) {
 				if (resource.partitions.get(j) != hpTask.partition) {
@@ -166,30 +151,32 @@ public class NewFIFONP {
 		return spin_delay;
 	}
 
-	/*
-	 * Calculate the local blocking for task t.
-	 */
-	private long localBlocking(SporadicTask t, ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, long[][] Ris, long Ri) {
-		ArrayList<Resource> LocalBlockingResources = getLocalBlockingResources(t, resources);
+	private long localBlockingFIFONP(SporadicTask t, ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, long[][] Ris, long Ri) {
+		ArrayList<Resource> LocalBlockingResources = FIFONPLocalResource(t, resources);
 		ArrayList<Long> local_blocking_each_resource = new ArrayList<>();
 
 		for (int i = 0; i < LocalBlockingResources.size(); i++) {
 			Resource res = LocalBlockingResources.get(i);
 			long local_blocking = res.csl;
 
-			if (res.isGlobal) {
-				for (int parition_index = 0; parition_index < res.partitions.size(); parition_index++) {
-					int partition = res.partitions.get(parition_index);
-					int norHP = getNoRFromHP(res, t, tasks.get(t.partition), Ris[t.partition], Ri);
-					int norT = t.resource_required_index.contains(res.id - 1)
-							? t.number_of_access_in_one_release.get(t.resource_required_index.indexOf(res.id - 1)) : 0;
-					int norR = getNoRRemote(res, tasks.get(partition), Ris[partition], Ri);
-
-					if (partition != t.partition && (norHP + norT) < norR) {
-						local_blocking += res.csl;
-					}
-				}
-			}
+			// if (res.isGlobal) {
+			// for (int parition_index = 0; parition_index <
+			// res.partitions.size(); parition_index++) {
+			// int partition = res.partitions.get(parition_index);
+			// int norHP = getNoRFromHP(res, t, tasks.get(t.partition),
+			// Ris[t.partition], Ri);
+			// int norT = t.resource_required_index.contains(res.id - 1)
+			// ?
+			// t.number_of_access_in_one_release.get(t.resource_required_index.indexOf(res.id
+			// - 1)) : 0;
+			// int norR = getNoRRemote(res, tasks.get(partition),
+			// Ris[partition], Ri);
+			//
+			// if (partition != t.partition && (norHP + norT) < norR) {
+			// local_blocking += res.csl;
+			// }
+			// }
+			// }
 			local_blocking_each_resource.add(local_blocking);
 		}
 
@@ -197,7 +184,41 @@ public class NewFIFONP {
 			local_blocking_each_resource.sort((l1, l2) -> -Double.compare(l1, l2));
 
 		return local_blocking_each_resource.size() > 0 ? local_blocking_each_resource.get(0) : 0;
+	}
 
+	private ArrayList<Resource> FIFONPLocalResource(SporadicTask task, ArrayList<Resource> resources) {
+		ArrayList<Resource> localBlockingResources = new ArrayList<>();
+		int partition = task.partition;
+
+		for (int i = 0; i < resources.size(); i++) {
+			Resource resource = resources.get(i);
+			// local resources that have a higher ceiling
+			if (resource.partitions.size() == 1 && resource.partitions.get(0) == partition
+					&& resource.ceiling.get(resource.partitions.indexOf(partition)) >= task.priority) {
+				for (int j = 0; j < resource.requested_tasks.size(); j++) {
+					SporadicTask LP_task = resource.requested_tasks.get(j);
+					if (LP_task.partition == partition && LP_task.priority < task.priority) {
+						localBlockingResources.add(resource);
+						break;
+					}
+				}
+			}
+
+			// global resources that are accessed from the partition
+			// if (resource.partitions.contains(partition) &&
+			// resource.partitions.size() > 1) {
+			// for (int j = 0; j < resource.requested_tasks.size(); j++) {
+			// SporadicTask LP_task = resource.requested_tasks.get(j);
+			// if (LP_task.partition == partition && LP_task.priority <
+			// task.priority) {
+			// localBlockingResources.add(resource);
+			// break;
+			// }
+			// }
+			// }
+		}
+
+		return localBlockingResources;
 	}
 
 	/*
@@ -262,31 +283,6 @@ public class NewFIFONP {
 			}
 		}
 		return number_of_request_by_HP;
-	}
-
-	/*
-	 * gives a set of resources that can cause local blocking for a given task
-	 */
-	private ArrayList<Resource> getLocalBlockingResources(SporadicTask task, ArrayList<Resource> resources) {
-		ArrayList<Resource> localBlockingResources = new ArrayList<>();
-		int partition = task.partition;
-
-		for (int i = 0; i < resources.size(); i++) {
-			Resource resource = resources.get(i);
-
-			if ((resource.partitions.size() == 1 && resource.partitions.get(0) == partition && resource.ceiling.get(0) >= task.priority)
-					|| (resource.partitions.size() > 1 && resource.partitions.contains(partition))) {
-				for (int j = 0; j < resource.requested_tasks.size(); j++) {
-					SporadicTask LP_task = resource.requested_tasks.get(j);
-					if (LP_task.partition == partition && LP_task.priority < task.priority) {
-						localBlockingResources.add(resource);
-						break;
-					}
-				}
-			}
-		}
-
-		return localBlockingResources;
 	}
 
 	/*

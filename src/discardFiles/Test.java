@@ -1,3 +1,4 @@
+package discardFiles;
 // package discardAnalysis;
 //
 // import org.gnu.glpk.GLPK;

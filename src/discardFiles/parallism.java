@@ -1,4 +1,4 @@
-package discardAnalysis;
+package discardFiles;
 
 import java.util.ArrayList;
 
@@ -7,8 +7,8 @@ import analysis.OriginalMrsPRTA;
 import entity.Resource;
 import entity.SporadicTask;
 import generatorTools.SystemGenerator;
-import test.Analysiser.CS_LENGTH_RANGE;
-import test.Analysiser.RESOURCES_RANGE;
+import test.SchedulabilityTest.CS_LENGTH_RANGE;
+import test.SchedulabilityTest.RESOURCES_RANGE;
 
 public class parallism {
 	public static void experimentIncreasingParallelism() {
