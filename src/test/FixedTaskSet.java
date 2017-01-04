@@ -3,7 +3,7 @@ package test;
 import java.util.ArrayList;
 
 import analysis.NewMrsPRTA;
-import analysis.NewMrsPRTAWithMigrationCostAsIndividual;
+import analysis.NewMrsPRTAWithMCNP;
 import entity.Resource;
 import entity.SporadicTask;
 
@@ -148,7 +148,7 @@ public class FixedTaskSet {
 		// new FIFONonPreemptiveLinearC().NewMrsPRTATest(tasks,
 		// resources,true,true);
 		new NewMrsPRTA().NewMrsPRTATest(tasks, resources, true);
-		new NewMrsPRTAWithMigrationCostAsIndividual().NewMrsPRTATest(tasks, resources, 100,true);
+		new NewMrsPRTAWithMCNP().NewMrsPRTATest(tasks, resources, 1,true);
 		System.out.println();
 		// new FIFONonPreemptiveLinear().NewMrsPRTATest(tasks, resources, true,
 		// false);
@@ -241,7 +241,7 @@ public class FixedTaskSet {
 		// new FIFONonPreemptiveLinearC().NewMrsPRTATest(tasks,
 		// resources,true,true);
 		new NewMrsPRTA().NewMrsPRTATest(tasks, resources, true);
-		new NewMrsPRTAWithMigrationCostAsIndividual().NewMrsPRTATest(tasks, resources, 100, true);
+		new NewMrsPRTAWithMCNP().NewMrsPRTATest(tasks, resources, 1, true);
 		System.out.println();
 		// new FIFONonPreemptiveLinear().NewMrsPRTATest(tasks, resources, true,
 		// false);
@@ -355,7 +355,7 @@ public class FixedTaskSet {
 		// new FIFONonPreemptiveLinearC().NewMrsPRTATest(tasks,
 		// resources,true,true);
 		new NewMrsPRTA().NewMrsPRTATest(tasks, resources, true);
-		new NewMrsPRTAWithMigrationCostAsIndividual().NewMrsPRTATest(tasks, resources,10,true);
+		new NewMrsPRTAWithMCNP().NewMrsPRTATest(tasks, resources,1,true);
 		System.out.println();
 	}
 }

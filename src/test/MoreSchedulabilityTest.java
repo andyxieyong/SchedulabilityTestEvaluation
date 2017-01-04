@@ -1,37 +1,20 @@
 package test;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import analysis.FIFOLinearC;
 import analysis.FIFONPLinearJava;
 import analysis.MSRPRTA;
 import analysis.NewMrsPRTA;
-import analysis.NewMrsPRTAWithMCNP;
 import analysis.OriginalMrsPRTA;
 import analysis.RTAWithoutBlocking;
 import entity.Resource;
 import entity.SporadicTask;
 import generatorTools.SystemGenerator;
+import test.SchedulabilityTest.CS_LENGTH_RANGE;
+import test.SchedulabilityTest.RESOURCES_RANGE;
 
-public class SchedulabilityTest {
-
-	/* define how long the critical section can be */
-	public static enum CS_LENGTH_RANGE {
-		VERY_LONG_CSLEN, LONG_CSLEN, MEDIUM_CS_LEN, SHORT_CS_LEN, VERY_SHORT_CS_LEN
-	};
-
-	/* define how many resources in the system */
-	public static enum RESOURCES_RANGE {
-		HALF_PARITIONS, /* partitions / 2 us */
-		PARTITIONS, /* partitions us */
-		DOUBLE_PARTITIONS, /* partitions * 2 us */
-	};
+public class MoreSchedulabilityTest {
 
 	public static int TOTAL_NUMBER_OF_SYSTEMS = 1000;
 	public static int TOTAL_PARTITIONS = 16;
@@ -39,37 +22,15 @@ public class SchedulabilityTest {
 	public static int MAX_PERIOD = 1000;
 
 	public static void main(String[] args) throws InterruptedException {
-		int experiment = 0;
-		int bigSet = 0;
-		int smallSet = 0;
 
-		if (args.length == 3) {
-			experiment = Integer.parseInt(args[0]);
-			bigSet = Integer.parseInt(args[1]);
-			smallSet = Integer.parseInt(args[2]);
-
-			switch (experiment) {
-			case 1:
-				experimentIncreasingWorkLoad(bigSet, smallSet);
-				break;
-			case 2:
-				experimentIncreasingCriticalSectionLength(bigSet, smallSet);
-				break;
-			case 3:
-				experimentIncreasingContention(bigSet, smallSet);
-				break;
-			default:
-				break;
-			}
-
-		} else
-			System.err.println("wrong parameter.");
+		for (int i = 1; i < 10; i++)
+			experimentIncreasingWorkLoad(i);
 
 	}
 
-	public static void experimentIncreasingWorkLoad(int bigSet, int smallSet) {
+	public static void experimentIncreasingWorkLoad(int smallSet) {
 		int NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE = 2;
-		double RESOURCE_SHARING_FACTOR = 0.2 + 0.1 * (double) (bigSet - 1);
+		double RESOURCE_SHARING_FACTOR = 0.3;
 
 		int NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION = smallSet;
 
@@ -80,7 +41,6 @@ public class SchedulabilityTest {
 		RTAWithoutBlocking noblocking = new RTAWithoutBlocking();
 		FIFOLinearC fp = new FIFOLinearC();
 		FIFONPLinearJava fnp = new FIFONPLinearJava();
-		NewMrsPRTAWithMCNP mrsp_mc = new NewMrsPRTAWithMCNP();
 
 		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION,
 				TOTAL_PARTITIONS, NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, CS_LENGTH_RANGE.VERY_SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS,
@@ -93,7 +53,6 @@ public class SchedulabilityTest {
 		int schedulableSystem_No_Blocking = 0;
 		int sfnp = 0;
 		int sfp = 0;
-		int mrsp_mcc = 0;
 
 		for (int i = 0; i < TOTAL_NUMBER_OF_SYSTEMS; i++) {
 			ArrayList<ArrayList<SporadicTask>> tasks = generator.generateTasks();
@@ -128,12 +87,7 @@ public class SchedulabilityTest {
 				if (isSystemSchedulable(tasks, Ris))
 					sfp++;
 
-				Ris = mrsp_mc.NewMrsPRTATest(tasks, resources, 1, false);
-				if (isSystemSchedulable(tasks, Ris))
-					mrsp_mcc++;
 			}
-
-			System.out.println(1 + "" + bigSet + " " + smallSet + " times: " + i);
 
 		}
 
@@ -142,14 +96,13 @@ public class SchedulabilityTest {
 				+ (double) schedulableSystem_Original_MrsP_Analysis / (double) TOTAL_NUMBER_OF_SYSTEMS + "  MSRP: "
 				+ (double) schedulableSystem_MSRP_Analysis / (double) TOTAL_NUMBER_OF_SYSTEMS + " No Blocking: "
 				+ (double) schedulableSystem_No_Blocking / (double) TOTAL_NUMBER_OF_SYSTEMS + " fifo np lp: "
-				+ (double) sfnp / (double) TOTAL_NUMBER_OF_SYSTEMS + " fifo p lp: " + (double) sfp / (double) TOTAL_NUMBER_OF_SYSTEMS
-				+ " mrsp-mig 1: " + (double) mrsp_mcc / (double) TOTAL_NUMBER_OF_SYSTEMS + "\n";
-
-		writeSystem((1 + " " + bigSet + " " + smallSet), result);
+				+ (double) sfnp / (double) TOTAL_NUMBER_OF_SYSTEMS + " fifo p lp: " + (double) sfp / (double) TOTAL_NUMBER_OF_SYSTEMS + "\n";
+		
+		System.out.print(result);
 	}
 
 	public static void experimentIncreasingCriticalSectionLength(int tasksNumConfig, int csLenConfig) {
-		double RESOURCE_SHARING_FACTOR = 0.4;
+		double RESOURCE_SHARING_FACTOR = 0.3;
 		int NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE = 3;
 		int NUMBER_OF_TASKS_ON_EACH_PARTITION = 3 + 2 * (tasksNumConfig - 1);
 
@@ -175,7 +128,7 @@ public class SchedulabilityTest {
 		}
 
 		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_TASKS_ON_EACH_PARTITION, TOTAL_PARTITIONS,
-				NUMBER_OF_TASKS_ON_EACH_PARTITION, true, range, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR,
+				NUMBER_OF_TASKS_ON_EACH_PARTITION, true, range, RESOURCES_RANGE.HALF_PARITIONS, RESOURCE_SHARING_FACTOR,
 				NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 		long[][] Ris;
 
@@ -237,16 +190,15 @@ public class SchedulabilityTest {
 				+ (double) schedulableSystem_No_Blocking / (double) TOTAL_NUMBER_OF_SYSTEMS + " fifo np lp: "
 				+ (double) sfnp / (double) TOTAL_NUMBER_OF_SYSTEMS + " fifo p lp: " + (double) sfp / (double) TOTAL_NUMBER_OF_SYSTEMS + "\n";
 
-		writeSystem((2 + " " + tasksNumConfig + " " + csLenConfig), result);
 	}
 
 	public static void experimentIncreasingContention(int bigSet, int smallSet) {
-		double RESOURCE_SHARING_FACTOR = 0.4;
+		double RESOURCE_SHARING_FACTOR = 0.25;
 		int NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE = 1 + 5 * (smallSet - 1);
 		int NUMBER_OF_TASKS_ON_EACH_PARTITION = 3 + 2 * (bigSet - 1);
 
 		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_TASKS_ON_EACH_PARTITION, TOTAL_PARTITIONS,
-				NUMBER_OF_TASKS_ON_EACH_PARTITION, true, CS_LENGTH_RANGE.VERY_SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR,
+				NUMBER_OF_TASKS_ON_EACH_PARTITION, true, CS_LENGTH_RANGE.VERY_SHORT_CS_LEN, RESOURCES_RANGE.HALF_PARITIONS, RESOURCE_SHARING_FACTOR,
 				NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 		long[][] Ris;
 
@@ -311,7 +263,6 @@ public class SchedulabilityTest {
 				+ (double) schedulableSystem_No_Blocking / (double) TOTAL_NUMBER_OF_SYSTEMS + " fifo np lp: "
 				+ (double) sfnp / (double) TOTAL_NUMBER_OF_SYSTEMS + " fifo p lp: " + (double) sfp / (double) TOTAL_NUMBER_OF_SYSTEMS + "\n";
 
-		writeSystem((3 + " " + bigSet + " " + smallSet), result);
 	}
 
 	public static boolean isSystemSchedulable(ArrayList<ArrayList<SporadicTask>> tasks, long[][] Ris) {
@@ -324,19 +275,4 @@ public class SchedulabilityTest {
 		return true;
 	}
 
-	public static void writeSystem(String filename, String result) {
-		PrintWriter writer = null;
-		try {
-			writer = new PrintWriter(new FileWriter(new File("result/" + filename + ".txt"), false));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		writer.println(result);
-		writer.close();
-	}
 }

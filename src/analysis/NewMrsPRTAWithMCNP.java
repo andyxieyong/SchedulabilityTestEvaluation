@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import entity.Resource;
 import entity.SporadicTask;
 
-public class NewMrsPRTAWithMigrationCostAsIndividual {
+public class NewMrsPRTAWithMCNP {
 
 	private boolean use_deadline_insteadof_Ri = false;
 	long count = 0;
@@ -77,7 +77,7 @@ public class NewMrsPRTAWithMigrationCostAsIndividual {
 				task.spin = resourceAccessingTime(task, tasks, resources, response_time, response_time[i][j], 0, oneMig);
 				task.interference = highPriorityInterference(task, tasks, response_time[i][j], response_time, resources, oneMig);
 				task.local = localBlocking(task, tasks, resources, response_time, response_time[i][j], oneMig)
-						+ (isTaskIncurNPSection(task, tasks.get(task.partition), resources) ? oneMig : 0);
+						+ (isTaskIncurNPSection(task, tasks.get(task.partition), resources) ? 2*oneMig : 0);
 				response_time_plus[i][j] = task.Ri = task.WCET + task.spin + task.interference + task.local;
 
 				if (task.Ri > task.deadline)
@@ -137,25 +137,6 @@ public class NewMrsPRTAWithMigrationCostAsIndividual {
 				}
 
 				if (oneMig != 0) {
-					// SporadicTask blocking_task = null;
-					// for (int j = 0; j < tasks.get(t.partition).size(); j++) {
-					// if (tasks.get(t.partition).get(j).priority < t.priority
-					// &&
-					// tasks.get(t.partition).get(j).resource_required_index.contains(res.id
-					// - 1)
-					// &&
-					// tasks.get(t.partition).get(j).number_of_access_in_one_release
-					// .get(tasks.get(t.partition).get(j).resource_required_index.indexOf(res.id
-					// - 1)) > 0) {
-					// blocking_task = tasks.get(t.partition).get(j);
-					// break;
-					// }
-					// }
-					//
-					// if (blocking_task == null) {
-					// System.err.println("Local blocking task not found!");
-					// System.exit(-1);
-					// }
 					local_blocking += migrationCostForArrival(oneMig, migration_targets, res, tasks);
 				}
 			}
@@ -310,7 +291,7 @@ public class NewMrsPRTAWithMigrationCostAsIndividual {
 			// section applied.
 			else {
 				long migCostWithHP = migrationCostBusyWindow(migration_targets_with_P, oneMig, resource, tasks);
-				long migCostWithNP = (long) (1 + Math.ceil((double) resource.csl / (double) oneMig)) * oneMig;
+				long migCostWithNP = (long) (1 + Math.ceil((double) resource.csl / (double) 2*oneMig)) * oneMig;
 
 				migration_cost_for_one_access = Math.min(migCostWithHP, migCostWithNP);
 			}
@@ -325,7 +306,7 @@ public class NewMrsPRTAWithMigrationCostAsIndividual {
 			ArrayList<ArrayList<SporadicTask>> tasks) {
 		long migCost = 0;
 
-		long migCostWithNP = (long) (1 + Math.ceil((double) resource.csl / (double) oneMig)) * oneMig;
+		long migCostWithNP = (long) (1 + Math.ceil((double) resource.csl / (double) 2*oneMig)) * oneMig;
 		long newMigCost = migrationCostOneCal(migration_targets_with_P, oneMig, resource.csl + migCost, resource, tasks);
 
 		while (migCost != newMigCost) {

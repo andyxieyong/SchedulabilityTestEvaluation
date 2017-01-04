@@ -16,9 +16,9 @@ public class ResultReader {
 	public static void main(String[] args) {
 
 		String result = "Work Load \n";
-		for (int bigSet = 1; bigSet < 4; bigSet++) {
+		for (int bigSet = 1; bigSet < 6; bigSet++) {
 
-			result += "access: " + (2 + (bigSet - 1) * 3) + " and rsf: " + (.2 + (bigSet - 1) * .3) + "\n";
+			//result += "access: " + (2 + (bigSet - 1) * 3) + " and rsf: " + (.2 + (bigSet - 1) * .3) + "\n";
 
 			for (int smallSet = 1; smallSet < 10; smallSet++) {
 				String filepath = "result/" + "1" + " " + bigSet + " " + smallSet + ".txt";
@@ -27,7 +27,6 @@ public class ResultReader {
 				try {
 					lines = Files.readAllLines(Paths.get(filepath), StandardCharsets.UTF_8);
 				} catch (IOException e) {
-					System.out.println("no such file: " + filepath);
 				}
 				if (lines != null)
 					result += bigSet + "" + smallSet + "" + lines.get(0) + "\n";

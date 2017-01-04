@@ -12,7 +12,7 @@ import analysis.FIFOLinearC;
 import analysis.FIFONPLinearJava;
 import analysis.MSRPRTA;
 import analysis.NewMrsPRTA;
-import analysis.NewMrsPRTAWithMigrationCostAsIndividual;
+import analysis.NewMrsPRTAWithMCNP;
 import analysis.OriginalMrsPRTA;
 import analysis.RTAWithoutBlocking;
 import entity.Resource;
@@ -84,7 +84,7 @@ public class Analysiser {
 		RTAWithoutBlocking noblocking = new RTAWithoutBlocking();
 		FIFOLinearC fp = new FIFOLinearC();
 		FIFONPLinearJava fnp = new FIFONPLinearJava();
-		NewMrsPRTAWithMigrationCostAsIndividual new_mrsp_mig = new NewMrsPRTAWithMigrationCostAsIndividual();
+		NewMrsPRTAWithMCNP new_mrsp_mig = new NewMrsPRTAWithMCNP();
 
 		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION,
 				TOTAL_PARTITIONS, NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, CS_LENGTH_RANGE.VERY_SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS,
