@@ -34,15 +34,9 @@ public class MigCostTest {
 			System.out.println(i);
 			
 			
-			mrsp_mcnp.NewMrsPRTATest(tasks, resources,1,false);
-			mrsp_mcnp.NewMrsPRTATest(tasks, resources,10,false);
-			mrsp_mcnp.NewMrsPRTATest(tasks, resources,50,false);
-			mrsp_mcnp.NewMrsPRTATest(tasks, resources,100,false);
+			mrsp_mcnp.NewMrsPRTATest(tasks, resources,1,2,false);
 			
 			mrsp_mc.NewMrsPRTATest(tasks, resources,1,false);
-			mrsp_mc.NewMrsPRTATest(tasks, resources,10,false);
-			mrsp_mc.NewMrsPRTATest(tasks, resources,50,false);
-			mrsp_mc.NewMrsPRTATest(tasks, resources,100,false);
 			
 			
 		}

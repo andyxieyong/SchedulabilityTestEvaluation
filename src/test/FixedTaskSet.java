@@ -148,7 +148,7 @@ public class FixedTaskSet {
 		// new FIFONonPreemptiveLinearC().NewMrsPRTATest(tasks,
 		// resources,true,true);
 		new NewMrsPRTA().NewMrsPRTATest(tasks, resources, true);
-		new NewMrsPRTAWithMCNP().NewMrsPRTATest(tasks, resources, 1,true);
+		new NewMrsPRTAWithMCNP().NewMrsPRTATest(tasks, resources, 1,2,true);
 		System.out.println();
 		// new FIFONonPreemptiveLinear().NewMrsPRTATest(tasks, resources, true,
 		// false);
@@ -241,7 +241,7 @@ public class FixedTaskSet {
 		// new FIFONonPreemptiveLinearC().NewMrsPRTATest(tasks,
 		// resources,true,true);
 		new NewMrsPRTA().NewMrsPRTATest(tasks, resources, true);
-		new NewMrsPRTAWithMCNP().NewMrsPRTATest(tasks, resources, 1, true);
+		new NewMrsPRTAWithMCNP().NewMrsPRTATest(tasks, resources, 1,2, true);
 		System.out.println();
 		// new FIFONonPreemptiveLinear().NewMrsPRTATest(tasks, resources, true,
 		// false);
@@ -355,7 +355,7 @@ public class FixedTaskSet {
 		// new FIFONonPreemptiveLinearC().NewMrsPRTATest(tasks,
 		// resources,true,true);
 		new NewMrsPRTA().NewMrsPRTATest(tasks, resources, true);
-		new NewMrsPRTAWithMCNP().NewMrsPRTATest(tasks, resources,1,true);
+		new NewMrsPRTAWithMCNP().NewMrsPRTATest(tasks, resources,1,2,true);
 		System.out.println();
 	}
 }

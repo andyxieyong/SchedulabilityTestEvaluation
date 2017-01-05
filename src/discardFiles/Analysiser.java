@@ -132,7 +132,7 @@ public class Analysiser {
 				if (isSystemSchedulable(tasks, Ris))
 					sfp++;
 				
-				Ris = new_mrsp_mig.NewMrsPRTATest(tasks, resources, 100, false);
+				Ris = new_mrsp_mig.NewMrsPRTATest(tasks, resources, 100, 1,false);
 				if(isSystemSchedulable(tasks, Ris)){
 //					mrsp_mig_100++;
 				}
