@@ -20,7 +20,6 @@ public class SporadicTask {
 	public int[] resource_required_index_cpoy = null;
 	public int[] number_of_access_in_one_release_copy = null;
 
-	// public MIPSolverJava solver;
 	public int index = 0;
 
 	public SporadicTask(int priority, long t, long c, int partition, int id) {
