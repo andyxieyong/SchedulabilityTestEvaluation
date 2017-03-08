@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import entity.Resource;
 import entity.SporadicTask;
 
-public class FIFONPLinearJava {
+public class FIFOPLinearJava {
 
 	private boolean use_deadline_insteadof_Ri = false;
 	long count = 0;

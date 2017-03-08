@@ -8,9 +8,9 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
-import analysis.NewMrsPRTA;
-import analysis.NewMrsPRTAWithMC;
-import analysis.NewMrsPRTAWithMCNP;
+import basicAnalysis.NewMrsPRTA;
+import basicAnalysis.NewMrsPRTAWithMC;
+import basicAnalysis.NewMrsPRTAWithMCNP;
 import entity.Resource;
 import entity.SporadicTask;
 import generatorTools.SystemGenerator;

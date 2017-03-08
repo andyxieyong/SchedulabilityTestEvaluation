@@ -2,8 +2,8 @@ package test;
 
 import java.util.ArrayList;
 
-import analysis.FIFOLinearC;
-import analysis.FIFONPLinearJava;
+import basicAnalysis.FIFOLinearC;
+import basicAnalysis.FIFONPLinearJava;
 import entity.Resource;
 import entity.SporadicTask;
 import generatorTools.SystemGenerator;

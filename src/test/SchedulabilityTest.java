@@ -8,12 +8,12 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
-import analysis.FIFOLinearC;
-import analysis.FIFONPLinearJava;
-import analysis.MSRPRTA;
-import analysis.NewMrsPRTA;
-import analysis.OriginalMrsPRTA;
-import analysis.RTAWithoutBlocking;
+import basicAnalysis.FIFOLinearC;
+import basicAnalysis.FIFONPLinearJava;
+import basicAnalysis.MSRPRTA;
+import basicAnalysis.NewMrsPRTA;
+import basicAnalysis.OriginalMrsPRTA;
+import basicAnalysis.RTAWithoutBlocking;
 import entity.Resource;
 import entity.SporadicTask;
 import generatorTools.SystemGenerator;
