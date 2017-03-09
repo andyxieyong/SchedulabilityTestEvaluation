@@ -27,13 +27,37 @@
 								</inputType>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.assembler.macosx.base.658660329" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.macosx.base">
+								<option id="gnu.both.asm.option.include.paths.1949215821" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="/usr/lib/jvm/jdk1.8.0_65/include"/>
+									<listOptionValue builtIn="false" value="/usr/lib/jvm/jdk1.8.0_65/include/linux"/>
+									<listOptionValue builtIn="false" value="/home/shuai/Desktop/TestMrsPAnalysis/native/include"/>
+									<listOptionValue builtIn="false" value="/home/shuai/Desktop/TestMrsPAnalysis/native/include/linprog"/>
+									<listOptionValue builtIn="false" value="/home/shuai/Desktop/TestMrsPAnalysis/native/include/edf"/>
+									<listOptionValue builtIn="false" value="/home/shuai/Desktop/TestMrsPAnalysis/native/include/canbus"/>
+								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.2047425236" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.archiver.macosx.base.1751524252" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.macosx.base"/>
 							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.macosx.base.457829549" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.macosx.base">
+								<option id="gnu.cpp.compiler.option.include.paths.1124434210" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
+									<listOptionValue builtIn="false" value="/usr/lib/jvm/jdk1.8.0_65/include"/>
+									<listOptionValue builtIn="false" value="/usr/lib/jvm/jdk1.8.0_65/include/linux"/>
+									<listOptionValue builtIn="false" value="/home/shuai/Desktop/TestMrsPAnalysis/native/include"/>
+									<listOptionValue builtIn="false" value="/home/shuai/Desktop/TestMrsPAnalysis/native/include/linprog"/>
+									<listOptionValue builtIn="false" value="/home/shuai/Desktop/TestMrsPAnalysis/native/include/edf"/>
+									<listOptionValue builtIn="false" value="/home/shuai/Desktop/TestMrsPAnalysis/native/include/canbus"/>
+								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1734194054" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.compiler.macosx.base.350415349" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.macosx.base">
+								<option id="gnu.c.compiler.option.include.paths.777915755" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
+									<listOptionValue builtIn="false" value="/usr/lib/jvm/jdk1.8.0_65/include"/>
+									<listOptionValue builtIn="false" value="/usr/lib/jvm/jdk1.8.0_65/include/linux"/>
+									<listOptionValue builtIn="false" value="/home/shuai/Desktop/TestMrsPAnalysis/native/include"/>
+									<listOptionValue builtIn="false" value="/home/shuai/Desktop/TestMrsPAnalysis/native/include/linprog"/>
+									<listOptionValue builtIn="false" value="/home/shuai/Desktop/TestMrsPAnalysis/native/include/edf"/>
+									<listOptionValue builtIn="false" value="/home/shuai/Desktop/TestMrsPAnalysis/native/include/canbus"/>
+								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.300397051" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
 						</toolChain>
@@ -60,4 +84,10 @@
 		</scannerConfigBuildInfo>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="Default">
+			<resource resourceType="PROJECT" workspacePath="/native"/>
+		</configuration>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 </cproject>
