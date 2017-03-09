@@ -1,4 +1,0 @@
-	GMP_PATH = /usr/local
-
-    PYTHON_INC = -I /usr/local/Cellar/python/2.7.12_2/Frameworks/Python.framework/Versions/2.7/include/python2.7
-    PYTHON_LIB = -F/usr/local/Cellar/python/2.7.12_2/Frameworks -framework Python
