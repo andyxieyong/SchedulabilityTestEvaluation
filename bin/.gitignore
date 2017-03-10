@@ -1,15 +1,2 @@
 /native/
-/.DS_Store
-/.gitignore
-/basicAnalysis/
-/entity/
-/generatorTools/
-/javaToC/
-/javaToC_MIPSolverC.h
-/libglpk.a
-/libglpk.la
-/libglpk.so
-/libglpk.so.40
-/libglpk.so.40.1.0
-/libmipsolverc.so
 /test/
