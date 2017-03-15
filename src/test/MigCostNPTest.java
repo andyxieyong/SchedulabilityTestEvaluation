@@ -3,7 +3,6 @@ package test;
 import java.util.ArrayList;
 
 import basicAnalysis.NewMrsPRTAWithMC;
-import basicAnalysis.NewMrsPRTAWithMCNP;
 import entity.Resource;
 import entity.SporadicTask;
 import generatorTools.SystemGenerator;
@@ -21,7 +20,7 @@ public class MigCostNPTest {
 	public static void main(String[] args) {
 
 		NewMrsPRTAWithMC mrsp_mc = new NewMrsPRTAWithMC();
-		NewMrsPRTAWithMCNP mrsp_mcnp = new NewMrsPRTAWithMCNP();
+		//NewMrsPRTAWithMCNP mrsp_mcnp = new NewMrsPRTAWithMCNP();
 
 		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION,
 				TOTAL_PARTITIONS, NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, SchedulabilityTest.CS_LENGTH_RANGE.MEDIUM_CS_LEN,

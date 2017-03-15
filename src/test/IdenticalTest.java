@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import basicAnalysis.FIFOLinearC;
 import basicAnalysis.FIFOP;
-import basicAnalysis.FIFOP2NEW;
 import entity.Resource;
 import entity.SporadicTask;
 import generatorTools.SystemGenerator;
@@ -24,7 +23,7 @@ public class IdenticalTest {
 		// FIFOLinearC f_c = new FIFOLinearC();
 		// FIFOPLinearJava fp_java = new FIFOPLinearJava();
 
-		FIFOP2NEW fnp = new FIFOP2NEW();
+		FIFOP fnp = new FIFOP();
 		FIFOLinearC fnp_java = new FIFOLinearC();
 
 		// NewMrsPRTA mrsp = new NewMrsPRTA();

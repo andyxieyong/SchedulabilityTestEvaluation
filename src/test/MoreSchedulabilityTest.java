@@ -189,7 +189,7 @@ public class MoreSchedulabilityTest {
 				+ (double) schedulableSystem_MSRP_Analysis / (double) TOTAL_NUMBER_OF_SYSTEMS + " NO BLOCKING: "
 				+ (double) schedulableSystem_No_Blocking / (double) TOTAL_NUMBER_OF_SYSTEMS + " fifo np lp: "
 				+ (double) sfnp / (double) TOTAL_NUMBER_OF_SYSTEMS + " fifo p lp: " + (double) sfp / (double) TOTAL_NUMBER_OF_SYSTEMS + "\n";
-
+		System.out.println(result);
 	}
 
 	public static void experimentIncreasingContention(int bigSet, int smallSet) {
@@ -262,7 +262,7 @@ public class MoreSchedulabilityTest {
 				+ (double) schedulableSystem_MSRP_Analysis / (double) TOTAL_NUMBER_OF_SYSTEMS + " NO BLOCKING: "
 				+ (double) schedulableSystem_No_Blocking / (double) TOTAL_NUMBER_OF_SYSTEMS + " fifo np lp: "
 				+ (double) sfnp / (double) TOTAL_NUMBER_OF_SYSTEMS + " fifo p lp: " + (double) sfp / (double) TOTAL_NUMBER_OF_SYSTEMS + "\n";
-
+		System.out.println(result);
 	}
 
 	public static boolean isSystemSchedulable(ArrayList<ArrayList<SporadicTask>> tasks, long[][] Ris) {

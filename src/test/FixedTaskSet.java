@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import basicAnalysis.FIFOLinearC;
 import basicAnalysis.FIFOP;
-import basicAnalysis.FIFOP2NEW;
 import entity.Resource;
 import entity.SporadicTask;
 import generatorTools.SystemGenerator;
@@ -164,7 +163,7 @@ public class FixedTaskSet {
 		// false);
 
 		SystemGenerator.testifyGeneratedTasksetAndResource(tasks, resources);
-		new FIFOP2NEW().NewMrsPRTATest(tasks, resources,  true);
+		new FIFOP().NewMrsPRTATest(tasks, resources,  true);
 		new FIFOLinearC().NewMrsPRTATest(tasks, resources,true,true);
 		System.out.println();
 	}
@@ -261,7 +260,7 @@ public class FixedTaskSet {
 		// new FIFONonPreemptiveLinear().NewMrsPRTATest(tasks, resources, true,
 		// false);
 		SystemGenerator.testifyGeneratedTasksetAndResource(tasks, resources);
-		new FIFOP2NEW().NewMrsPRTATest(tasks, resources, true);
+		new FIFOP().NewMrsPRTATest(tasks, resources, true);
 		new FIFOLinearC().NewMrsPRTATest(tasks, resources,true,true);
 		System.out.println();
 	}
@@ -377,7 +376,7 @@ public class FixedTaskSet {
 		// new NewMrsPRTAWithMCNP().NewMrsPRTATest(tasks, resources,1,2,true);
 		// System.out.println();
 		SystemGenerator.testifyGeneratedTasksetAndResource(tasks, resources);
-		new FIFOP2NEW().NewMrsPRTATest(tasks, resources,  true);
+		new FIFOP().NewMrsPRTATest(tasks, resources,  true);
 		new FIFOLinearC().NewMrsPRTATest(tasks, resources,true,true);
 		System.out.println();
 	}
