@@ -3,7 +3,7 @@ package test;
 import java.util.ArrayList;
 
 import basicAnalysis.FIFOLinearC;
-import basicAnalysis.FIFONPLinearJava;
+import basicAnalysis.FIFONP;
 import basicAnalysis.MSRPRTA;
 import basicAnalysis.NewMrsPRTA;
 import basicAnalysis.OriginalMrsPRTA;
@@ -40,7 +40,7 @@ public class MoreSchedulabilityTest {
 		MSRPRTA msrp = new MSRPRTA();
 		RTAWithoutBlocking noblocking = new RTAWithoutBlocking();
 		FIFOLinearC fp = new FIFOLinearC();
-		FIFONPLinearJava fnp = new FIFONPLinearJava();
+		FIFONP fnp = new FIFONP();
 
 		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION,
 				TOTAL_PARTITIONS, NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, CS_LENGTH_RANGE.VERY_SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS,
@@ -137,7 +137,7 @@ public class MoreSchedulabilityTest {
 		MSRPRTA msrp = new MSRPRTA();
 		RTAWithoutBlocking noblocking = new RTAWithoutBlocking();
 		FIFOLinearC fp = new FIFOLinearC();
-		FIFONPLinearJava fnp = new FIFONPLinearJava();
+		FIFONP fnp = new FIFONP();
 		String result = "";
 
 		int schedulableSystem_New_MrsP_Analysis2 = 0;
@@ -207,7 +207,7 @@ public class MoreSchedulabilityTest {
 		MSRPRTA msrp = new MSRPRTA();
 		RTAWithoutBlocking noblocking = new RTAWithoutBlocking();
 		FIFOLinearC fp = new FIFOLinearC();
-		FIFONPLinearJava fnp = new FIFONPLinearJava();
+		FIFONP fnp = new FIFONP();
 
 		String result = "";
 

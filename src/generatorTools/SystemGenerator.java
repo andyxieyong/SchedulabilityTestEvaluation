@@ -164,6 +164,15 @@ public class SystemGenerator {
 			Resource resource = new Resource(i + 1, cs_len);
 			resources.add(resource);
 		}
+		
+		resources.sort((r2,r1) -> Long.compare(r1.csl, r2.csl));
+		
+		for(int i=0;i<resources.size();i++){
+			Resource res = resources.get(i);
+			res.id = i+1;
+		}
+		
+		
 		return resources;
 	}
 
@@ -296,7 +305,7 @@ public class SystemGenerator {
 		return fails;
 	}
 
-	public void testifyGeneratedTasksetAndResource(ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources) {
+	static public void testifyGeneratedTasksetAndResource(ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources) {
 		System.out.println("----------------------------------------------------");
 		for (int i = 0; i < tasks.size(); i++) {
 			double util = 0;

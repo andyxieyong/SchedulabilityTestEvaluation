@@ -8,7 +8,7 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
-import basicAnalysis.FIFONPLinearJava;
+import basicAnalysis.FIFONP;
 import basicAnalysis.NewMrsPRTA;
 import entity.Resource;
 import entity.SporadicTask;
@@ -35,7 +35,7 @@ public class ResponseTimeBoundingTest {
 	public static void run() {
 
 		NewMrsPRTA new_mrsp = new NewMrsPRTA();
-		FIFONPLinearJava fnp = new FIFONPLinearJava();
+		FIFONP fnp = new FIFONP();
 
 		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION,
 				TOTAL_PARTITIONS, NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, range, SchedulabilityTest.RESOURCES_RANGE.PARTITIONS,

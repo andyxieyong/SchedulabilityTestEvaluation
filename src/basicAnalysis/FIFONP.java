@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import entity.Resource;
 import entity.SporadicTask;
 
-public class FIFOPLinearJava {
+public class FIFONP {
 
 	private boolean use_deadline_insteadof_Ri = false;
 	long count = 0;
@@ -70,10 +70,9 @@ public class FIFOPLinearJava {
 		for (int i = 0; i < tasks.size(); i++) {
 			for (int j = 0; j < tasks.get(i).size(); j++) {
 				SporadicTask task = tasks.get(i).get(j);
-				task.accountedP = 0;
-				
-				task.interference = highPriorityInterference(task, tasks, response_time[i][j], response_time, resources);
+
 				task.spin = directRemoteDelay(task, tasks, resources, response_time, response_time[i][j]);
+				task.interference = highPriorityInterference(task, tasks, response_time[i][j], response_time, resources);
 				task.local = localBlocking(task, tasks, resources, response_time, response_time[i][j]);
 
 				response_time_plus[i][j] = task.Ri = task.WCET + task.pure_resource_execution_time + task.spin + task.interference + task.local;
@@ -101,32 +100,11 @@ public class FIFOPLinearJava {
 				SporadicTask hpTask = tasks.get(i);
 				interference += Math.ceil((double) (Ri) / (double) hpTask.period) * (hpTask.WCET);
 
-//				long btb_interference = getIndirectSpinDelay(hpTask, Ri, Ris[partition][i], Ris, allTasks, resources);
-//				interference += btb_interference;
+				long btb_interference = getIndirectSpinDelay(hpTask, Ri, Ris[partition][i], Ris, allTasks, resources);
+				interference += btb_interference;
 			}
 		}
-		
-		for(int i=0;i<resources.size();i++){
-			Resource res = resources.get(i);
-			long btb_interference = getIndirectSpinDelayByResource(res, t, Ri, Ris, allTasks);
-			interference += btb_interference;
-		}
-		
 		return interference;
-	}
-	
-	private long getIndirectSpinDelayByResource(Resource res, SporadicTask t, long Ri, long[][] Ris, ArrayList<ArrayList<SporadicTask>> allTasks){
-		long BTBhitForOneResource = 0;
-		
-		int partition = t.partition;
-		ArrayList<SporadicTask> tasks = allTasks.get(partition);
-	
-		
-		int number_of_higher_request = getNoRFromHP(res, t, allTasks.get(t.partition), Ris[t.partition], Ri);
-		
-		
-		
-		return 0;
 	}
 
 	/*
@@ -136,7 +114,7 @@ public class FIFOPLinearJava {
 	private long getIndirectSpinDelay(SporadicTask hpTask, long Ri, long Rihp, long[][] Ris, ArrayList<ArrayList<SporadicTask>> allTasks,
 			ArrayList<Resource> resources) {
 		long BTBhit = 0;
-		
+
 		for (int i = 0; i < hpTask.resource_required_index.size(); i++) {
 			/* for each resource that a high priority task request */
 			Resource resource = resources.get(hpTask.resource_required_index.get(i));
@@ -161,7 +139,7 @@ public class FIFOPLinearJava {
 					BTBhit += spin_delay_with_btb * resource.csl;
 				}
 			}
-		}		
+		}
 		return BTBhit;
 	}
 
@@ -170,15 +148,9 @@ public class FIFOPLinearJava {
 	 */
 	private long directRemoteDelay(SporadicTask t, ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, long[][] Ris, long Ri) {
 		long spin_delay = 0;
-		long longestResource = 0;
-		
 		for (int k = 0; k < t.resource_required_index.size(); k++) {
 			Resource resource = resources.get(t.resource_required_index.get(k));
-			
-			if(resource.csl > longestResource && getNoRFromHP(resource, t, tasks.get(t.partition), Ris[t.partition], Ri) > 0)
-				longestResource = resource.csl;
-			
-			spin_delay += getNoSpinDelay(t, resource, tasks, resources, Ris, Ri) * resource.csl;
+			spin_delay += getNoSpinDelay(t, resource, tasks, Ris, Ri) * resource.csl;
 		}
 		return spin_delay;
 	}
@@ -190,6 +162,20 @@ public class FIFOPLinearJava {
 		for (int i = 0; i < LocalBlockingResources.size(); i++) {
 			Resource res = LocalBlockingResources.get(i);
 			long local_blocking = res.csl;
+
+			if (res.isGlobal) {
+				for (int parition_index = 0; parition_index < res.partitions.size(); parition_index++) {
+					int partition = res.partitions.get(parition_index);
+					int norHP = getNoRFromHP(res, t, tasks.get(t.partition), Ris[t.partition], Ri);
+					int norT = t.resource_required_index.contains(res.id - 1)
+							? t.number_of_access_in_one_release.get(t.resource_required_index.indexOf(res.id - 1)) : 0;
+					int norR = getNoRRemote(res, tasks.get(partition), Ris[partition], Ri);
+
+					if (partition != t.partition && (norHP + norT) < norR) {
+						local_blocking += res.csl;
+					}
+				}
+			}
 			local_blocking_each_resource.add(local_blocking);
 		}
 
@@ -235,8 +221,7 @@ public class FIFOPLinearJava {
 	 * gives the number of requests from remote partitions for a resource that
 	 * is required by the given task.
 	 */
-	private int getNoSpinDelay(SporadicTask task, Resource resource, ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources,
-			long[][] Ris, long Ri) {
+	private int getNoSpinDelay(SporadicTask task, Resource resource, ArrayList<ArrayList<SporadicTask>> tasks, long[][] Ris, long Ri) {
 		int number_of_spin_dealy = 0;
 
 		for (int i = 0; i < tasks.size(); i++) {
@@ -259,7 +244,6 @@ public class FIFOPLinearJava {
 				number_of_spin_dealy += Integer.min(possible_spin_delay, NoRFromT);
 			}
 		}
-
 		return number_of_spin_dealy;
 	}
 

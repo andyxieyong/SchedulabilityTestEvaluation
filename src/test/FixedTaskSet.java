@@ -2,10 +2,12 @@ package test;
 
 import java.util.ArrayList;
 
-import basicAnalysis.NewMrsPRTA;
-import basicAnalysis.NewMrsPRTAWithMCNP;
+import basicAnalysis.FIFOLinearC;
+import basicAnalysis.FIFOP;
+import basicAnalysis.FIFOP2NEW;
 import entity.Resource;
 import entity.SporadicTask;
+import generatorTools.SystemGenerator;
 
 public class FixedTaskSet {
 
@@ -32,24 +34,24 @@ public class FixedTaskSet {
 		/* Generate resource */
 		ArrayList<Resource> resources = new ArrayList<>();
 		resources.add(new Resource(1, 2));
-		// resources.add(new Resource(2, 10));
+		resources.add(new Resource(2, 10));
 		// resources.add(new Resource(3, 5));
 
-		tasks.get(0).get(0).resource_required_index.add(0);
-		tasks.get(0).get(0).number_of_access_in_one_release.add(2);
-		tasks.get(0).get(0).pure_resource_execution_time = 2 * 2;
+		// tasks.get(0).get(0).resource_required_index.add(0);
+		// tasks.get(0).get(0).number_of_access_in_one_release.add(2);
+		// tasks.get(0).get(0).pure_resource_execution_time = 2 * 2;
 
 		tasks.get(0).get(1).resource_required_index.add(0);
 		tasks.get(0).get(1).number_of_access_in_one_release.add(3);
 		tasks.get(0).get(1).pure_resource_execution_time = 2 * 3;
 
-		tasks.get(0).get(2).resource_required_index.add(0);
-		tasks.get(0).get(2).number_of_access_in_one_release.add(3);
-		tasks.get(0).get(2).pure_resource_execution_time = 2 * 3;
+//		tasks.get(0).get(2).resource_required_index.add(0);
+//		tasks.get(0).get(2).number_of_access_in_one_release.add(3);
+//		tasks.get(0).get(2).pure_resource_execution_time = 2 * 3;
 
-		// tasks.get(0).get(2).resource_required_index.add(1);
-		// tasks.get(0).get(2).number_of_access_in_one_release.add(3);
-		// tasks.get(0).get(2).pure_resource_execution_time = 2 * 3 + 10 * 3;
+		 tasks.get(0).get(2).resource_required_index.add(1);
+		 tasks.get(0).get(2).number_of_access_in_one_release.add(3);
+		 tasks.get(0).get(2).pure_resource_execution_time = 10 * 3;
 		//
 		// tasks.get(0).get(2).resource_required_index.add(2);
 		// tasks.get(0).get(2).number_of_access_in_one_release.add(1);
@@ -60,54 +62,62 @@ public class FixedTaskSet {
 		tasks.get(1).get(0).number_of_access_in_one_release.add(5);
 		tasks.get(1).get(0).pure_resource_execution_time = 2 * 5;
 
-		// tasks.get(1).get(0).resource_required_index.add(1);
-		// tasks.get(1).get(0).number_of_access_in_one_release.add(5);
-		// tasks.get(1).get(0).pure_resource_execution_time = 2 * 5 + 10 * 5;
+		 tasks.get(1).get(0).resource_required_index.add(1);
+		 tasks.get(1).get(0).number_of_access_in_one_release.add(4);
+		 tasks.get(1).get(0).pure_resource_execution_time = 2 * 5 + 10 * 4;
 
-		resources.get(0).requested_tasks.add(tasks.get(0).get(0));
+		// resources.get(0).requested_tasks.add(tasks.get(0).get(0));
 		resources.get(0).requested_tasks.add(tasks.get(0).get(1));
-		resources.get(0).requested_tasks.add(tasks.get(0).get(2));
 		resources.get(0).requested_tasks.add(tasks.get(1).get(0));
 
-		resources.get(0).ceiling.add(999);
+		resources.get(0).ceiling.add(900);
 		resources.get(0).ceiling.add(999);
 
 		resources.get(0).partitions.add(0);
 		resources.get(0).partitions.add(1);
 		resources.get(0).isGlobal = true;
-
-		for (int i = 0; i < tasks.size(); i++) {
-			for (int j = 0; j < tasks.get(i).size(); j++) {
-				SporadicTask task = tasks.get(i).get(j);
-				task.hasResource = 1;
-				task.resource_required_index_cpoy = new int[task.resource_required_index.size()];
-				task.number_of_access_in_one_release_copy = new int[task.resource_required_index.size()];
-				for (int resource_index = 0; resource_index < task.resource_required_index.size(); resource_index++) {
-					task.resource_required_index_cpoy[resource_index] = task.resource_required_index.get(resource_index);
-					task.number_of_access_in_one_release_copy[resource_index] = task.number_of_access_in_one_release.get(resource_index);
-				}
-			}
-		}
-
-		tasks.get(0).get(0).Ri = 1 + 4;
-		tasks.get(0).get(1).Ri = 1 + 4;
-		tasks.get(0).get(2).Ri = 1 + 6;
-		tasks.get(1).get(0).Ri = 1 + 10;
-
-		// resources.get(1).requested_tasks.add(tasks.get(0).get(2));
-		// resources.get(1).requested_tasks.add(tasks.get(1).get(0));
+		
+		 resources.get(1).requested_tasks.add(tasks.get(0).get(2));
+		 resources.get(1).requested_tasks.add(tasks.get(1).get(0));
+		
+		 resources.get(1).ceiling.add(800);
+		 resources.get(1).ceiling.add(999);
 		//
-		// resources.get(1).ceiling.add(800);
-		// resources.get(1).ceiling.add(999);
-		//
-		// resources.get(1).partitions.add(0);
-		// resources.get(1).partitions.add(1);
-		// resources.get(1).isGlobal = true;
+		 resources.get(1).partitions.add(0);
+		 resources.get(1).partitions.add(1);
+		 resources.get(1).isGlobal = true;
 		//
 		// resources.get(2).requested_tasks.add(tasks.get(0).get(2));
 		// resources.get(2).ceiling.add(800);
 		// resources.get(2).partitions.add(0);
 		// resources.get(2).isGlobal = false;
+		
+
+		for (int i = 0; i < tasks.size(); i++) {
+			for (int j = 0; j < tasks.get(i).size(); j++) {
+
+				SporadicTask task = tasks.get(i).get(j);
+
+				if (i == 0 && j == 0) {
+				} else {
+					task.hasResource = 1;
+					task.resource_required_index_cpoy = new int[task.resource_required_index.size()];
+					task.number_of_access_in_one_release_copy = new int[task.resource_required_index.size()];
+					for (int resource_index = 0; resource_index < task.resource_required_index.size(); resource_index++) {
+						task.resource_required_index_cpoy[resource_index] = task.resource_required_index.get(resource_index);
+						task.number_of_access_in_one_release_copy[resource_index] = task.number_of_access_in_one_release.get(resource_index);
+					}
+				}
+
+			}
+		}
+
+		tasks.get(0).get(0).Ri = 1;
+		tasks.get(0).get(1).Ri = 1 + 6;
+		tasks.get(0).get(2).Ri = 1 + 6;
+		tasks.get(1).get(0).Ri = 1 + 10 + 40;
+
+
 
 		// new OriginalMrsPRTA().NewMrsPRTATest(tasks, resources, true);
 		// new MSRPRTA().NewMrsPRTATest(tasks, resources, true);
@@ -147,11 +157,16 @@ public class FixedTaskSet {
 		// new NewMrsPRTA().NewMrsPRTATest(tasks, resources, true);
 		// new FIFONonPreemptiveLinearC().NewMrsPRTATest(tasks,
 		// resources,true,true);
-		new NewMrsPRTA().NewMrsPRTATest(tasks, resources, true);
-		new NewMrsPRTAWithMCNP().NewMrsPRTATest(tasks, resources, 1,2,true);
-		System.out.println();
+		// new NewMrsPRTA().NewMrsPRTATest(tasks, resources, true);
+		// new NewMrsPRTAWithMCNP().NewMrsPRTATest(tasks, resources, 1,2,true);
+
 		// new FIFONonPreemptiveLinear().NewMrsPRTATest(tasks, resources, true,
 		// false);
+
+		SystemGenerator.testifyGeneratedTasksetAndResource(tasks, resources);
+		new FIFOP2NEW().NewMrsPRTATest(tasks, resources,  true);
+		new FIFOLinearC().NewMrsPRTATest(tasks, resources,true,true);
+		System.out.println();
 	}
 
 	public static void fixed_system_2() {
@@ -240,11 +255,15 @@ public class FixedTaskSet {
 		// new NewMrsPRTA().NewMrsPRTATest(tasks, resources, true);
 		// new FIFONonPreemptiveLinearC().NewMrsPRTATest(tasks,
 		// resources,true,true);
-		new NewMrsPRTA().NewMrsPRTATest(tasks, resources, true);
-		new NewMrsPRTAWithMCNP().NewMrsPRTATest(tasks, resources, 1,2, true);
-		System.out.println();
+		// new NewMrsPRTA().NewMrsPRTATest(tasks, resources, true);
+		// new NewMrsPRTAWithMCNP().NewMrsPRTATest(tasks, resources, 1,2, true);
+		// System.out.println();
 		// new FIFONonPreemptiveLinear().NewMrsPRTATest(tasks, resources, true,
 		// false);
+		SystemGenerator.testifyGeneratedTasksetAndResource(tasks, resources);
+		new FIFOP2NEW().NewMrsPRTATest(tasks, resources, true);
+		new FIFOLinearC().NewMrsPRTATest(tasks, resources,true,true);
+		System.out.println();
 	}
 
 	public static void hard_system1() {
@@ -354,8 +373,12 @@ public class FixedTaskSet {
 		// new NewMrsPRTA().NewMrsPRTATest(tasks, resources, true);
 		// new FIFONonPreemptiveLinearC().NewMrsPRTATest(tasks,
 		// resources,true,true);
-		new NewMrsPRTA().NewMrsPRTATest(tasks, resources, true);
-		new NewMrsPRTAWithMCNP().NewMrsPRTATest(tasks, resources,1,2,true);
+		// new NewMrsPRTA().NewMrsPRTATest(tasks, resources, true);
+		// new NewMrsPRTAWithMCNP().NewMrsPRTATest(tasks, resources,1,2,true);
+		// System.out.println();
+		SystemGenerator.testifyGeneratedTasksetAndResource(tasks, resources);
+		new FIFOP2NEW().NewMrsPRTATest(tasks, resources,  true);
+		new FIFOLinearC().NewMrsPRTATest(tasks, resources,true,true);
 		System.out.println();
 	}
 }
