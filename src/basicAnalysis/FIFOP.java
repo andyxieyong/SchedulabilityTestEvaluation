@@ -1,16 +1,11 @@
 package basicAnalysis;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-
-import javax.annotation.Resources;
 
 import entity.Resource;
 import entity.SporadicTask;
 
 public class FIFOP {
-
-	private boolean use_deadline_insteadof_Ri = false;
 	long count = 0;
 	SporadicTask problemtask = null;
 	int isTestPrint = 0;
@@ -77,6 +72,7 @@ public class FIFOP {
 		for (int i = 0; i < tasks.size(); i++) {
 			for (int j = 0; j < tasks.get(i).size(); j++) {
 				SporadicTask task = tasks.get(i).get(j);
+				task.spin_delay_by_preemptions = 0;
 				task.spin = getSpinDelay(task, tasks, resources, response_time[i][j], response_time);
 				task.interference = highPriorityInterference(task, tasks, response_time[i][j], response_time, resources);
 				task.local = localBlocking(task, tasks, resources, response_time, response_time[i][j]);
@@ -101,6 +97,7 @@ public class FIFOP {
 
 		// preemptions
 		long preemptions = 0;
+		long request_by_preemptions = 0;
 		for (int i = 0; i < tasks.get(task.partition).size(); i++) {
 			if (tasks.get(task.partition).get(i).priority > task.priority) {
 				preemptions += (int) Math.ceil((double) (time) / (double) tasks.get(task.partition).get(i).period);
@@ -128,9 +125,12 @@ public class FIFOP {
 					}
 				}
 				preemptions--;
+				request_by_preemptions ++;
 			} else
 				break;
 		}
+		
+		task.spin_delay_by_preemptions = request_by_preemptions;
 
 		return spin;
 	}

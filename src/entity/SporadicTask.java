@@ -16,6 +16,9 @@ public class SporadicTask {
 	public ArrayList<Integer> resource_required_index;
 	public ArrayList<Integer> number_of_access_in_one_release;
 	
+	public long spin_delay_by_preemptions = 0;
+	
+	/* Used by LP solver from C code*/
 	public int hasResource = 0;
 	public int[] resource_required_index_cpoy = null;
 	public int[] number_of_access_in_one_release_copy = null;
