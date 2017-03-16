@@ -11,7 +11,7 @@ import generatorTools.SystemGenerator;
 public class IdenticalTest {
 
 	public static int TOTAL_NUMBER_OF_SYSTEMS = 99999999;
-	public static int TOTAL_PARTITIONS = 6;
+	public static int TOTAL_PARTITIONS = 5;
 	public static int MIN_PERIOD = 1;
 	public static int MAX_PERIOD = 1000;
 	public static int NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION = 5;
@@ -35,7 +35,9 @@ public class IdenticalTest {
 				TOTAL_PARTITIONS, NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, SchedulabilityTest.CS_LENGTH_RANGE.SHORT_CS_LEN,
 				SchedulabilityTest.RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 
-		for (int i = 0; i < TOTAL_NUMBER_OF_SYSTEMS; i++) {
+		int i = 0;
+		while (i <= TOTAL_NUMBER_OF_SYSTEMS) {
+
 			ArrayList<ArrayList<SporadicTask>> tasks = generator.generateTasks();
 			ArrayList<Resource> resources = generator.generateResources();
 			generator.generateResourceUsage(tasks, resources);
@@ -52,8 +54,10 @@ public class IdenticalTest {
 				r2 = fnp_java.NewMrsPRTATest(tasks, resources, true, true);
 				System.exit(0);
 			}
-			if (isEqual && isSystemSchedulable(tasks, r1) && isSystemSchedulable(tasks, r2))
+			if (isEqual && isSystemSchedulable(tasks, r1) && isSystemSchedulable(tasks, r2)) {
 				System.out.println(i);
+				i++;
+			}
 
 		}
 
