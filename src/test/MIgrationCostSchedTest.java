@@ -23,6 +23,7 @@ public class MIgrationCostSchedTest {
 	public static int TOTAL_PARTITIONS = 16;
 	public static int MIN_PERIOD = 1;
 	public static int MAX_PERIOD = 1000;
+	public static int MIGRATION_COST = 10;
 
 	public static void main(String[] args) throws InterruptedException {
 		// int experiment = 0;
@@ -51,30 +52,35 @@ public class MIgrationCostSchedTest {
 		// } else
 		// System.err.println("wrong parameter.");
 
-		for (int i = 1; i < 6; i++) {
-			for (int j = 1; j < 10; j++) {
-				experimentIncreasingWorkLoad(i, j);
-			}
-			System.out.println();
+//		for (int i = 1; i < 6; i++) {
+//			for (int j = 1; j < 10; j++) {
+//				experimentIncreasingWorkLoad(i, j);
+//			}
+//			System.out.println();
+//		}
+//		System.out.println();
+//		System.out.println();
+//		System.out.println();
+//		for (int i = 1; i < 4; i++) {
+//			for (int j = 1; j < 6; j++) {
+//				experimentIncreasingCriticalSectionLength(i, j);
+//			}
+//			System.out.println();
+//		}
+//		System.out.println();
+//		System.out.println();
+//		System.out.println();
+//		for (int i = 1; i < 4; i++) {
+//			for (int j = 1; j < 11; j++) {
+//				experimentIncreasingContention(i, j);
+//			}
+//			System.out.println();
+//		}
+		
+		for (int j = 1; j < 10; j++) {
+			experimentIncreasingWorkLoad(3, j);
 		}
 		System.out.println();
-		System.out.println();
-		System.out.println();
-		for (int i = 1; i < 4; i++) {
-			for (int j = 1; j < 6; j++) {
-				experimentIncreasingCriticalSectionLength(i, j);
-			}
-			System.out.println();
-		}
-		System.out.println();
-		System.out.println();
-		System.out.println();
-		for (int i = 1; i < 4; i++) {
-			for (int j = 1; j < 11; j++) {
-				experimentIncreasingContention(i, j);
-			}
-			System.out.println();
-		}
 	}
 
 	public static void experimentIncreasingWorkLoad(int bigSet, int smallSet) {
@@ -114,43 +120,43 @@ public class MIgrationCostSchedTest {
 			if (isSystemSchedulable(tasks, Ris))
 				smrsp++;
 
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, 1, 1, false);
+			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 1, false);
 			if (isSystemSchedulable(tasks, Ris))
 				smrsp_np1++;
 
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, 1, 5, false);
+			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 5, false);
 			if (isSystemSchedulable(tasks, Ris))
 				smrsp_np5++;
 
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, 1, 10, false);
+			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 10, false);
 			if (isSystemSchedulable(tasks, Ris))
 				smrsp_np10++;
 
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, 1, 20, false);
+			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 20, false);
 			if (isSystemSchedulable(tasks, Ris))
 				smrsp_np20++;
 
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, 1, 25, false);
+			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 25, false);
 			if (isSystemSchedulable(tasks, Ris))
 				smrsp_np25++;
 
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, 1, 30, false);
+			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 30, false);
 			if (isSystemSchedulable(tasks, Ris))
 				smrsp_np30++;
 
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, 1, 40, false);
+			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 40, false);
 			if (isSystemSchedulable(tasks, Ris))
 				smrsp_np40++;
 
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, 1, 50, false);
+			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 50, false);
 			if (isSystemSchedulable(tasks, Ris))
 				smrsp_np50++;
 
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, 1, 100, false);
+			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 100, false);
 			if (isSystemSchedulable(tasks, Ris))
 				smrsp_np100++;
 
-			Ris = mrsp_mig.NewMrsPRTATest(tasks, resources, 1, false);
+			Ris = mrsp_mig.NewMrsPRTATest(tasks, resources, MIGRATION_COST, false);
 			if (isSystemSchedulable(tasks, Ris))
 				smrsp_mig++;
 
@@ -228,43 +234,43 @@ public class MIgrationCostSchedTest {
 			if (isSystemSchedulable(tasks, Ris))
 				smrsp++;
 
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, 1, 1, false);
+			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 1, false);
 			if (isSystemSchedulable(tasks, Ris))
 				smrsp_np1++;
 
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, 1, 5, false);
+			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 5, false);
 			if (isSystemSchedulable(tasks, Ris))
 				smrsp_np5++;
 
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, 1, 10, false);
+			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 10, false);
 			if (isSystemSchedulable(tasks, Ris))
 				smrsp_np10++;
 
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, 1, 20, false);
+			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 20, false);
 			if (isSystemSchedulable(tasks, Ris))
 				smrsp_np20++;
 
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, 1, 25, false);
+			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 25, false);
 			if (isSystemSchedulable(tasks, Ris))
 				smrsp_np25++;
 
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, 1, 30, false);
+			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 30, false);
 			if (isSystemSchedulable(tasks, Ris))
 				smrsp_np30++;
 
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, 1, 40, false);
+			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 40, false);
 			if (isSystemSchedulable(tasks, Ris))
 				smrsp_np40++;
 
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, 1, 50, false);
+			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 50, false);
 			if (isSystemSchedulable(tasks, Ris))
 				smrsp_np50++;
 
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, 1, 100, false);
+			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 100, false);
 			if (isSystemSchedulable(tasks, Ris))
 				smrsp_np100++;
 
-			Ris = mrsp_mig.NewMrsPRTATest(tasks, resources, 1, false);
+			Ris = mrsp_mig.NewMrsPRTATest(tasks, resources, MIGRATION_COST, false);
 			if (isSystemSchedulable(tasks, Ris))
 				smrsp_mig++;
 
@@ -317,43 +323,43 @@ public class MIgrationCostSchedTest {
 			if (isSystemSchedulable(tasks, Ris))
 				smrsp++;
 
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, 1, 1, false);
+			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 1, false);
 			if (isSystemSchedulable(tasks, Ris))
 				smrsp_np1++;
 
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, 1, 5, false);
+			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 5, false);
 			if (isSystemSchedulable(tasks, Ris))
 				smrsp_np5++;
 
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, 1, 10, false);
+			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 10, false);
 			if (isSystemSchedulable(tasks, Ris))
 				smrsp_np10++;
 
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, 1, 20, false);
+			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 20, false);
 			if (isSystemSchedulable(tasks, Ris))
 				smrsp_np20++;
 
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, 1, 25, false);
+			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 25, false);
 			if (isSystemSchedulable(tasks, Ris))
 				smrsp_np25++;
 
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, 1, 30, false);
+			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 30, false);
 			if (isSystemSchedulable(tasks, Ris))
 				smrsp_np30++;
 
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, 1, 40, false);
+			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 40, false);
 			if (isSystemSchedulable(tasks, Ris))
 				smrsp_np40++;
 
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, 1, 50, false);
+			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 50, false);
 			if (isSystemSchedulable(tasks, Ris))
 				smrsp_np50++;
 
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, 1, 100, false);
+			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 100, false);
 			if (isSystemSchedulable(tasks, Ris))
 				smrsp_np100++;
 
-			Ris = mrsp_mig.NewMrsPRTATest(tasks, resources, 1, false);
+			Ris = mrsp_mig.NewMrsPRTATest(tasks, resources, MIGRATION_COST, false);
 			if (isSystemSchedulable(tasks, Ris))
 				smrsp_mig++;
 

@@ -2,29 +2,31 @@ package test;
 
 import java.util.ArrayList;
 
-import basicAnalysis.FIFOLinearC;
-import basicAnalysis.FIFOP;
+import basicAnalysis.NewMrsPRTAWithMCNP;
 import entity.Resource;
 import entity.SporadicTask;
 import generatorTools.SystemGenerator;
+import implementationAwareAnalysis.IANewMrsPRTAWithMCNP;
 
 public class IdenticalTest {
 
 	public static int TOTAL_NUMBER_OF_SYSTEMS = 99999999;
-	public static int TOTAL_PARTITIONS = 5;
+	public static int TOTAL_PARTITIONS = 10;
 	public static int MIN_PERIOD = 1;
 	public static int MAX_PERIOD = 1000;
-	public static int NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION = 5;
-	public static int NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE = 5;
-	public static double RESOURCE_SHARING_FACTOR = .5;
+	public static int NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION = 4;
+	public static int NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE = 2;
+	public static double RESOURCE_SHARING_FACTOR = .4;
 
 	public static void main(String[] args) {
 
 		// FIFOLinearC f_c = new FIFOLinearC();
 		// FIFOPLinearJava fp_java = new FIFOPLinearJava();
 
-		FIFOP fnp = new FIFOP();
-		FIFOLinearC fnp_java = new FIFOLinearC();
+		// FIFOP fnp = new FIFOP();
+		// FIFOLinearC fnp_java = new FIFOLinearC();
+		IANewMrsPRTAWithMCNP MrsP = new IANewMrsPRTAWithMCNP();
+		NewMrsPRTAWithMCNP MrsP1 = new NewMrsPRTAWithMCNP();
 
 		// NewMrsPRTA mrsp = new NewMrsPRTA();
 		// NewMrsPRTAWithMigrationCostAsIndividual s_mrsp = new
@@ -32,7 +34,7 @@ public class IdenticalTest {
 		long[][] r1, r2;
 
 		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION,
-				TOTAL_PARTITIONS, NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, SchedulabilityTest.CS_LENGTH_RANGE.SHORT_CS_LEN,
+				TOTAL_PARTITIONS, NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, SchedulabilityTest.CS_LENGTH_RANGE.VERY_SHORT_CS_LEN,
 				SchedulabilityTest.RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 
 		int i = 0;
@@ -42,16 +44,16 @@ public class IdenticalTest {
 			ArrayList<Resource> resources = generator.generateResources();
 			generator.generateResourceUsage(tasks, resources);
 
-			r1 = fnp.NewMrsPRTATest(tasks, resources, false);
-			r2 = fnp_java.NewMrsPRTATest(tasks, resources, true, false);
+			r1 = MrsP.NewMrsPRTATest(tasks, resources, 1, 1, false);
+			r2 = MrsP1.NewMrsPRTATest(tasks, resources, 1, 1, false);
 			boolean isEqual = isEqual(r1, r2, false);
 
 			if (!isEqual && isSystemSchedulable(tasks, r1) && isSystemSchedulable(tasks, r2)) {
 				System.out.println("not equal");
 				isEqual(r1, r2, true);
 				SystemGenerator.testifyGeneratedTasksetAndResource(tasks, resources);
-				r1 = fnp.NewMrsPRTATest(tasks, resources, true);
-				r2 = fnp_java.NewMrsPRTATest(tasks, resources, true, true);
+				r1 = MrsP.NewMrsPRTATest(tasks, resources, 1, 1, true);
+				r2 = MrsP1.NewMrsPRTATest(tasks, resources, 1, 1, true);
 				System.exit(0);
 			}
 			if (isEqual && isSystemSchedulable(tasks, r1) && isSystemSchedulable(tasks, r2)) {

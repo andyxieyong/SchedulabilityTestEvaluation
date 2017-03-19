@@ -18,6 +18,9 @@ public class SporadicTask {
 	
 	public long spin_delay_by_preemptions = 0;
 	
+	public double implementation_overheads = 0;
+	public double migration_overheads_plus = 0;
+	
 	/* Used by LP solver from C code*/
 	public int hasResource = 0;
 	public int[] resource_required_index_cpoy = null;
