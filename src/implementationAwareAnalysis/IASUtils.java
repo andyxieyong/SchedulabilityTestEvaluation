@@ -6,7 +6,7 @@ import entity.SporadicTask;
 
 public class IASUtils {
 
-	private static double CACHE_OVERHEADS = (double) (1905) / (double) 1000;
+//	private static double CACHE_OVERHEADS = (double) (1905) / (double) 1000;
 	private static double LINUX_SCHED = (double) (845) / (double) 1000;
 	private static double LINUX_SCHED_AWAY = (double) (736) / (double) 1000;
 	private static double LINUX_CONTEXT_SWTICH = (double) (965) / (double) 1000;
