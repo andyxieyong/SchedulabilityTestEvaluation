@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import basicAnalysis.FIFOLinearC;
 import basicAnalysis.FIFONP;
+import basicAnalysis.FIFOP;
 import basicAnalysis.MSRPRTA;
 import basicAnalysis.NewMrsPRTA;
 import basicAnalysis.OriginalMrsPRTA;
@@ -39,11 +40,11 @@ public class MoreSchedulabilityTest {
 		OriginalMrsPRTA original_mrsp = new OriginalMrsPRTA();
 		MSRPRTA msrp = new MSRPRTA();
 		RTAWithoutBlocking noblocking = new RTAWithoutBlocking();
-		FIFOLinearC fp = new FIFOLinearC();
+		FIFOP fp = new FIFOP();
 		FIFONP fnp = new FIFONP();
 
 		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION,
-				TOTAL_PARTITIONS, NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, CS_LENGTH_RANGE.VERY_SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS,
+				TOTAL_PARTITIONS, NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, CS_LENGTH_RANGE.VERY_LONG_CSLEN, RESOURCES_RANGE.PARTITIONS,
 				RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 
 		String result = "";
@@ -83,7 +84,7 @@ public class MoreSchedulabilityTest {
 						sfnp++;
 				}
 
-				Ris = fp.NewMrsPRTATest(tasks, resources, true, false);
+				Ris = fp.NewMrsPRTATest(tasks, resources, false);
 				if (isSystemSchedulable(tasks, Ris))
 					sfp++;
 
@@ -253,7 +254,7 @@ public class MoreSchedulabilityTest {
 					sfp++;
 			}
 
-			System.out.println(3 + "" + bigSet + " " + smallSet + " times: " + i);
+			//System.out.println(3 + "" + bigSet + " " + smallSet + " times: " + i);
 		}
 
 		result += "number of access: " + NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE + " ; New MrsP: "

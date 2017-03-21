@@ -77,10 +77,18 @@ public class MIgrationCostSchedTest {
 //			System.out.println();
 //		}
 		
-		for (int j = 1; j < 10; j++) {
-			experimentIncreasingWorkLoad(3, j);
+//		for (int j = 1; j < 10; j++) {
+//			experimentIncreasingWorkLoad(3, j);
+//		}
+		
+		for (int j = 1; j < 6; j++) {
+			experimentIncreasingCriticalSectionLength(3, j);
 		}
+		
 		System.out.println();
+		
+		ResultReader.schedreader();
+		ResultReader.migReader();
 	}
 
 	public static void experimentIncreasingWorkLoad(int bigSet, int smallSet) {
@@ -90,7 +98,7 @@ public class MIgrationCostSchedTest {
 		int NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION = smallSet;
 
 		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION,
-				TOTAL_PARTITIONS, NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, CS_LENGTH_RANGE.MEDIUM_CS_LEN, RESOURCES_RANGE.PARTITIONS,
+				TOTAL_PARTITIONS, NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, CS_LENGTH_RANGE.VERY_LONG_CSLEN, RESOURCES_RANGE.PARTITIONS,
 				RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 
 		long[][] Ris;
