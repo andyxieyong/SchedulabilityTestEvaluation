@@ -12,8 +12,8 @@ import basicAnalysis.RTAWithoutBlocking;
 import entity.Resource;
 import entity.SporadicTask;
 import generatorTools.SystemGenerator;
-import test.SchedulabilityTest.CS_LENGTH_RANGE;
-import test.SchedulabilityTest.RESOURCES_RANGE;
+import generatorTools.SystemGenerator.CS_LENGTH_RANGE;
+import generatorTools.SystemGenerator.RESOURCES_RANGE;
 
 public class MoreSchedulabilityTest {
 
@@ -31,7 +31,7 @@ public class MoreSchedulabilityTest {
 
 	public static void experimentIncreasingWorkLoad(int smallSet) {
 		int NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE = 2;
-		double RESOURCE_SHARING_FACTOR = 0.3;
+		double RESOURCE_SHARING_FACTOR = 0.4;
 
 		int NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION = smallSet;
 
@@ -44,7 +44,7 @@ public class MoreSchedulabilityTest {
 		FIFONP fnp = new FIFONP();
 
 		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION,
-				TOTAL_PARTITIONS, NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, CS_LENGTH_RANGE.VERY_LONG_CSLEN, RESOURCES_RANGE.PARTITIONS,
+				TOTAL_PARTITIONS, NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, CS_LENGTH_RANGE.VERY_SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS,
 				RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 
 		String result = "";
@@ -102,10 +102,10 @@ public class MoreSchedulabilityTest {
 		System.out.print(result);
 	}
 
-	public static void experimentIncreasingCriticalSectionLength(int tasksNumConfig, int csLenConfig) {
-		double RESOURCE_SHARING_FACTOR = 0.3;
+	public static void experimentIncreasingCriticalSectionLength(int csLenConfig) {
+		double RESOURCE_SHARING_FACTOR = 0.4;
 		int NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE = 3;
-		int NUMBER_OF_TASKS_ON_EACH_PARTITION = 3 + 2 * (tasksNumConfig - 1);
+		int NUMBER_OF_TASKS_ON_EACH_PARTITION = 4;
 
 		CS_LENGTH_RANGE range = null;
 		switch (csLenConfig) {
@@ -129,7 +129,7 @@ public class MoreSchedulabilityTest {
 		}
 
 		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_TASKS_ON_EACH_PARTITION, TOTAL_PARTITIONS,
-				NUMBER_OF_TASKS_ON_EACH_PARTITION, true, range, RESOURCES_RANGE.HALF_PARITIONS, RESOURCE_SHARING_FACTOR,
+				NUMBER_OF_TASKS_ON_EACH_PARTITION, true, range, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR,
 				NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 		long[][] Ris;
 
@@ -182,7 +182,7 @@ public class MoreSchedulabilityTest {
 					sfp++;
 			}
 
-			System.out.println(2 + "" + tasksNumConfig + " " + csLenConfig + " times: " + i);
+			System.out.println(2 + "" + 1 + " " + csLenConfig + " times: " + i);
 		}
 
 		result += "cs _len: " + range.toString() + " ; New MrsP: " + (double) schedulableSystem_New_MrsP_Analysis2 / (double) TOTAL_NUMBER_OF_SYSTEMS
@@ -194,12 +194,12 @@ public class MoreSchedulabilityTest {
 	}
 
 	public static void experimentIncreasingContention(int bigSet, int smallSet) {
-		double RESOURCE_SHARING_FACTOR = 0.25;
+		double RESOURCE_SHARING_FACTOR = 0.4;
 		int NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE = 1 + 5 * (smallSet - 1);
-		int NUMBER_OF_TASKS_ON_EACH_PARTITION = 3 + 2 * (bigSet - 1);
+		int NUMBER_OF_TASKS_ON_EACH_PARTITION = 5;
 
 		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_TASKS_ON_EACH_PARTITION, TOTAL_PARTITIONS,
-				NUMBER_OF_TASKS_ON_EACH_PARTITION, true, CS_LENGTH_RANGE.VERY_SHORT_CS_LEN, RESOURCES_RANGE.HALF_PARITIONS, RESOURCE_SHARING_FACTOR,
+				NUMBER_OF_TASKS_ON_EACH_PARTITION, true, CS_LENGTH_RANGE.VERY_SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR,
 				NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 		long[][] Ris;
 

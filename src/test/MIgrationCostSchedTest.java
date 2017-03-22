@@ -14,8 +14,8 @@ import basicAnalysis.NewMrsPRTAWithMCNP;
 import entity.Resource;
 import entity.SporadicTask;
 import generatorTools.SystemGenerator;
-import test.SchedulabilityTest.CS_LENGTH_RANGE;
-import test.SchedulabilityTest.RESOURCES_RANGE;
+import generatorTools.SystemGenerator.CS_LENGTH_RANGE;
+import generatorTools.SystemGenerator.RESOURCES_RANGE;
 
 public class MIgrationCostSchedTest {
 
@@ -82,13 +82,111 @@ public class MIgrationCostSchedTest {
 //		}
 		
 		for (int j = 1; j < 6; j++) {
-			experimentIncreasingCriticalSectionLength(3, j);
+			experimentIncreasingCriticalSectionLength(2, j);
 		}
+		
+//		for (int j = 1; j < 10; j++) {
+//			experimentIncreasingContention(2, j);
+//		}
+//		
+//		for (int j = 0; j < 11; j++) {
+//			experimentIncreasingParallel(j);
+//		}
 		
 		System.out.println();
 		
 		ResultReader.schedreader();
 		ResultReader.migReader();
+	}
+	
+	public static void experimentIncreasingParallel(int partitions) {
+		double RESOURCE_SHARING_FACTOR = 0.4;
+		int NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE = 2;
+		int NUMBER_OF_TASKS_ON_EACH_PARTITION = 5;
+		int total_partitions = 4 + partitions * 2;
+
+		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_TASKS_ON_EACH_PARTITION, total_partitions,
+				NUMBER_OF_TASKS_ON_EACH_PARTITION, true, CS_LENGTH_RANGE.VERY_SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR,
+				NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
+		long[][] Ris;
+		NewMrsPRTA mrsp = new NewMrsPRTA();
+		NewMrsPRTAWithMC mrsp_mig = new NewMrsPRTAWithMC();
+		NewMrsPRTAWithMCNP mrsp_np = new NewMrsPRTAWithMCNP();
+
+		String result = "";
+		int smrsp = 0;
+		int smrsp_mig = 0;
+		int smrsp_np1 = 0;
+		int smrsp_np5 = 0;
+		int smrsp_np10 = 0;
+		int smrsp_np20 = 0;
+		int smrsp_np25 = 0;
+		int smrsp_np30 = 0;
+		int smrsp_np40 = 0;
+		int smrsp_np50 = 0;
+		int smrsp_np100 = 0;
+
+		for (int i = 0; i < TOTAL_NUMBER_OF_SYSTEMS; i++) {
+			ArrayList<ArrayList<SporadicTask>> tasks = generator.generateTasks();
+			ArrayList<Resource> resources = generator.generateResources();
+			generator.generateResourceUsage(tasks, resources);
+
+			Ris = mrsp.NewMrsPRTATest(tasks, resources, false);
+			if (isSystemSchedulable(tasks, Ris))
+				smrsp++;
+
+			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 1, false);
+			if (isSystemSchedulable(tasks, Ris))
+				smrsp_np1++;
+
+			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 5, false);
+			if (isSystemSchedulable(tasks, Ris))
+				smrsp_np5++;
+
+			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 10, false);
+			if (isSystemSchedulable(tasks, Ris))
+				smrsp_np10++;
+
+			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 20, false);
+			if (isSystemSchedulable(tasks, Ris))
+				smrsp_np20++;
+
+			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 25, false);
+			if (isSystemSchedulable(tasks, Ris))
+				smrsp_np25++;
+
+			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 30, false);
+			if (isSystemSchedulable(tasks, Ris))
+				smrsp_np30++;
+
+			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 40, false);
+			if (isSystemSchedulable(tasks, Ris))
+				smrsp_np40++;
+
+			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 50, false);
+			if (isSystemSchedulable(tasks, Ris))
+				smrsp_np50++;
+
+			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 100, false);
+			if (isSystemSchedulable(tasks, Ris))
+				smrsp_np100++;
+
+			Ris = mrsp_mig.NewMrsPRTATest(tasks, resources, MIGRATION_COST, false);
+			if (isSystemSchedulable(tasks, Ris))
+				smrsp_mig++;
+
+			System.out.println(4 + "" + 1 + " " + total_partitions + " times: " + i);
+
+		}
+
+		result += (double) smrsp / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) smrsp_np1 / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
+				+ (double) smrsp_np5 / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) smrsp_np10 / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
+				+ (double) smrsp_np20 / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) smrsp_np25 / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
+				+ (double) smrsp_np30 / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) smrsp_np40 / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
+				+ (double) smrsp_np50 / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) smrsp_np100 / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
+				+ (double) smrsp_mig / (double) TOTAL_NUMBER_OF_SYSTEMS + "\n";
+		// System.out.print(result);
+		writeSystem(("mig 4 " + 1 + " " + total_partitions), result);
 	}
 
 	public static void experimentIncreasingWorkLoad(int bigSet, int smallSet) {
@@ -98,7 +196,7 @@ public class MIgrationCostSchedTest {
 		int NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION = smallSet;
 
 		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION,
-				TOTAL_PARTITIONS, NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, CS_LENGTH_RANGE.VERY_LONG_CSLEN, RESOURCES_RANGE.PARTITIONS,
+				TOTAL_PARTITIONS, NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, CS_LENGTH_RANGE.VERY_SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS,
 				RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 
 		long[][] Ris;
@@ -299,7 +397,7 @@ public class MIgrationCostSchedTest {
 	public static void experimentIncreasingContention(int bigSet, int smallSet) {
 		double RESOURCE_SHARING_FACTOR = 0.4;
 		int NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE = 1 + 5 * (smallSet - 1);
-		int NUMBER_OF_TASKS_ON_EACH_PARTITION = 4 + 2 * (bigSet - 1);
+		int NUMBER_OF_TASKS_ON_EACH_PARTITION = 4 + 1 * (bigSet - 1);
 
 		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_TASKS_ON_EACH_PARTITION, TOTAL_PARTITIONS,
 				NUMBER_OF_TASKS_ON_EACH_PARTITION, true, CS_LENGTH_RANGE.VERY_SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR,

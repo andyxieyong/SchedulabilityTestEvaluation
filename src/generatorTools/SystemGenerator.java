@@ -2,11 +2,24 @@ package generatorTools;
 
 import java.util.ArrayList;
 import java.util.Random;
+
 import entity.Resource;
 import entity.SporadicTask;
-import test.SchedulabilityTest;
 
 public class SystemGenerator {
+
+	/* define how long the critical section can be */
+	public static enum CS_LENGTH_RANGE {
+		VERY_LONG_CSLEN, LONG_CSLEN, MEDIUM_CS_LEN, SHORT_CS_LEN, VERY_SHORT_CS_LEN
+	};
+
+	/* define how many resources in the system */
+	public static enum RESOURCES_RANGE {
+		HALF_PARITIONS, /* partitions / 2 us */
+		PARTITIONS, /* partitions us */
+		DOUBLE_PARTITIONS, /* partitions * 2 us */
+	};
+	
 	public int task_id = 1;
 	public int minT;
 	public int maxT;
@@ -14,14 +27,14 @@ public class SystemGenerator {
 	public int total_partitions;
 	public int number_of_tasks_per_processor;
 	public boolean isLogUni;
-	public SchedulabilityTest.CS_LENGTH_RANGE cs_len_range;
-	public SchedulabilityTest.RESOURCES_RANGE range;
+	public CS_LENGTH_RANGE cs_len_range;
+	public RESOURCES_RANGE range;
 
 	public double rsf;
 	public int number_of_max_access;
 
 	public SystemGenerator(int minT, int maxT, double util, int total_partitions, int number_of_tasks_per_processor, boolean isLogUni,
-			SchedulabilityTest.CS_LENGTH_RANGE cs_len_range, SchedulabilityTest.RESOURCES_RANGE range, double rsf, int number_of_max_access) {
+			CS_LENGTH_RANGE cs_len_range,RESOURCES_RANGE range, double rsf, int number_of_max_access) {
 		this.minT = minT;
 		this.maxT = maxT;
 		this.util = util;

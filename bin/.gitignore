@@ -1,1 +1,6 @@
 /native/
+/implementationAwareAnalysis/
+/javaToC/
+/test/
+/implementationAwareTest/
+/generatorTools/

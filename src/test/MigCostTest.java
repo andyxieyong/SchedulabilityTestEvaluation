@@ -7,6 +7,8 @@ import basicAnalysis.NewMrsPRTAWithMCNP;
 import entity.Resource;
 import entity.SporadicTask;
 import generatorTools.SystemGenerator;
+import generatorTools.SystemGenerator.CS_LENGTH_RANGE;
+import generatorTools.SystemGenerator.RESOURCES_RANGE;
 
 public class MigCostTest {
 
@@ -24,8 +26,8 @@ public class MigCostTest {
 		NewMrsPRTAWithMCNP mrsp_mcnp = new NewMrsPRTAWithMCNP();
 
 		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION,
-				TOTAL_PARTITIONS, NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, SchedulabilityTest.CS_LENGTH_RANGE.MEDIUM_CS_LEN,
-				SchedulabilityTest.RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
+				TOTAL_PARTITIONS, NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, CS_LENGTH_RANGE.MEDIUM_CS_LEN,
+				RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 
 		for (int i = 0; i < 1000000; i++) {
 			ArrayList<ArrayList<SporadicTask>> tasks = generator.generateTasks();

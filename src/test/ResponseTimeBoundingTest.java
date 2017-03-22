@@ -13,6 +13,8 @@ import basicAnalysis.NewMrsPRTA;
 import entity.Resource;
 import entity.SporadicTask;
 import generatorTools.SystemGenerator;
+import generatorTools.SystemGenerator.CS_LENGTH_RANGE;
+import generatorTools.SystemGenerator.RESOURCES_RANGE;
 
 public class ResponseTimeBoundingTest {
 
@@ -25,7 +27,7 @@ public class ResponseTimeBoundingTest {
 	public static int NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE = 25;
 	public static double RESOURCE_SHARING_FACTOR = .4;
 
-	public static SchedulabilityTest.CS_LENGTH_RANGE range = SchedulabilityTest.CS_LENGTH_RANGE.VERY_SHORT_CS_LEN;
+	public static CS_LENGTH_RANGE range = CS_LENGTH_RANGE.VERY_SHORT_CS_LEN;
 
 	public static void main(String[] args) {
 
@@ -38,7 +40,7 @@ public class ResponseTimeBoundingTest {
 		FIFONP fnp = new FIFONP();
 
 		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION,
-				TOTAL_PARTITIONS, NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, range, SchedulabilityTest.RESOURCES_RANGE.PARTITIONS,
+				TOTAL_PARTITIONS, NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, range, RESOURCES_RANGE.PARTITIONS,
 				RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 
 		long[][] r1, r2, diff;

@@ -18,12 +18,13 @@ public class ResultReader {
 		schedreader();
 		migReader();
 	}
-	
-	public static void schedreader(){
+
+	public static void schedreader() {
 		String result = "Work Load \n";
 		for (int bigSet = 1; bigSet < 6; bigSet++) {
 
-			//result += "access: " + (2 + (bigSet - 1) * 3) + " and rsf: " + (.2 + (bigSet - 1) * .3) + "\n";
+			// result += "access: " + (2 + (bigSet - 1) * 3) + " and rsf: " +
+			// (.2 + (bigSet - 1) * .3) + "\n";
 
 			for (int smallSet = 1; smallSet < 10; smallSet++) {
 				String filepath = "result/" + "1" + " " + bigSet + " " + smallSet + ".txt";
@@ -98,12 +99,13 @@ public class ResultReader {
 		writer.println(result);
 		writer.close();
 	}
-	
-	public static void migReader(){
+
+	public static void migReader() {
 		String result = "Work Load \n";
 		for (int bigSet = 1; bigSet < 6; bigSet++) {
 
-			//result += "access: " + (2 + (bigSet - 1) * 3) + " and rsf: " + (.2 + (bigSet - 1) * .3) + "\n";
+			// result += "access: " + (2 + (bigSet - 1) * 3) + " and rsf: " +
+			// (.2 + (bigSet - 1) * .3) + "\n";
 
 			for (int smallSet = 1; smallSet < 10; smallSet++) {
 				String filepath = "result/" + "mig 1" + " " + bigSet + " " + smallSet + ".txt";
@@ -157,6 +159,26 @@ public class ResultReader {
 				if (lines != null)
 					result += bigSet + "" + smallSet + " " + lines.get(0) + "\n";
 			}
+
+			result += "\n";
+
+		}
+
+		result += "\n \n Parallel \n";
+
+		for (int partitions = 0; partitions < 11; partitions++) {
+			result += "tasks per core: " + (4 + 2 * partitions) + "\n";
+
+			String filepath = "result/" + "mig 4" + " " + 1 + " " + (4 + 2 * partitions) + ".txt";
+
+			List<String> lines = null;
+			try {
+				lines = Files.readAllLines(Paths.get(filepath), StandardCharsets.UTF_8);
+			} catch (IOException e) {
+			}
+
+			if (lines != null)
+				result += 1 + "" + (4 + 2 * partitions) + " " + lines.get(0) + "\n";
 
 			result += "\n";
 
