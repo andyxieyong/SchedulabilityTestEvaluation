@@ -27,25 +27,26 @@ public class BasicAnalysisTest {
 		IAFIFONP fnp = new IAFIFONP();
 		IANewMrsPRTAWithMCNP mrsp = new IANewMrsPRTAWithMCNP();
 
-//		FIFOLinearC fifoc = new FIFOLinearC();
+		// FIFOLinearC fifoc = new FIFOLinearC();
 
-		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION,
-				TOTAL_PARTITIONS, NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, CS_LENGTH_RANGE.VERY_SHORT_CS_LEN,
+		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD,
+				0.1 * (double) NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, TOTAL_PARTITIONS,
+				NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, CS_LENGTH_RANGE.VERY_SHORT_CS_LEN,
 				RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 
 		ArrayList<ArrayList<SporadicTask>> tasks = generator.generateTasks();
 		ArrayList<Resource> resources = generator.generateResources();
 		generator.generateResourceUsage(tasks, resources);
-		
+
 		System.out.println(IASUtils.MrsP_PREEMPTION_AND_MIGRATION);
 
 		int i = 0;
 		while (i <= TOTAL_NUMBER_OF_SYSTEMS) {
 			fp.NewMrsPRTATest(tasks, resources, false);
 			fnp.NewMrsPRTATest(tasks, resources, false);
-			mrsp.NewMrsPRTATest(tasks, resources, IASUtils.MrsP_PREEMPTION_AND_MIGRATION , 5, false);
-//			fifoc.NewMrsPRTATest(tasks, resources, true, false);
-//			fifoc.NewMrsPRTATest(tasks, resources, false, false);
+			mrsp.NewMrsPRTATest(tasks, resources, IASUtils.MrsP_PREEMPTION_AND_MIGRATION, 5, false);
+			// fifoc.NewMrsPRTATest(tasks, resources, true, false);
+			// fifoc.NewMrsPRTATest(tasks, resources, false, false);
 			i++;
 			System.out.println(i);
 		}

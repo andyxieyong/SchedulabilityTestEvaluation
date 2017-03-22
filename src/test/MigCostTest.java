@@ -25,22 +25,21 @@ public class MigCostTest {
 		NewMrsPRTAWithMC mrsp_mc = new NewMrsPRTAWithMC();
 		NewMrsPRTAWithMCNP mrsp_mcnp = new NewMrsPRTAWithMCNP();
 
-		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION,
-				TOTAL_PARTITIONS, NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, CS_LENGTH_RANGE.MEDIUM_CS_LEN,
-				RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
+		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD,
+				0.1 * (double) NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, TOTAL_PARTITIONS,
+				NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, CS_LENGTH_RANGE.MEDIUM_CS_LEN, RESOURCES_RANGE.PARTITIONS,
+				RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 
 		for (int i = 0; i < 1000000; i++) {
 			ArrayList<ArrayList<SporadicTask>> tasks = generator.generateTasks();
 			ArrayList<Resource> resources = generator.generateResources();
 			generator.generateResourceUsage(tasks, resources);
 			System.out.println(i);
-			
-			
-			mrsp_mcnp.NewMrsPRTATest(tasks, resources,1,2,false);
-			
-			mrsp_mc.NewMrsPRTATest(tasks, resources,1,false);
-			
-			
+
+			mrsp_mcnp.NewMrsPRTATest(tasks, resources, 1, 2, false);
+
+			mrsp_mc.NewMrsPRTATest(tasks, resources, 1, false);
+
 		}
 
 	}
@@ -49,7 +48,8 @@ public class MigCostTest {
 		for (int i = 0; i < r1.length; i++) {
 			for (int j = 0; j < r1[i].length; j++) {
 				if (r1[i][j] != r2[i][j]) {
-					System.out.println("not equal at:  i=" + i + "  j=" + j + "   r1: " + r1[i][j] + "   r2:" + r2[i][j]);
+					System.out
+							.println("not equal at:  i=" + i + "  j=" + j + "   r1: " + r1[i][j] + "   r2:" + r2[i][j]);
 
 					return false;
 				}

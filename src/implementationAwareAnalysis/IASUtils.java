@@ -6,7 +6,7 @@ import entity.SporadicTask;
 
 public class IASUtils {
 
-//	private static double CACHE_OVERHEADS = (double) (1905) / (double) 1000;
+	// private static double CACHE_OVERHEADS = (double) (1905) / (double) 1000;
 	private static double LINUX_SCHED = (double) (845) / (double) 1000;
 	private static double LINUX_SCHED_AWAY = (double) (736) / (double) 1000;
 	private static double LINUX_CONTEXT_SWTICH = (double) (965) / (double) 1000;
@@ -19,8 +19,10 @@ public class IASUtils {
 	private static double PFP_SCHED_REQUEUE = (double) (603) / (double) 1000;
 	private static double PFP_SCHED_SET_NEXT = (double) (308) / (double) 1000;
 
-//	private static double PFP_SCHED_TAKE_NEXT = (double) (274) / (double) 1000;
-//	private static double FINISH_SWITCH = (double) (1113 + 1165) / (double) 1000;
+	// private static double PFP_SCHED_TAKE_NEXT = (double) (274) / (double)
+	// 1000;
+	// private static double FINISH_SWITCH = (double) (1113 + 1165) / (double)
+	// 1000;
 
 	public static double FIFONP_LOCK = (double) (501 + 259 + 219) / (double) 1000;
 	public static double FIFONP_UNLOCK = (double) 602 / (double) 1000;
@@ -39,8 +41,8 @@ public class IASUtils {
 	public static double FULL_CONTEXT_SWTICH1 = LINUX_SCHED + LINUX_SCHED_AWAY + LINUX_CONTEXT_SWTICH + PFP_SCHEDULER;
 	public static double FULL_CONTEXT_SWTICH2 = FULL_CONTEXT_SWTICH1 + LITMUS_RELEASE + LITMUS_COMPLETE;
 
-	public static double MrsP_PREEMPTION_AND_MIGRATION =  LINUX_SCHED * 2 + PFP_SCHED_CHECK * 2 + MrsP_INSERT + PFP_SCHED_REQUEUE
-			+ MrsP_HELP_IN_SCHEDULE + PFP_SCHED_SET_NEXT + LINUX_SCHED_AWAY + LINUX_CONTEXT_SWTICH;
+	public static double MrsP_PREEMPTION_AND_MIGRATION = LINUX_SCHED * 2 + PFP_SCHED_CHECK * 2 + MrsP_INSERT
+			+ PFP_SCHED_REQUEUE + MrsP_HELP_IN_SCHEDULE + PFP_SCHED_SET_NEXT + LINUX_SCHED_AWAY + LINUX_CONTEXT_SWTICH;
 
 	public long[][] initResponseTime(ArrayList<ArrayList<SporadicTask>> tasks) {
 		long[][] response_times = new long[tasks.size()][];
@@ -65,9 +67,10 @@ public class IASUtils {
 		int task_id = 1;
 		for (int i = 0; i < Ris.length; i++) {
 			for (int j = 0; j < Ris[i].length; j++) {
-				System.out.println("T" + task_id + " RT: " + Ris[i][j] + ", D: " + tasks.get(i).get(j).deadline + ", S = " + tasks.get(i).get(j).spin
-						+ ", L = " + tasks.get(i).get(j).local + ", I = " + tasks.get(i).get(j).interference + ", WCET = " + tasks.get(i).get(j).WCET
-						+ ", Resource: " + tasks.get(i).get(j).pure_resource_execution_time);
+				System.out.println("T" + task_id + " RT: " + Ris[i][j] + ", D: " + tasks.get(i).get(j).deadline
+						+ ", S = " + tasks.get(i).get(j).spin + ", L = " + tasks.get(i).get(j).local + ", I = "
+						+ tasks.get(i).get(j).interference + ", WCET = " + tasks.get(i).get(j).WCET + ", Resource: "
+						+ tasks.get(i).get(j).pure_resource_execution_time);
 				task_id++;
 			}
 			System.out.println();
