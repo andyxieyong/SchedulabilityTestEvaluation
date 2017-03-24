@@ -23,7 +23,7 @@ public class MIgrationCostSchedTest {
 	public static int TOTAL_PARTITIONS = 16;
 	public static int MIN_PERIOD = 1;
 	public static int MAX_PERIOD = 1000;
-	public static int MIGRATION_COST = 10;
+	public static int MIGRATION_COST = 1;
 
 	public static void main(String[] args) throws InterruptedException {
 		// int experiment = 0;
@@ -77,13 +77,13 @@ public class MIgrationCostSchedTest {
 		// System.out.println();
 		// }
 
-		// for (int j = 1; j < 10; j++) {
-		// experimentIncreasingWorkLoad(3, j);
-		// }
+		 for (int j = 1; j < 10; j++) {
+		 experimentIncreasingWorkLoad(3, j);
+		 }
 
-		for (int j = 1; j < 6; j++) {
-			experimentIncreasingCriticalSectionLength(2, j);
-		}
+//		for (int j = 1; j < 6; j++) {
+//			experimentIncreasingCriticalSectionLength(2, j);
+//		}
 
 		// for (int j = 1; j < 10; j++) {
 		// experimentIncreasingContention(2, j);

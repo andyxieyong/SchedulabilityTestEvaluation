@@ -53,11 +53,6 @@ public class SchedulabilityTest {
 
 		} else
 			System.err.println("wrong parameter.");
-
-		// for(int i=1;i<10;i++){
-		// experimentIncreasingWorkLoad(3, i);
-		// }
-
 	}
 
 	public static void experimentIncreasingWorkLoad(int bigSet, int smallSet) {
