@@ -32,7 +32,7 @@ public class MoreSchedulabilityTest {
 
 	public static void experimentIncreasingWorkLoad(int smallSet) {
 		int NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE = 2;
-		double RESOURCE_SHARING_FACTOR = 0.4;
+		double RESOURCE_SHARING_FACTOR = 0.3;
 
 		int NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION = smallSet;
 
