@@ -158,16 +158,16 @@ public class SystemGenerator {
 			long cs_len = 0;
 			switch (cs_len_range) {
 			case VERY_LONG_CSLEN:
-				cs_len = ran.nextInt(300) + 200;
+				cs_len = ran.nextInt(300 - 200) + 201;
 				break;
 			case LONG_CSLEN:
-				cs_len = ran.nextInt(200) + 100;
+				cs_len = ran.nextInt(200 - 100) + 101;
 				break;
 			case MEDIUM_CS_LEN:
-				cs_len = ran.nextInt(100) + 50;
+				cs_len = ran.nextInt(100 - 50) + 51;
 				break;
 			case SHORT_CS_LEN:
-				cs_len = ran.nextInt(50) + 15;
+				cs_len = ran.nextInt(50 - 15) + 16;
 				break;
 			case VERY_SHORT_CS_LEN:
 				cs_len = ran.nextInt(15) + 1;

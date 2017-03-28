@@ -83,8 +83,11 @@ public class NewMrsPRTAWithMCNP {
 						np);
 				task.interference = highPriorityInterference(task, tasks, response_time[i][j], response_time, resources,
 						oneMig, np);
-				task.local = localBlocking(task, tasks, resources, response_time, response_time[i][j], oneMig, np)
-						+ (isTaskIncurNPSection(task, tasks.get(task.partition), resources) ? np : 0);
+				
+				task.local = localBlocking(task, tasks, resources, response_time, response_time[i][j], oneMig, np);
+				long npsection = (isTaskIncurNPSection(task, tasks.get(task.partition), resources) ? 0 : 0);
+				task.local = Long.max(task.local, npsection);
+				
 				response_time_plus[i][j] = task.Ri = task.WCET + task.spin + task.interference + task.local;
 
 				if (task.Ri > task.deadline)
