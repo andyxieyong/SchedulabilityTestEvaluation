@@ -89,8 +89,9 @@ public class IANewMrsPRTAWithMCNP {
 						np, task);
 				task.interference = highPriorityInterference(task, tasks, response_time[i][j], response_time, resources,
 						oneMig, np);
-				task.local = localBlocking(task, tasks, resources, response_time, response_time[i][j], oneMig, np)
-						+ (isTaskIncurNPSection(task, tasks.get(task.partition), resources) ? np : 0);
+				task.local = localBlocking(task, tasks, resources, response_time, response_time[i][j], oneMig, np);
+				long npsection = (isTaskIncurNPSection(task, tasks.get(task.partition), resources) ? np : 0);
+				task.local = Long.max(task.local, npsection);
 
 				long implementation_overheads = (long) Math.ceil(task.implementation_overheads);
 				long migration_overheads = (long) Math.ceil(task.migration_overheads_plus);

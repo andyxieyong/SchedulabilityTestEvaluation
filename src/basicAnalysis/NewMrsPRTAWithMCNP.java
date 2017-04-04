@@ -85,7 +85,7 @@ public class NewMrsPRTAWithMCNP {
 						oneMig, np);
 				
 				task.local = localBlocking(task, tasks, resources, response_time, response_time[i][j], oneMig, np);
-				long npsection = (isTaskIncurNPSection(task, tasks.get(task.partition), resources) ? 0 : 0);
+				long npsection = (isTaskIncurNPSection(task, tasks.get(task.partition), resources) ? np : 0);
 				task.local = Long.max(task.local, npsection);
 				
 				response_time_plus[i][j] = task.Ri = task.WCET + task.spin + task.interference + task.local;
