@@ -79,13 +79,13 @@ public class MIgrationCostSchedTest {
 		// System.out.println();
 		// }
 
-		for (int j = 1; j < 10; j++) {
-			experimentIncreasingWorkLoad(1, j);
-		}
+//		for (int j = 1; j < 10; j++) {
+//			experimentIncreasingWorkLoad(1, j);
+//		}
 
-		// for (int j = 1; j < 6; j++) {
-		// experimentIncreasingCriticalSectionLength(2, j);
-		// }
+		 for (int j = 1; j < 6; j++) {
+		 experimentIncreasingCriticalSectionLength(2, j);
+		 }
 
 		// for (int j = 1; j < 10; j++) {
 		// experimentIncreasingContention(2, j);
