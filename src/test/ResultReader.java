@@ -127,7 +127,7 @@ public class ResultReader {
 		for (int bigSet = 1; bigSet < 4; bigSet++) {
 			result += "tasks per core: " + (3 + (bigSet - 1) * 2) + "\n";
 
-			for (int smallSet = 1; smallSet < 6; smallSet++) {
+			for (int smallSet = 1; smallSet < 301; smallSet++) {
 				String filepath = "result/" + "mig 2" + " " + bigSet + " " + smallSet + ".txt";
 
 				List<String> lines = null;
@@ -166,8 +166,8 @@ public class ResultReader {
 
 		result += "\n \n Parallel \n";
 
-		for (int partitions = 0; partitions < 11; partitions++) {
-			result += "tasks per core: " + (4 + 2 * partitions) + "\n";
+		for (int partitions = 0; partitions < 50; partitions++) {
+			//result += "tasks per core: " + (4 + 2 * partitions) + "\n";
 
 			String filepath = "result/" + "mig 4" + " " + 1 + " " + (4 + 2 * partitions) + ".txt";
 
@@ -178,7 +178,7 @@ public class ResultReader {
 			}
 
 			if (lines != null)
-				result += 1 + "" + (4 + 2 * partitions) + " " + lines.get(0) + "\n";
+				result += 1 + "" + (partitions) + " " + lines.get(0) + "\n";
 
 			result += "\n";
 

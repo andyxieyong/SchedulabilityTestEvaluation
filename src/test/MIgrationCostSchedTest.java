@@ -83,17 +83,17 @@ public class MIgrationCostSchedTest {
 		// experimentIncreasingWorkLoad(1, j);
 		// }
 
-		for (int j = 1; j < 6; j++) {
-			experimentIncreasingCriticalSectionLength(2, j);
-		}
+//		for (int j = 1; j <= 300; j++) {
+//			experimentIncreasingCriticalSectionLength(2, j);
+//		}
 
 		// for (int j = 1; j < 10; j++) {
 		// experimentIncreasingContention(2, j);
 		// }
 		//
-		// for (int j = 0; j < 11; j++) {
-		// experimentIncreasingParallel(j);
-		// }
+		 for (int j = 2; j < 33; j++) {
+		 experimentIncreasingParallel(j);
+		 }
 
 		System.out.println();
 
@@ -105,28 +105,25 @@ public class MIgrationCostSchedTest {
 		double RESOURCE_SHARING_FACTOR = 0.4;
 		int NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE = 2;
 		int NUMBER_OF_TASKS_ON_EACH_PARTITION = 5;
-		int total_partitions = 4 + partitions * 2;
+		int total_partitions = partitions;
 
-		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_TASKS_ON_EACH_PARTITION, total_partitions,
-				NUMBER_OF_TASKS_ON_EACH_PARTITION, true, CS_LENGTH_RANGE.VERY_SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR,
+		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD,
+				0.1 * (double) NUMBER_OF_TASKS_ON_EACH_PARTITION, total_partitions, NUMBER_OF_TASKS_ON_EACH_PARTITION,
+				true, CS_LENGTH_RANGE.VERY_LONG_CSLEN, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR,
 				NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 		long[][] Ris;
 		NewMrsPRTA mrsp = new NewMrsPRTA();
 		NewMrsPRTAWithMC mrsp_mig = new NewMrsPRTAWithMC();
 		NewMrsPRTAWithMCNP mrsp_np = new NewMrsPRTAWithMCNP();
+		FIFOP fp = new FIFOP();
+		FIFONP fnp = new FIFONP();
 
 		String result = "";
 		int smrsp = 0;
 		int smrsp_mig = 0;
-		int smrsp_np1 = 0;
-		int smrsp_np5 = 0;
-		int smrsp_np10 = 0;
-		int smrsp_np20 = 0;
-		int smrsp_np25 = 0;
-		int smrsp_np30 = 0;
-		int smrsp_np40 = 0;
-		int smrsp_np50 = 0;
-		int smrsp_np100 = 0;
+		int fifop = 0;
+		int fifonp = 0;
+		int smrsp_np = 0;
 
 		for (int i = 0; i < TOTAL_NUMBER_OF_SYSTEMS; i++) {
 			ArrayList<ArrayList<SporadicTask>> tasks = generator.generateTasks();
@@ -137,55 +134,30 @@ public class MIgrationCostSchedTest {
 			if (isSystemSchedulable(tasks, Ris))
 				smrsp++;
 
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 1, false);
+			Ris = fp.NewMrsPRTATest(tasks, resources, false);
 			if (isSystemSchedulable(tasks, Ris))
-				smrsp_np1++;
+				fifop++;
 
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 10, false);
+			Ris = fnp.NewMrsPRTATest(tasks, resources, false);
 			if (isSystemSchedulable(tasks, Ris))
-				smrsp_np5++;
-
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 20, false);
-			if (isSystemSchedulable(tasks, Ris))
-				smrsp_np10++;
-
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 50, false);
-			if (isSystemSchedulable(tasks, Ris))
-				smrsp_np20++;
-
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 75, false);
-			if (isSystemSchedulable(tasks, Ris))
-				smrsp_np25++;
-
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 100, false);
-			if (isSystemSchedulable(tasks, Ris))
-				smrsp_np30++;
-
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 120, false);
-			if (isSystemSchedulable(tasks, Ris))
-				smrsp_np40++;
-
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 150, false);
-			if (isSystemSchedulable(tasks, Ris))
-				smrsp_np50++;
-
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 200, false);
-			if (isSystemSchedulable(tasks, Ris))
-				smrsp_np100++;
+				fifonp++;
 
 			Ris = mrsp_mig.NewMrsPRTATest(tasks, resources, MIGRATION_COST, false);
 			if (isSystemSchedulable(tasks, Ris))
 				smrsp_mig++;
 
+			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 300, false);
+			if (isSystemSchedulable(tasks, Ris))
+				smrsp_np++;
+
 			System.out.println(4 + "" + 1 + " " + total_partitions + " times: " + i);
 
 		}
 
-		result += (double) smrsp / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) smrsp_np1 / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
-				+ (double) smrsp_np5 / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) smrsp_np10 / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
-				+ (double) smrsp_np20 / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) smrsp_np25 / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
-				+ (double) smrsp_np30 / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) smrsp_np40 / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
-				+ (double) smrsp_np50 / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) smrsp_np100 / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
+		result += (double) smrsp / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
+				+ (double) fifop / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
+				+ (double) fifonp / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
+				+ (double) smrsp_np / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
 				+ (double) smrsp_mig / (double) TOTAL_NUMBER_OF_SYSTEMS + "\n";
 		// System.out.print(result);
 		writeSystem(("mig 4 " + 1 + " " + total_partitions), result);
@@ -197,9 +169,10 @@ public class MIgrationCostSchedTest {
 
 		int NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION = smallSet;
 
-		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION,
-				TOTAL_PARTITIONS, NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, CS_LENGTH_RANGE.MEDIUM_CS_LEN, RESOURCES_RANGE.HALF_PARITIONS,
-				RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
+		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD,
+				0.1 * (double) NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, TOTAL_PARTITIONS,
+				NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, CS_LENGTH_RANGE.MEDIUM_CS_LEN,
+				RESOURCES_RANGE.HALF_PARITIONS, RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 
 		long[][] Ris;
 		NewMrsPRTA mrsp = new NewMrsPRTA();
@@ -244,8 +217,10 @@ public class MIgrationCostSchedTest {
 
 		}
 
-		result += (double) smrsp / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) fifonp / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
-				+ (double) fifop / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) smrsp_np100 / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
+		result += (double) smrsp / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
+				+ (double) fifonp / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
+				+ (double) fifop / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
+				+ (double) smrsp_np100 / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
 				+ (double) smrsp_mig / (double) TOTAL_NUMBER_OF_SYSTEMS + "\n";
 
 		// System.out.print(result);
@@ -258,31 +233,32 @@ public class MIgrationCostSchedTest {
 		int NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE = 3;
 		int NUMBER_OF_TASKS_ON_EACH_PARTITION = 3 + 1 * (bigSet - 1);
 
-		CS_LENGTH_RANGE range = null;
-		switch (smallSet) {
-		case 1:
-			range = CS_LENGTH_RANGE.VERY_SHORT_CS_LEN;
-			break;
-		case 2:
-			range = CS_LENGTH_RANGE.SHORT_CS_LEN;
-			break;
-		case 3:
-			range = CS_LENGTH_RANGE.MEDIUM_CS_LEN;
-			break;
-		case 4:
-			range = CS_LENGTH_RANGE.LONG_CSLEN;
-			break;
-		case 5:
-			range = CS_LENGTH_RANGE.VERY_LONG_CSLEN;
-			break;
-		default:
-			System.out.println("wrong cs len");
-			break;
-		}
+		// CS_LENGTH_RANGE range = null;
+		// switch (smallSet) {
+		// case 1:
+		// range = CS_LENGTH_RANGE.VERY_SHORT_CS_LEN;
+		// break;
+		// case 2:
+		// range = CS_LENGTH_RANGE.SHORT_CS_LEN;
+		// break;
+		// case 3:
+		// range = CS_LENGTH_RANGE.MEDIUM_CS_LEN;
+		// break;
+		// case 4:
+		// range = CS_LENGTH_RANGE.LONG_CSLEN;
+		// break;
+		// case 5:
+		// range = CS_LENGTH_RANGE.VERY_LONG_CSLEN;
+		// break;
+		// default:
+		// System.out.println("wrong cs len");
+		// break;
+		// }
 
-		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_TASKS_ON_EACH_PARTITION, TOTAL_PARTITIONS,
-				NUMBER_OF_TASKS_ON_EACH_PARTITION, true, range, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR,
-				NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
+		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD,
+				0.1 * (double) NUMBER_OF_TASKS_ON_EACH_PARTITION, TOTAL_PARTITIONS, NUMBER_OF_TASKS_ON_EACH_PARTITION,
+				true, null, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE,
+				smallSet);
 
 		long[][] Ris;
 		NewMrsPRTA mrsp = new NewMrsPRTA();
@@ -294,21 +270,9 @@ public class MIgrationCostSchedTest {
 		String result = "";
 		int smrsp = 0;
 		int smrsp_mig = 0;
-		int smrsp_np15 = 0;
-		int smrsp_np50 = 0;
-		int smrsp_np100 = 0;
-		int smrsp_np200 = 0;
-		int smrsp_np300 = 0;
 		int fifop = 0;
 		int fifonp = 0;
-
-		int smrsp_np1 = 0;
-		int smrsp_np10 = 0;
-		int smrsp_np25 = 0;
-		int smrsp_np75 = 0;
-		int smrsp_np150 = 0;
-		int smrsp_np250 = 0;
-		int smrsp_np350 = 0;
+		int smrsp_np = 0;
 
 		for (int i = 0; i < TOTAL_NUMBER_OF_SYSTEMS; i++) {
 			ArrayList<ArrayList<SporadicTask>> tasks = generator.generateTasks();
@@ -327,71 +291,24 @@ public class MIgrationCostSchedTest {
 			if (isSystemSchedulable(tasks, Ris))
 				fifonp++;
 
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 15, false);
-			if (isSystemSchedulable(tasks, Ris))
-				smrsp_np15++;
-
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 50, false);
-			if (isSystemSchedulable(tasks, Ris))
-				smrsp_np50++;
-
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 100, false);
-			if (isSystemSchedulable(tasks, Ris))
-				smrsp_np100++;
-
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 200, false);
-			if (isSystemSchedulable(tasks, Ris))
-				smrsp_np200++;
-
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 300, false);
-			if (isSystemSchedulable(tasks, Ris))
-				smrsp_np300++;
-
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 1, false);
-			if (isSystemSchedulable(tasks, Ris))
-				smrsp_np1++;
-
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 10, false);
-			if (isSystemSchedulable(tasks, Ris))
-				smrsp_np10++;
-
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 25, false);
-			if (isSystemSchedulable(tasks, Ris))
-				smrsp_np25++;
-
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 75, false);
-			if (isSystemSchedulable(tasks, Ris))
-				smrsp_np75++;
-
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 150, false);
-			if (isSystemSchedulable(tasks, Ris))
-				smrsp_np150++;
-
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 250, false);
-			if (isSystemSchedulable(tasks, Ris))
-				smrsp_np250++;
-
-			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, 350, false);
-			if (isSystemSchedulable(tasks, Ris))
-				smrsp_np350++;
-
 			Ris = mrsp_mig.NewMrsPRTATest(tasks, resources, MIGRATION_COST, false);
 			if (isSystemSchedulable(tasks, Ris))
 				smrsp_mig++;
+
+			Ris = mrsp_np.NewMrsPRTATest(tasks, resources, MIGRATION_COST, smallSet, false);
+			if (isSystemSchedulable(tasks, Ris))
+				smrsp_np++;
 
 			System.out.println(1 + "" + bigSet + " " + smallSet + " times: " + i);
 
 		}
 
-		result += (double) smrsp / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) fifop / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
-				+ (double) fifonp / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) smrsp_np1 / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
-				+ (double) smrsp_np10 / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) smrsp_np15 / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
-				+ (double) smrsp_np25 / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) smrsp_np50 / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
-				+ (double) smrsp_np75 / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) smrsp_np100 / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
-				+ (double) smrsp_np150 / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) smrsp_np200 / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
-				+ (double) smrsp_np250 / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) smrsp_np300 / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
-				+ (double) smrsp_np350 / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) smrsp_mig / (double) TOTAL_NUMBER_OF_SYSTEMS + "\n";
-		// System.out.print(result);
+		result += (double) smrsp / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
+				+ (double) fifop / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
+				+ (double) fifonp / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
+				+ (double) smrsp_np / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
+				+ (double) smrsp_mig / (double) TOTAL_NUMBER_OF_SYSTEMS + "\n";
+
 		writeSystem(("mig 2 " + bigSet + " " + smallSet), result);
 	}
 
@@ -400,8 +317,9 @@ public class MIgrationCostSchedTest {
 		int NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE = 1 + 5 * (smallSet - 1);
 		int NUMBER_OF_TASKS_ON_EACH_PARTITION = 4 + 1 * (bigSet - 1);
 
-		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_TASKS_ON_EACH_PARTITION, TOTAL_PARTITIONS,
-				NUMBER_OF_TASKS_ON_EACH_PARTITION, true, CS_LENGTH_RANGE.VERY_SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR,
+		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD,
+				0.1 * (double) NUMBER_OF_TASKS_ON_EACH_PARTITION, TOTAL_PARTITIONS, NUMBER_OF_TASKS_ON_EACH_PARTITION,
+				true, CS_LENGTH_RANGE.VERY_SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR,
 				NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 		long[][] Ris;
 		NewMrsPRTA mrsp = new NewMrsPRTA();
@@ -474,11 +392,16 @@ public class MIgrationCostSchedTest {
 
 		}
 
-		result += (double) smrsp / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) smrsp_np1 / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
-				+ (double) smrsp_np5 / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) smrsp_np10 / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
-				+ (double) smrsp_np20 / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) smrsp_np25 / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
-				+ (double) smrsp_np30 / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) smrsp_np40 / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
-				+ (double) smrsp_np50 / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) smrsp_np100 / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
+		result += (double) smrsp / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
+				+ (double) smrsp_np1 / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
+				+ (double) smrsp_np5 / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
+				+ (double) smrsp_np10 / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
+				+ (double) smrsp_np20 / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
+				+ (double) smrsp_np25 / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
+				+ (double) smrsp_np30 / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
+				+ (double) smrsp_np40 / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
+				+ (double) smrsp_np50 / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
+				+ (double) smrsp_np100 / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
 				+ (double) smrsp_mig / (double) TOTAL_NUMBER_OF_SYSTEMS + "\n";
 		// System.out.print(result);
 		writeSystem(("mig 3 " + bigSet + " " + smallSet), result);

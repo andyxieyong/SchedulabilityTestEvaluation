@@ -7,6 +7,7 @@ import entity.Resource;
 import entity.SporadicTask;
 
 public class SystemGenerator {
+	long csl = -1;
 
 	/* define how long the critical section can be */
 	public static enum CS_LENGTH_RANGE {
@@ -46,6 +47,23 @@ public class SystemGenerator {
 		this.range = range;
 		this.rsf = rsf;
 		this.number_of_max_access = number_of_max_access;
+		this.csl = -1;
+	}
+
+	public SystemGenerator(int minT, int maxT, double util, int total_partitions, int number_of_tasks_per_processor,
+			boolean isLogUni, CS_LENGTH_RANGE cs_len_range, RESOURCES_RANGE range, double rsf, int number_of_max_access,
+			long csl) {
+		this.minT = minT;
+		this.maxT = maxT;
+		this.util = util;
+		this.total_partitions = total_partitions;
+		this.number_of_tasks_per_processor = number_of_tasks_per_processor;
+		this.isLogUni = isLogUni;
+		this.cs_len_range = cs_len_range;
+		this.range = range;
+		this.rsf = rsf;
+		this.number_of_max_access = number_of_max_access;
+		this.csl = csl;
 	}
 
 	/*
@@ -156,25 +174,30 @@ public class SystemGenerator {
 
 		for (int i = 0; i < number_of_resources; i++) {
 			long cs_len = 0;
-			switch (cs_len_range) {
-			case VERY_LONG_CSLEN:
-				cs_len = ran.nextInt(300 - 200) + 201;
-				break;
-			case LONG_CSLEN:
-				cs_len = ran.nextInt(200 - 100) + 101;
-				break;
-			case MEDIUM_CS_LEN:
-				cs_len = ran.nextInt(100 - 50) + 51;
-				break;
-			case SHORT_CS_LEN:
-				cs_len = ran.nextInt(50 - 15) + 16;
-				break;
-			case VERY_SHORT_CS_LEN:
-				cs_len = ran.nextInt(15) + 1;
-				break;
-			default:
-				break;
+			if(csl == -1){
+				switch (cs_len_range) {
+				case VERY_LONG_CSLEN:
+					cs_len = ran.nextInt(300 - 200) + 201;
+					break;
+				case LONG_CSLEN:
+					cs_len = ran.nextInt(200 - 100) + 101;
+					break;
+				case MEDIUM_CS_LEN:
+					cs_len = ran.nextInt(100 - 50) + 51;
+					break;
+				case SHORT_CS_LEN:
+					cs_len = ran.nextInt(50 - 15) + 16;
+					break;
+				case VERY_SHORT_CS_LEN:
+					cs_len = ran.nextInt(15) + 1;
+					break;
+				default:
+					break;
+				}
 			}
+			else
+				cs_len = csl;
+
 			Resource resource = new Resource(i + 1, cs_len);
 			resources.add(resource);
 		}
