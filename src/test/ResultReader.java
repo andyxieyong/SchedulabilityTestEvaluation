@@ -169,7 +169,7 @@ public class ResultReader {
 		for (int partitions = 0; partitions < 50; partitions++) {
 			//result += "tasks per core: " + (4 + 2 * partitions) + "\n";
 
-			String filepath = "result/" + "mig 4" + " " + 1 + " " + (4 + 2 * partitions) + ".txt";
+			String filepath = "result/" + "mig 4" + " " + 1 + " " + (partitions) + ".txt";
 
 			List<String> lines = null;
 			try {
@@ -180,7 +180,7 @@ public class ResultReader {
 			if (lines != null)
 				result += 1 + "" + (partitions) + " " + lines.get(0) + "\n";
 
-			result += "\n";
+			//result += "\n";
 
 		}
 
