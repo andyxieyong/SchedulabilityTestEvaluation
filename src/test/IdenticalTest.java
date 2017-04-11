@@ -2,8 +2,6 @@ package test;
 
 import java.util.ArrayList;
 
-import basicAnalysis.FIFOLinearC;
-import basicAnalysis.FIFOP;
 import entity.Resource;
 import entity.SporadicTask;
 import generatorTools.SystemGenerator;
@@ -23,9 +21,9 @@ public class IdenticalTest {
 	static long maxC = 0;
 
 	public static void main(String[] args) {
-		FIFOLinearC fp_c = new FIFOLinearC();
-		FIFOP fp_java = new FIFOP();
-		long[][] r1, r2;
+//		FIFOLinearC fp_c = new FIFOLinearC();
+//		FIFOP fp_java = new FIFOP();
+//		long[][] r1, r2;
 		ArrayList<ArrayList<SporadicTask>> maxT = null;
 		ArrayList<Resource> maxR = null;
 		
