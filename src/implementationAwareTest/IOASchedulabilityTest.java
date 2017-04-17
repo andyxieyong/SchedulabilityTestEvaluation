@@ -85,18 +85,17 @@ public class IOASchedulabilityTest {
 		// }
 
 		// IOAResultReader.schedreader();
-		
-		
-		 for (int j = 1; j < 6; j++) {
-			 MrsPSchedulabilityTestNPLen(2, j);
-		 }
+
+		for (int j = 1; j < 6; j++) {
+			MrsPSchedulabilityTestNPLen(2, j);
+		}
 	}
 
 	public static void MrsPSchedulabilityTestNPLen(int tasksNumConfig, int csLenConfig) {
 		double RESOURCE_SHARING_FACTOR = 0.4;
 		int NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE = 3;
 		int NUMBER_OF_TASKS_ON_EACH_PARTITION = 4;
-		long np =0;
+		long np = 0;
 
 		CS_LENGTH_RANGE range = null;
 		switch (csLenConfig) {
@@ -127,19 +126,20 @@ public class IOASchedulabilityTest {
 		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_TASKS_ON_EACH_PARTITION, TOTAL_PARTITIONS,
 				NUMBER_OF_TASKS_ON_EACH_PARTITION, true, range, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR,
 				NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
-		long[][] Ris;
 
 		IANewMrsPRTAWithMCNP IOAmrsp = new IANewMrsPRTAWithMCNP();
+		IAFIFONP IOAfifonp = new IAFIFONP();
+		IAFIFOP IOAfifop = new IAFIFOP();
 
-		for (int i = 0; i < TOTAL_NUMBER_OF_SYSTEMS; i++) {
+		for (int i = 0; i < 100; i++) {
 			ArrayList<ArrayList<SporadicTask>> tasks = generator.generateTasks();
 			ArrayList<Resource> resources = generator.generateResources();
 			generator.generateResourceUsage(tasks, resources);
 
-			Ris = IOAmrsp.getResponseTime(tasks, resources, np, false);
-			if (isSystemSchedulable(tasks, Ris)) {
-				System.out.println("schedulable. np len: " + IOAmrsp.np);
-			}
+			IOAmrsp.getResponseTime(tasks, resources, np, false);
+			IOAfifonp.NewMrsPRTATest(tasks, resources, false);
+			IOAfifop.NewMrsPRTATest(tasks, resources, false);
+			System.out.println(i);
 		}
 	}
 

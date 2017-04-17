@@ -167,7 +167,7 @@ public class ResultReader {
 		result += "\n \n Parallel \n";
 
 		for (int partitions = 0; partitions < 50; partitions++) {
-			//result += "tasks per core: " + (4 + 2 * partitions) + "\n";
+			// result += "tasks per core: " + (4 + 2 * partitions) + "\n";
 
 			String filepath = "result/" + "mig 4" + " " + 1 + " " + (partitions) + ".txt";
 
@@ -180,7 +180,7 @@ public class ResultReader {
 			if (lines != null)
 				result += 1 + "" + (partitions) + " " + lines.get(0) + "\n";
 
-			//result += "\n";
+			// result += "\n";
 
 		}
 

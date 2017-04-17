@@ -102,7 +102,7 @@ public class IOAResultReader {
 			result += "\n";
 
 		}
-		
+
 		System.out.println(result);
 
 		PrintWriter writer = null;

@@ -27,10 +27,9 @@ public class BasicAnalysisTest {
 		IAFIFONP fnp = new IAFIFONP();
 		IANewMrsPRTAWithMCNP mrsp = new IANewMrsPRTAWithMCNP();
 
-		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD,
-				0.1 * (double) NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, TOTAL_PARTITIONS,
-				NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, CS_LENGTH_RANGE.VERY_SHORT_CS_LEN,
-				RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
+		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION,
+				TOTAL_PARTITIONS, NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, CS_LENGTH_RANGE.VERY_SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS,
+				RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 
 		ArrayList<ArrayList<SporadicTask>> tasks = generator.generateTasks();
 		ArrayList<Resource> resources = generator.generateResources();

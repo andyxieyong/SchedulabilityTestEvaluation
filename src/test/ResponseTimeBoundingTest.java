@@ -39,15 +39,13 @@ public class ResponseTimeBoundingTest {
 		NewMrsPRTA new_mrsp = new NewMrsPRTA();
 		FIFONP fnp = new FIFONP();
 
-		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD,
-				0.1 * (double) NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, TOTAL_PARTITIONS,
-				NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, range, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR,
+		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION,
+				TOTAL_PARTITIONS, NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, range, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR,
 				NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 
 		long[][] r1, r2, diff;
 		double[][] totaldiff = new double[TOTAL_PARTITIONS][NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION];
-		double[][] diffs = new double[TOTAL_PARTITIONS
-				* NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION][TOTAL_NUMBER_OF_SYSTEMS];
+		double[][] diffs = new double[TOTAL_PARTITIONS * NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION][TOTAL_NUMBER_OF_SYSTEMS];
 
 		int count = 0;
 		int actual_count = 0;
@@ -66,8 +64,7 @@ public class ResponseTimeBoundingTest {
 				for (int j = 0; j < diff.length; j++) {
 					for (int k = 0; k < diff[j].length; k++) {
 						totaldiff[j][k] += diff[j][k];
-						diffs[j * NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION + k][count] = ((double) diff[j][k]
-								/ (double) r2[j][k]) * 100;
+						diffs[j * NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION + k][count] = ((double) diff[j][k] / (double) r2[j][k]) * 100;
 
 					}
 				}
@@ -88,8 +85,8 @@ public class ResponseTimeBoundingTest {
 
 		PrintWriter writer = null;
 		try {
-			writer = new PrintWriter(new FileWriter(new File("result/access m5 n5 k4 Rm vshort/diff mrsp fifonp "
-					+ NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE + ".txt"), false));
+			writer = new PrintWriter(new FileWriter(
+					new File("result/access m5 n5 k4 Rm vshort/diff mrsp fifonp " + NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE + ".txt"), false));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
@@ -120,8 +117,7 @@ public class ResponseTimeBoundingTest {
 
 			for (int k = 0; k < totaldiff[j].length; k++) {
 				totaldiff[j][k] = (double) totaldiff[j][k] / (double) TOTAL_NUMBER_OF_SYSTEMS;
-				System.out.println("task id: " + (j * NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION + k + 1) + " diff: "
-						+ totaldiff[j][k]);
+				System.out.println("task id: " + (j * NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION + k + 1) + " diff: " + totaldiff[j][k]);
 			}
 		}
 

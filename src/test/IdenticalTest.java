@@ -26,8 +26,8 @@ public class IdenticalTest {
 		FIFOLinearC fp_c = new FIFOLinearC();
 		FIFOP fp_java = new FIFOP();
 		long[][] r1, r2;
-//		ArrayList<ArrayList<SporadicTask>> maxT = null;
-//		ArrayList<Resource> maxR = null;
+		// ArrayList<ArrayList<SporadicTask>> maxT = null;
+		// ArrayList<Resource> maxR = null;
 
 		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION,
 				TOTAL_PARTITIONS, NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, CS_LENGTH_RANGE.VERY_SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS,

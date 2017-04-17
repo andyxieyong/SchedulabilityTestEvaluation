@@ -10,7 +10,7 @@ public class Resource {
 	public ArrayList<SporadicTask> requested_tasks;
 	public ArrayList<Integer> partitions;
 	public ArrayList<Integer> ceiling;
-	
+
 	public int protocol;
 
 	public boolean isGlobal = false;
@@ -26,8 +26,8 @@ public class Resource {
 
 	@Override
 	public String toString() {
-		return "R" + this.id + " : cs len = " + this.csl + ", partitions: " + partitions.size() + ", tasks: "
-				+ requested_tasks.size() + ", isGlobal: " + isGlobal;
+		return "R" + this.id + " : cs len = " + this.csl + ", partitions: " + partitions.size() + ", tasks: " + requested_tasks.size()
+				+ ", isGlobal: " + isGlobal;
 	}
 
 }

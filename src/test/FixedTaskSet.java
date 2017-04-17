@@ -101,12 +101,9 @@ public class FixedTaskSet {
 					task.hasResource = 1;
 					task.resource_required_index_cpoy = new int[task.resource_required_index.size()];
 					task.number_of_access_in_one_release_copy = new int[task.resource_required_index.size()];
-					for (int resource_index = 0; resource_index < task.resource_required_index
-							.size(); resource_index++) {
-						task.resource_required_index_cpoy[resource_index] = task.resource_required_index
-								.get(resource_index);
-						task.number_of_access_in_one_release_copy[resource_index] = task.number_of_access_in_one_release
-								.get(resource_index);
+					for (int resource_index = 0; resource_index < task.resource_required_index.size(); resource_index++) {
+						task.resource_required_index_cpoy[resource_index] = task.resource_required_index.get(resource_index);
+						task.number_of_access_in_one_release_copy[resource_index] = task.number_of_access_in_one_release.get(resource_index);
 					}
 				}
 
@@ -237,10 +234,8 @@ public class FixedTaskSet {
 				task.resource_required_index_cpoy = new int[task.resource_required_index.size()];
 				task.number_of_access_in_one_release_copy = new int[task.resource_required_index.size()];
 				for (int resource_index = 0; resource_index < task.resource_required_index.size(); resource_index++) {
-					task.resource_required_index_cpoy[resource_index] = task.resource_required_index
-							.get(resource_index);
-					task.number_of_access_in_one_release_copy[resource_index] = task.number_of_access_in_one_release
-							.get(resource_index);
+					task.resource_required_index_cpoy[resource_index] = task.resource_required_index.get(resource_index);
+					task.number_of_access_in_one_release_copy[resource_index] = task.number_of_access_in_one_release.get(resource_index);
 				}
 			}
 		}
@@ -354,10 +349,8 @@ public class FixedTaskSet {
 				task.resource_required_index_cpoy = new int[task.resource_required_index.size()];
 				task.number_of_access_in_one_release_copy = new int[task.resource_required_index.size()];
 				for (int resource_index = 0; resource_index < task.resource_required_index.size(); resource_index++) {
-					task.resource_required_index_cpoy[resource_index] = task.resource_required_index
-							.get(resource_index);
-					task.number_of_access_in_one_release_copy[resource_index] = task.number_of_access_in_one_release
-							.get(resource_index);
+					task.resource_required_index_cpoy[resource_index] = task.resource_required_index.get(resource_index);
+					task.number_of_access_in_one_release_copy[resource_index] = task.number_of_access_in_one_release.get(resource_index);
 				}
 			}
 		}
