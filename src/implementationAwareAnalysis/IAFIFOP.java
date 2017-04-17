@@ -100,8 +100,10 @@ public class IAFIFOP {
 			ArrayList<Resource> resources, long time, long[][] Ris) {
 		long spin = 0;
 		ArrayList<ArrayList<Long>> requestsLeftOnRemoteP = new ArrayList<>();
+		ArrayList<Resource> fifop_resources = new ArrayList<>();
 		for (int i = 0; i < resources.size(); i++) {
 			requestsLeftOnRemoteP.add(new ArrayList<Long>());
+			fifop_resources.add(resources.get(i));
 			Resource res = resources.get(i);
 			spin += getSpinDelayForOneResoruce(task, tasks, res, time, Ris, requestsLeftOnRemoteP.get(i));
 		}
@@ -121,9 +123,9 @@ public class IAFIFOP {
 
 			long max_delay = 0;
 			int max_delay_resource_index = -1;
-			for (int i = 0; i < resources.size(); i++) {
-				if (max_delay < resources.get(i).csl * requestsLeftOnRemoteP.get(i).size()) {
-					max_delay = resources.get(i).csl * requestsLeftOnRemoteP.get(i).size();
+			for (int i = 0; i < fifop_resources.size(); i++) {
+				if (max_delay < fifop_resources.get(i).csl * requestsLeftOnRemoteP.get(i).size()) {
+					max_delay = fifop_resources.get(i).csl * requestsLeftOnRemoteP.get(i).size();
 					max_delay_resource_index = i;
 				}
 			}

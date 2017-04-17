@@ -10,6 +10,8 @@ public class Resource {
 	public ArrayList<SporadicTask> requested_tasks;
 	public ArrayList<Integer> partitions;
 	public ArrayList<Integer> ceiling;
+	
+	public int protocol;
 
 	public boolean isGlobal = false;
 
@@ -19,6 +21,7 @@ public class Resource {
 		requested_tasks = new ArrayList<>();
 		partitions = new ArrayList<>();
 		ceiling = new ArrayList<>();
+		this.protocol = 0;
 	}
 
 	@Override
