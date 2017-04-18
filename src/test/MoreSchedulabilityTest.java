@@ -2,14 +2,14 @@ package test;
 
 import java.util.ArrayList;
 
-import basicAnalysis.FIFOLinearC;
-import basicAnalysis.FIFONP;
-import basicAnalysis.FIFOP;
-import basicAnalysis.MSRPRTA;
-import basicAnalysis.NewMrsPRTA;
-import basicAnalysis.NewMrsPRTAWithMCNP;
-import basicAnalysis.OriginalMrsPRTA;
-import basicAnalysis.RTAWithoutBlocking;
+import analysis.FIFOLinearC;
+import analysis.FIFONP;
+import analysis.FIFOP;
+import analysis.MSRPRTA;
+import analysis.NewMrsPRTA;
+import analysis.NewMrsPRTAWithMCNP;
+import analysis.OriginalMrsPRTA;
+import analysis.RTAWithoutBlocking;
 import entity.Resource;
 import entity.SporadicTask;
 import generatorTools.SystemGenerator;

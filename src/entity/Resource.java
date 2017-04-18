@@ -11,8 +11,6 @@ public class Resource {
 	public ArrayList<Integer> partitions;
 	public ArrayList<Integer> ceiling;
 
-	public int protocol;
-
 	public boolean isGlobal = false;
 
 	public Resource(int id, long cs_len) {
@@ -21,7 +19,6 @@ public class Resource {
 		requested_tasks = new ArrayList<>();
 		partitions = new ArrayList<>();
 		ceiling = new ArrayList<>();
-		this.protocol = 0;
 	}
 
 	@Override

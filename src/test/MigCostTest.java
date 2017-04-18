@@ -2,8 +2,8 @@ package test;
 
 import java.util.ArrayList;
 
-import basicAnalysis.NewMrsPRTAWithMC;
-import basicAnalysis.NewMrsPRTAWithMCNP;
+import analysis.NewMrsPRTAWithMC;
+import analysis.NewMrsPRTAWithMCNP;
 import entity.Resource;
 import entity.SporadicTask;
 import generatorTools.SystemGenerator;

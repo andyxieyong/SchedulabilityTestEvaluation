@@ -2,8 +2,9 @@ package test;
 
 import java.util.ArrayList;
 
-import basicAnalysis.FIFOLinearC;
-import basicAnalysis.FIFOP;
+import analysis.FIFOLinearC;
+import analysis.FIFONP;
+import analysis.FIFOP;
 import entity.Resource;
 import entity.SporadicTask;
 import generatorTools.SystemGenerator;
@@ -25,9 +26,8 @@ public class IdenticalTest {
 	public static void main(String[] args) {
 		FIFOLinearC fp_c = new FIFOLinearC();
 		FIFOP fp_java = new FIFOP();
-		long[][] r1, r2;
-		// ArrayList<ArrayList<SporadicTask>> maxT = null;
-		// ArrayList<Resource> maxR = null;
+		FIFONP fnp_java = new FIFONP();
+		long[][] r1, r2, r3, r4;
 
 		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION,
 				TOTAL_PARTITIONS, NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, CS_LENGTH_RANGE.VERY_SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS,
@@ -52,27 +52,25 @@ public class IdenticalTest {
 				r2 = fp_java.NewMrsPRTATest(tasks, resources, false);
 				System.exit(0);
 			}
-			if (isEqual && isSystemSchedulable(tasks, r1) && isSystemSchedulable(tasks, r2)) {
+			
+			r3 = fp_c.NewMrsPRTATest(tasks, resources, false, false);
+			r4 = fnp_java.NewMrsPRTATest(tasks, resources, false);
+			if (!isEqual && isSystemSchedulable(tasks, r3) && isSystemSchedulable(tasks, r4)) {
+				System.out.println("not equal");
+				isEqual(r3, r4, true);
+				SystemGenerator.testifyGeneratedTasksetAndResource(tasks, resources);
+				r3 = fp_c.NewMrsPRTATest(tasks, resources, true, false);
+				r4 = fp_java.NewMrsPRTATest(tasks, resources, false);
+				System.exit(0);
+			}
+			
+			
+			if (isEqual && isSystemSchedulable(tasks, r1) && isSystemSchedulable(tasks, r2) && isSystemSchedulable(tasks, r3) && isSystemSchedulable(tasks, r4)) {
 				System.out.println(i);
 				i++;
 			}
 
-			// if (tasks.get(0).get(0).period == 1000) {
-			// System.out.println(i);
-			// i++;
-			//
-			// if (maxC < tasks.get(0).get(0).WCET +
-			// tasks.get(0).get(0).pure_resource_execution_time) {
-			// maxC = tasks.get(0).get(0).WCET +
-			// tasks.get(0).get(0).pure_resource_execution_time;
-			// maxT = tasks;
-			// maxR = resources;
-			// }
-			// }
-
 		}
-		// System.out.println(maxC);
-		// SystemGenerator.testifyGeneratedTasksetAndResource(maxT, maxR);
 
 	}
 

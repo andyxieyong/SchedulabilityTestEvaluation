@@ -8,8 +8,8 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
-import basicAnalysis.FIFONP;
-import basicAnalysis.NewMrsPRTA;
+import analysis.FIFONP;
+import analysis.NewMrsPRTA;
 import entity.Resource;
 import entity.SporadicTask;
 import generatorTools.SystemGenerator;
