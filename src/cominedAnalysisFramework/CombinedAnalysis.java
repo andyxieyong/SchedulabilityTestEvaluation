@@ -709,7 +709,7 @@ public class CombinedAnalysis {
 			}
 		}
 
-		if (priority >= minCeiling)
+		if (priority > minCeiling)
 			return true;
 		else
 			return false;

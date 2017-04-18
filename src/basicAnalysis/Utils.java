@@ -18,7 +18,7 @@ public class Utils {
 			for (int j = 0; j < task_on_a_partition.size(); j++) {
 				SporadicTask t = task_on_a_partition.get(j);
 				Ri[j] = t.Ri = t.WCET + t.pure_resource_execution_time;
-				t.interference = t.local = t.spin = t.total_blocking = 0;
+				t.interference = t.local = t.spin = t.indirectspin = 0;
 			}
 			response_times[i] = Ri;
 		}
@@ -29,9 +29,12 @@ public class Utils {
 		int task_id = 1;
 		for (int i = 0; i < Ris.length; i++) {
 			for (int j = 0; j < Ris[i].length; j++) {
-				System.out.println("T" + task_id + " RT: " + Ris[i][j] + ", D: " + tasks.get(i).get(j).deadline + ", S = " + tasks.get(i).get(j).spin
-						+ ", L = " + tasks.get(i).get(j).local + ", I = " + tasks.get(i).get(j).interference + ", WCET = " + tasks.get(i).get(j).WCET
-						+ ", Resource: " + tasks.get(i).get(j).pure_resource_execution_time);
+				System.out.println("T" + task_id + " RT: " + Ris[i][j] + ", D: " + tasks.get(i).get(j).deadline
+						+ ", S = " + tasks.get(i).get(j).spin + ", L = " + tasks.get(i).get(j).local + ", I = "
+						+ tasks.get(i).get(j).interference + ", WCET = " + tasks.get(i).get(j).WCET + ", Resource: "
+						+ tasks.get(i).get(j).pure_resource_execution_time + ", B = "
+						+ tasks.get(i).get(j).indirectspin);
+
 				task_id++;
 			}
 			System.out.println();

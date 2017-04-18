@@ -11,14 +11,7 @@ public class IAFIFOP {
 	int isTestPrint = 0;
 
 	public long[][] NewMrsPRTATest(ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, boolean printDebug) {
-		for (int i = 0; i < tasks.size(); i++) {
-			for (int j = 0; j < tasks.get(i).size(); j++) {
-				tasks.get(i).get(j).fifop = new double[resources.size()];
-				for (int k = 0; k < tasks.get(i).get(j).fifop.length; k++) {
-					tasks.get(i).get(j).fifop[k] = 0;
-				}
-			}
-		}
+
 		long[][] init_Ri = new IASUtils().initResponseTime(tasks);
 
 		long[][] response_time = new long[tasks.size()][];
@@ -72,6 +65,15 @@ public class IAFIFOP {
 			response_time_plus[i] = new long[response_time[i].length];
 		}
 
+		for (int i = 0; i < tasks.size(); i++) {
+			for (int j = 0; j < tasks.get(i).size(); j++) {
+				tasks.get(i).get(j).fifop = new double[resources.size()];
+				for (int k = 0; k < tasks.get(i).get(j).fifop.length; k++) {
+					tasks.get(i).get(j).fifop[k] = 0;
+				}
+			}
+		}
+		
 		for (int i = 0; i < tasks.size(); i++) {
 			for (int j = 0; j < tasks.get(i).size(); j++) {
 				SporadicTask task = tasks.get(i).get(j);

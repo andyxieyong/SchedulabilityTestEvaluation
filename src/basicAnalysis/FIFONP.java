@@ -71,11 +71,11 @@ public class FIFONP {
 			for (int j = 0; j < tasks.get(i).size(); j++) {
 				SporadicTask task = tasks.get(i).get(j);
 
-				task.spin = directRemoteDelay(task, tasks, resources, response_time, response_time[i][j]);
+				task.spin = directRemoteDelay(task, tasks, resources, response_time, response_time[i][j]) + task.pure_resource_execution_time;
 				task.interference = highPriorityInterference(task, tasks, response_time[i][j], response_time, resources);
 				task.local = localBlocking(task, tasks, resources, response_time, response_time[i][j]);
 
-				response_time_plus[i][j] = task.Ri = task.WCET + task.pure_resource_execution_time + task.spin + task.interference + task.local;
+				response_time_plus[i][j] = task.Ri = task.WCET + task.spin + task.interference + task.local;
 
 				if (task.Ri > task.deadline)
 					return response_time_plus;

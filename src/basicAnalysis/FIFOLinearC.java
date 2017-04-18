@@ -26,7 +26,7 @@ public class FIFOLinearC {
 			for (int j = 0; j < tasks.get(i).size(); j++) {
 				SporadicTask t = tasks.get(i).get(j);
 				t.Ri = init_Ri[i][j];
-				t.interference = t.local = t.spin = t.total_blocking = 0;
+				t.interference = t.local = t.spin = t.indirectspin = 0;
 				if (t.Ri > t.deadline)
 					return init_Ri;
 			}

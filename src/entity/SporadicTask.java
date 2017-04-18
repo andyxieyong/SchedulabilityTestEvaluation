@@ -11,7 +11,7 @@ public class SporadicTask {
 	public int id;
 
 	public long pure_resource_execution_time = 0;
-	public long Ri = 0, spin = 0, interference = 0, local = 0, total_blocking = 0;
+	public long Ri = 0, spin = 0, interference = 0, local = 0, indirectspin = 0;
 
 	public ArrayList<Integer> resource_required_index;
 	public ArrayList<Integer> number_of_access_in_one_release;
@@ -29,6 +29,8 @@ public class SporadicTask {
 	public double[] fifonp = null;
 	public double[] fifop = null;
 	public double[] mrsp = null;
+	
+	public double np_section = 0;
 
 	public SporadicTask(int priority, long t, long c, int partition, int id) {
 		this.priority = priority;

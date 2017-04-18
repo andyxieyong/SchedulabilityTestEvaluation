@@ -10,14 +10,6 @@ public class IAFIFONP {
 	long count = 0;
 
 	public long[][] NewMrsPRTATest(ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, boolean printDebug) {
-		for (int i = 0; i < tasks.size(); i++) {
-			for (int j = 0; j < tasks.get(i).size(); j++) {
-				tasks.get(i).get(j).fifonp = new double[resources.size()];
-				for (int k = 0; k < tasks.get(i).get(j).fifonp.length; k++) {
-					tasks.get(i).get(j).fifonp[k] = 0;
-				}
-			}
-		}
 		long[][] init_Ri = new IASUtils().initResponseTime(tasks);
 
 		long[][] response_time = new long[tasks.size()][];
@@ -71,19 +63,29 @@ public class IAFIFONP {
 		for (int i = 0; i < response_time.length; i++) {
 			response_time_plus[i] = new long[response_time[i].length];
 		}
+		
+		for (int i = 0; i < tasks.size(); i++) {
+			for (int j = 0; j < tasks.get(i).size(); j++) {
+				tasks.get(i).get(j).fifonp = new double[resources.size()];
+				for (int k = 0; k < tasks.get(i).get(j).fifonp.length; k++) {
+					tasks.get(i).get(j).fifonp[k] = 0;
+				}
+			}
+		}
 
 		for (int i = 0; i < tasks.size(); i++) {
 			for (int j = 0; j < tasks.get(i).size(); j++) {
 				SporadicTask task = tasks.get(i).get(j);
+				task.indirectspin = 0;
 				task.implementation_overheads = 0;
 				task.implementation_overheads += IASUtils.FULL_CONTEXT_SWTICH1;
 
-				task.spin = directRemoteDelay(task, tasks, resources, response_time, response_time[i][j]);
+				task.spin = directRemoteDelay(task, tasks, resources, response_time, response_time[i][j]) + task.pure_resource_execution_time;
 				task.interference = highPriorityInterference(task, tasks, response_time[i][j], response_time, resources);
 				task.local = localBlocking(task, tasks, resources, response_time, response_time[i][j]);
 
 				long implementation_overheads = (long) Math.ceil(task.implementation_overheads);
-				response_time_plus[i][j] = task.Ri = task.WCET + task.pure_resource_execution_time + task.spin + task.interference + task.local
+				response_time_plus[i][j] = task.Ri = task.WCET + task.spin + task.interference + task.local
 						+ implementation_overheads;
 
 				if (task.Ri > task.deadline)
@@ -112,6 +114,7 @@ public class IAFIFONP {
 						* (IASUtils.FULL_CONTEXT_SWTICH1 + IASUtils.FULL_CONTEXT_SWTICH2);
 
 				long btb_interference = getIndirectSpinDelay(hpTask, Ri, Ris[partition][i], Ris, allTasks, resources, t);
+				t.indirectspin += btb_interference;
 				interference += btb_interference;
 			}
 		}
@@ -208,7 +211,7 @@ public class IAFIFONP {
 			overheads.add((local_blocking / res.csl) *( IASUtils.FIFONP_LOCK + IASUtils.FIFONP_UNLOCK));
 		}
 
-		if (local_blocking_each_resource.size() > 1){
+		if (local_blocking_each_resource.size() >= 1){
 			local_blocking_each_resource.sort((l1, l2) -> -Double.compare(l1, l2));
 			overheads.sort((l1, l2) -> -Double.compare(l1, l2));
 			t.implementation_overheads += overheads.get(0);
