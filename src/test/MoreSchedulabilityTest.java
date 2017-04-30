@@ -25,8 +25,8 @@ public class MoreSchedulabilityTest {
 
 	public static void main(String[] args) throws InterruptedException {
 
-		for (int i = 1; i < 10; i++)
-			experimentIncreasingWorkLoad(i);
+		for (int i = 1; i < 6; i++)
+			experimentIncreasingCriticalSectionLength(i);
 
 	}
 
