@@ -2,7 +2,7 @@ package test;
 
 import java.util.ArrayList;
 
-import analysis.NewMrsPRTAWithMC;
+import basicAnalysis.NewMrsPRTAWithMC;
 import entity.Resource;
 import entity.SporadicTask;
 import generatorTools.SystemGenerator;

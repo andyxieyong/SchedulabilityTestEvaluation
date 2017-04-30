@@ -1,4 +1,4 @@
-package analysis;
+package basicAnalysis;
 
 import java.util.ArrayList;
 

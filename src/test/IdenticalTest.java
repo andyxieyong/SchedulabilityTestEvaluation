@@ -2,9 +2,9 @@ package test;
 
 import java.util.ArrayList;
 
-import analysis.FIFOLinearC;
-import analysis.FIFONP;
-import analysis.FIFOP;
+import basicAnalysis.FIFOLinearC;
+import basicAnalysis.FIFONP;
+import basicAnalysis.FIFOP;
 import entity.Resource;
 import entity.SporadicTask;
 import generatorTools.SystemGenerator;

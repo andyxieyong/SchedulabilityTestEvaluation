@@ -1,11 +1,11 @@
-package analysis;
+package basicAnalysis;
 
 import java.util.ArrayList;
 
 import entity.Resource;
 import entity.SporadicTask;
 
-public class OriginalMrsPRTA {
+public class MSRPRTA {
 	long count = 0;
 
 	public long[][] NewMrsPRTATest(ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, boolean printBebug) {
@@ -29,7 +29,6 @@ public class OriginalMrsPRTA {
 				for (int j = 0; j < response_time_plus[i].length; j++) {
 					if (response_time[i][j] != response_time_plus[i][j])
 						isEqual = false;
-
 					if (response_time_plus[i][j] > tasks.get(i).get(j).deadline)
 						missDeadline = true;
 				}
@@ -44,9 +43,9 @@ public class OriginalMrsPRTA {
 
 		if (printBebug) {
 			if (missDeadline)
-				System.out.println("OriginalMrsPRTA    after " + count + " tims of recursion, the tasks miss the deadline.");
+				System.out.println("MSRPRTA    after " + count + " tims of recursion, the tasks miss the deadline.");
 			else
-				System.out.println("OriginalMrsPRTA    after " + count + " tims of recursion, we got the response time.");
+				System.out.println("MSRPRTA	   after " + count + " tims of recursion, we got the response time.");
 
 			new Utils().printResponseTime(response_time, tasks);
 		}
@@ -109,7 +108,8 @@ public class OriginalMrsPRTA {
 	/*
 	 * Calculate the local blocking for task t.
 	 */
-	private long localBlocking(SporadicTask t, ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, long[][] Ris, long Ri) {
+	private long localBlocking(SporadicTask t, ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, long[][] Ris,
+			long Ri) {
 		ArrayList<Resource> LocalBlockingResources = getLocalBlockingResources(t, resources);
 		ArrayList<Long> local_blocking_each_resource = new ArrayList<>();
 
@@ -136,7 +136,18 @@ public class OriginalMrsPRTA {
 		for (int i = 0; i < resources.size(); i++) {
 			Resource resource = resources.get(i);
 
-			if (resource.partitions.contains(partition) && resource.ceiling.get(resource.partitions.indexOf(partition)) >= task.priority) {
+			if (resource.partitions.size() == 1 && resource.partitions.get(0) == task.partition
+					&& resource.ceiling.get(0) >= task.priority) {
+				for (int j = 0; j < resource.requested_tasks.size(); j++) {
+					SporadicTask LP_task = resource.requested_tasks.get(j);
+					if (LP_task.partition == partition && LP_task.priority < task.priority) {
+						localBlockingResources.add(resource);
+						break;
+					}
+				}
+			}
+
+			if (resource.partitions.size() > 1 && resource.partitions.contains(task.partition)) {
 				for (int j = 0; j < resource.requested_tasks.size(); j++) {
 					SporadicTask LP_task = resource.requested_tasks.get(j);
 					if (LP_task.partition == partition && LP_task.priority < task.priority) {
