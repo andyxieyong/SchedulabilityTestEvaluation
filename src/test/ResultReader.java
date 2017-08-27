@@ -43,7 +43,7 @@ public class ResultReader {
 		}
 		result += "\n \n CS Length \n";
 
-		for (int bigSet = 1; bigSet < 4; bigSet++) {
+		for (int bigSet = 1; bigSet < 10; bigSet++) {
 			result += "tasks per core: " + (3 + (bigSet - 1) * 2) + "\n";
 
 			for (int smallSet = 1; smallSet < 6; smallSet++) {
