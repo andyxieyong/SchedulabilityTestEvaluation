@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 
 import basicAnalysis.FIFOLinearC;
@@ -22,7 +23,7 @@ import generatorTools.SystemGenerator.RESOURCES_RANGE;
 
 public class ComputingTimeTest {
 
-	public static int TOTAL_NUMBER_OF_SYSTEMS = 1000;
+	public static int TOTAL_NUMBER_OF_SYSTEMS = 10;
 	public static int TOTAL_PARTITIONS = 16;
 	public static int MIN_PERIOD = 1;
 	public static int MAX_PERIOD = 1000;
@@ -31,30 +32,32 @@ public class ComputingTimeTest {
 		int experiment = 0;
 		int parameter = 0;
 
-		if (args.length == 2) {
-			experiment = Integer.parseInt(args[0]);
-			parameter = Integer.parseInt(args[1]);
-
-			switch (experiment) {
-			case 1:
-				experimentIncreasingWorkLoad(parameter);
-				break;
-			case 2:
-				experimentIncreasingCriticalSectionLength(parameter);
-				break;
-			case 3:
-				experimentIncreasingContention(parameter);
-				break;
-			case 4:
-				experimentIncreasingParallel(parameter);
-				break;
-			default:
-				break;
-			}
-
-		} else
-			System.err.println("wrong parameter.");
-
+//		if (args.length == 2) {
+//			experiment = Integer.parseInt(args[0]);
+//			parameter = Integer.parseInt(args[1]);
+//
+//			switch (experiment) {
+//			case 1:
+//				experimentIncreasingWorkLoad(parameter);
+//				break;
+//			case 2:
+//				experimentIncreasingCriticalSectionLength(parameter);
+//				break;
+//			case 3:
+//				experimentIncreasingContention(parameter);
+//				break;
+//			case 4:
+//				experimentIncreasingParallel(parameter);
+//				break;
+//			default:
+//				break;
+//			}
+//
+//		} else
+//			System.err.println("wrong parameter.");
+		
+		
+		experimentIncreasingCriticalSectionLength(1);
 	}
 
 	public static void experimentIncreasingWorkLoad(int smallSet) {
@@ -88,10 +91,11 @@ public class ComputingTimeTest {
 			ArrayList<Resource> resources = generator.generateResources();
 			generator.generateResourceUsage(tasks, resources);
 
-			start = System.nanoTime();
+			start = ManagementFactory.getThreadMXBean().getThreadCpuTime(Thread.currentThread().getId());
 			new_mrsp.NewMrsPRTATest(tasks, resources, false);
-			end = System.nanoTime() - start;
+			end = ManagementFactory.getThreadMXBean().getThreadCpuTime(Thread.currentThread().getId()) - start;
 			computingTime[0][i] = end;
+			ManagementFactory.getThreadMXBean().getThreadCpuTime(Thread.currentThread().getId());
 
 			start = System.nanoTime();
 			original_mrsp.NewMrsPRTATest(tasks, resources, false);
