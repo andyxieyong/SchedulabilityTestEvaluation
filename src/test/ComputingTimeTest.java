@@ -31,33 +31,34 @@ public class ComputingTimeTest {
 	public static void main(String[] args) throws InterruptedException {
 		int experiment = 0;
 		int parameter = 0;
+		
+		//experimentIncreasingCriticalSectionLength(2);
 
-//		if (args.length == 2) {
-//			experiment = Integer.parseInt(args[0]);
-//			parameter = Integer.parseInt(args[1]);
-//
-//			switch (experiment) {
-//			case 1:
-//				experimentIncreasingWorkLoad(parameter);
-//				break;
-//			case 2:
-//				experimentIncreasingCriticalSectionLength(parameter);
-//				break;
-//			case 3:
-//				experimentIncreasingContention(parameter);
-//				break;
-//			case 4:
-//				experimentIncreasingParallel(parameter);
-//				break;
-//			default:
-//				break;
-//			}
-//
-//		} else
-//			System.err.println("wrong parameter.");
+		if (args.length == 2) {
+			experiment = Integer.parseInt(args[0]);
+			parameter = Integer.parseInt(args[1]);
+
+			switch (experiment) {
+			case 1:
+				experimentIncreasingWorkLoad(parameter);
+				break;
+			case 2:
+				experimentIncreasingCriticalSectionLength(parameter);
+				break;
+			case 3:
+				experimentIncreasingContention(parameter);
+				break;
+			case 4:
+				experimentIncreasingParallel(parameter);
+				break;
+			default:
+				break;
+			}
+
+		} else
+			System.err.println("wrong parameter.");
 		
 		
-		experimentIncreasingCriticalSectionLength(1);
 	}
 
 	public static void experimentIncreasingWorkLoad(int smallSet) {
@@ -91,40 +92,39 @@ public class ComputingTimeTest {
 			ArrayList<Resource> resources = generator.generateResources();
 			generator.generateResourceUsage(tasks, resources);
 
-			start = ManagementFactory.getThreadMXBean().getThreadCpuTime(Thread.currentThread().getId());
+			start = getTime();
 			new_mrsp.NewMrsPRTATest(tasks, resources, false);
-			end = ManagementFactory.getThreadMXBean().getThreadCpuTime(Thread.currentThread().getId()) - start;
+			end = getTime() - start;
 			computingTime[0][i] = end;
-			ManagementFactory.getThreadMXBean().getThreadCpuTime(Thread.currentThread().getId());
 
-			start = System.nanoTime();
+			start = getTime();
 			original_mrsp.NewMrsPRTATest(tasks, resources, false);
-			end = System.nanoTime() - start;
+			end = getTime() - start;
 			computingTime[1][i] = end;
 
-			start = System.nanoTime();
+			start = getTime();
 			msrp.NewMrsPRTATest(tasks, resources, false);
-			end = System.nanoTime() - start;
+			end = getTime() - start;
 			computingTime[2][i] = end;
 
-			start = System.nanoTime();
+			start = getTime();
 			fnp.NewMrsPRTATest(tasks, resources, false);
-			end = System.nanoTime() - start;
+			end = getTime() - start;
 			computingTime[3][i] = end;
 
-			start = System.nanoTime();
+			start = getTime();
 			fp.NewMrsPRTATest(tasks, resources, false);
-			end = System.nanoTime() - start;
+			end = getTime() - start;
 			computingTime[4][i] = end;
 
-			start = System.nanoTime();
+			start = getTime();
 			fifo.NewMrsPRTATest(tasks, resources, false, false);
-			end = System.nanoTime() - start;
+			end = getTime() - start;
 			computingTime[5][i] = end;
 
-			start = System.nanoTime();
+			start = getTime();
 			fifo.NewMrsPRTATest(tasks, resources, true, false);
-			end = System.nanoTime() - start;
+			end = getTime() - start;
 			computingTime[6][i] = end;
 
 			System.out.println(1 + " " + 1 + " " + smallSet + " times: " + i);
@@ -194,39 +194,39 @@ public class ComputingTimeTest {
 			ArrayList<Resource> resources = generator.generateResources();
 			generator.generateResourceUsage(tasks, resources);
 
-			start = System.nanoTime();
+			start = getTime();
 			new_mrsp.NewMrsPRTATest(tasks, resources, false);
-			end = System.nanoTime() - start;
+			end = getTime() - start;
 			computingTime[0][i] = end;
 
-			start = System.nanoTime();
+			start = getTime();
 			original_mrsp.NewMrsPRTATest(tasks, resources, false);
-			end = System.nanoTime() - start;
+			end = getTime() - start;
 			computingTime[1][i] = end;
 
-			start = System.nanoTime();
+			start = getTime();
 			msrp.NewMrsPRTATest(tasks, resources, false);
-			end = System.nanoTime() - start;
+			end = getTime() - start;
 			computingTime[2][i] = end;
 
-			start = System.nanoTime();
+			start = getTime();
 			fnp.NewMrsPRTATest(tasks, resources, false);
-			end = System.nanoTime() - start;
+			end = getTime() - start;
 			computingTime[3][i] = end;
 
-			start = System.nanoTime();
+			start = getTime();
 			fp.NewMrsPRTATest(tasks, resources, false);
-			end = System.nanoTime() - start;
+			end = getTime() - start;
 			computingTime[4][i] = end;
 
-			start = System.nanoTime();
+			start = getTime();
 			fifo.NewMrsPRTATest(tasks, resources, false, false);
-			end = System.nanoTime() - start;
+			end = getTime() - start;
 			computingTime[5][i] = end;
 
-			start = System.nanoTime();
+			start = getTime();
 			fifo.NewMrsPRTATest(tasks, resources, true, false);
-			end = System.nanoTime() - start;
+			end = getTime() - start;
 			computingTime[6][i] = end;
 
 			System.out.println(2 + " " + 1 + " " + csLenConfig + " times: " + i);
@@ -274,39 +274,39 @@ public class ComputingTimeTest {
 			ArrayList<Resource> resources = generator.generateResources();
 			generator.generateResourceUsage(tasks, resources);
 
-			start = System.nanoTime();
+			start = getTime();
 			new_mrsp.NewMrsPRTATest(tasks, resources, false);
-			end = System.nanoTime() - start;
+			end = getTime() - start;
 			computingTime[0][i] = end;
 
-			start = System.nanoTime();
+			start = getTime();
 			original_mrsp.NewMrsPRTATest(tasks, resources, false);
-			end = System.nanoTime() - start;
+			end = getTime() - start;
 			computingTime[1][i] = end;
 
-			start = System.nanoTime();
+			start = getTime();
 			msrp.NewMrsPRTATest(tasks, resources, false);
-			end = System.nanoTime() - start;
+			end = getTime() - start;
 			computingTime[2][i] = end;
 
-			start = System.nanoTime();
+			start = getTime();
 			fnp.NewMrsPRTATest(tasks, resources, false);
-			end = System.nanoTime() - start;
+			end = getTime() - start;
 			computingTime[3][i] = end;
 
-			start = System.nanoTime();
+			start = getTime();
 			fp.NewMrsPRTATest(tasks, resources, false);
-			end = System.nanoTime() - start;
+			end = getTime() - start;
 			computingTime[4][i] = end;
 
-			start = System.nanoTime();
+			start = getTime();
 			fifo.NewMrsPRTATest(tasks, resources, false, false);
-			end = System.nanoTime() - start;
+			end = getTime() - start;
 			computingTime[5][i] = end;
 
-			start = System.nanoTime();
+			start = getTime();
 			fifo.NewMrsPRTATest(tasks, resources, true, false);
-			end = System.nanoTime() - start;
+			end = getTime() - start;
 			computingTime[6][i] = end;
 
 			System.out.println(3 + " " + 1 + " " + smallSet + " times: " + i);
@@ -354,39 +354,39 @@ public class ComputingTimeTest {
 			ArrayList<Resource> resources = generator.generateResources();
 			generator.generateResourceUsage(tasks, resources);
 
-			start = System.nanoTime();
+			start = getTime();
 			new_mrsp.NewMrsPRTATest(tasks, resources, false);
-			end = System.nanoTime() - start;
+			end = getTime() - start;
 			computingTime[0][i] = end;
 
-			start = System.nanoTime();
+			start = getTime();
 			original_mrsp.NewMrsPRTATest(tasks, resources, false);
-			end = System.nanoTime() - start;
+			end = getTime() - start;
 			computingTime[1][i] = end;
 
-			start = System.nanoTime();
+			start = getTime();
 			msrp.NewMrsPRTATest(tasks, resources, false);
-			end = System.nanoTime() - start;
+			end = getTime() - start;
 			computingTime[2][i] = end;
 
-			start = System.nanoTime();
+			start = getTime();
 			fnp.NewMrsPRTATest(tasks, resources, false);
-			end = System.nanoTime() - start;
+			end = getTime() - start;
 			computingTime[3][i] = end;
 
-			start = System.nanoTime();
+			start = getTime();
 			fp.NewMrsPRTATest(tasks, resources, false);
-			end = System.nanoTime() - start;
+			end = getTime() - start;
 			computingTime[4][i] = end;
 
-			start = System.nanoTime();
+			start = getTime();
 			fifo.NewMrsPRTATest(tasks, resources, false, false);
-			end = System.nanoTime() - start;
+			end = getTime() - start;
 			computingTime[5][i] = end;
 
-			start = System.nanoTime();
+			start = getTime();
 			fifo.NewMrsPRTATest(tasks, resources, true, false);
-			end = System.nanoTime() - start;
+			end = getTime() - start;
 			computingTime[6][i] = end;
 
 			System.out.println(4 + " " + 1 + " " + total_partitions + " times: " + i);
@@ -402,6 +402,10 @@ public class ComputingTimeTest {
 		}
 
 		writeSystem(("4 " + 1 + " " + total_partitions), result);
+	}
+	
+	public static long getTime(){
+		return ManagementFactory.getThreadMXBean().getThreadCpuTime(Thread.currentThread().getId());
 	}
 
 	public static void writeSystem(String filename, String result) {
