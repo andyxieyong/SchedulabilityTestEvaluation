@@ -1,8 +1,6 @@
 /native/
-/ILPBasedAnalysis/
-/basicAnalysis/
-/test/
 /Utils/
-/Utils.class
+/entity/
+/ILPBasedAnalysis/
 /newAnalysis/
 /newAnalysisOverheads/

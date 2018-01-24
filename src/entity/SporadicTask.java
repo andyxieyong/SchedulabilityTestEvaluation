@@ -22,7 +22,7 @@ public class SporadicTask {
 	public int hasResource = 0;
 	public int[] resource_required_index_cpoy = null;
 	public int[] number_of_access_in_one_release_copy = null;
-
+	
 	public SporadicTask(int priority, long t, long c, int partition, int id) {
 		this.priority = priority;
 		this.period = t;
