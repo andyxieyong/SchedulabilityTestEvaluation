@@ -1,6 +1,3 @@
 /native/
-/Utils/
-/entity/
-/ILPBasedAnalysis/
-/newAnalysis/
-/newAnalysisOverheads/
+/test/
+/generatorTools/

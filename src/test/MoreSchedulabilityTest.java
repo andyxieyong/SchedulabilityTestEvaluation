@@ -25,7 +25,7 @@ public class MoreSchedulabilityTest {
 
 	public static void main(String[] args) throws InterruptedException {
 
-		for (int i = 1; i < 6; i++)
+		for (int i = 1; i < 7; i++)
 			experimentIncreasingCriticalSectionLength(i);
 
 	}
@@ -124,6 +124,9 @@ public class MoreSchedulabilityTest {
 			break;
 		case 5:
 			range = CS_LENGTH_RANGE.VERY_LONG_CSLEN;
+			break;
+		case 6:
+			range = CS_LENGTH_RANGE.Random;
 			break;
 		default:
 			break;
