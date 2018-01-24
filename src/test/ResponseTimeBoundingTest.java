@@ -8,13 +8,13 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
-import basicAnalysis.FIFONP;
-import basicAnalysis.NewMrsPRTA;
 import entity.Resource;
 import entity.SporadicTask;
 import generatorTools.SystemGenerator;
 import generatorTools.SystemGenerator.CS_LENGTH_RANGE;
 import generatorTools.SystemGenerator.RESOURCES_RANGE;
+import newAnalysis.FIFONP;
+import newAnalysis.NewMrsPRTA;
 
 public class ResponseTimeBoundingTest {
 

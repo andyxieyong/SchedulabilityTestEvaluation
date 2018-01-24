@@ -2,12 +2,12 @@ package test;
 
 import java.util.ArrayList;
 
-import basicAnalysis.NewMrsPRTAWithMC;
 import entity.Resource;
 import entity.SporadicTask;
 import generatorTools.SystemGenerator;
 import generatorTools.SystemGenerator.CS_LENGTH_RANGE;
 import generatorTools.SystemGenerator.RESOURCES_RANGE;
+import newAnalysisOverheads.NewMrsPRTAWithMC;
 
 public class MigCostNPTest {
 

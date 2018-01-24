@@ -8,16 +8,16 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
-import basicAnalysis.FIFONP;
-import basicAnalysis.FIFOP;
-import basicAnalysis.NewMrsPRTA;
-import basicAnalysis.NewMrsPRTAWithMC;
-import basicAnalysis.NewMrsPRTAWithMCNP;
 import entity.Resource;
 import entity.SporadicTask;
 import generatorTools.SystemGenerator;
 import generatorTools.SystemGenerator.CS_LENGTH_RANGE;
 import generatorTools.SystemGenerator.RESOURCES_RANGE;
+import newAnalysis.FIFONP;
+import newAnalysis.FIFOP;
+import newAnalysis.NewMrsPRTA;
+import newAnalysisOverheads.NewMrsPRTAWithMC;
+import newAnalysisOverheads.NewMrsPRTAWithMCNP;
 
 public class MIgrationCostSchedTest {
 

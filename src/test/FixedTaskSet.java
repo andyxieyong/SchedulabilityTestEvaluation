@@ -2,11 +2,11 @@ package test;
 
 import java.util.ArrayList;
 
-import basicAnalysis.FIFOLinearC;
-import basicAnalysis.FIFOP;
+import ILPBasedAnalysis.FIFOLinearC;
 import entity.Resource;
 import entity.SporadicTask;
 import generatorTools.SystemGenerator;
+import newAnalysis.FIFOP;
 
 public class FixedTaskSet {
 

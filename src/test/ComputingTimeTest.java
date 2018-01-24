@@ -9,17 +9,17 @@ import java.io.UnsupportedEncodingException;
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 
-import basicAnalysis.FIFOLinearC;
-import basicAnalysis.FIFONP;
-import basicAnalysis.FIFOP;
+import ILPBasedAnalysis.FIFOLinearC;
 import basicAnalysis.MSRPRTA;
-import basicAnalysis.NewMrsPRTA;
 import basicAnalysis.OriginalMrsPRTA;
 import entity.Resource;
 import entity.SporadicTask;
 import generatorTools.SystemGenerator;
 import generatorTools.SystemGenerator.CS_LENGTH_RANGE;
 import generatorTools.SystemGenerator.RESOURCES_RANGE;
+import newAnalysis.FIFONP;
+import newAnalysis.FIFOP;
+import newAnalysis.NewMrsPRTA;
 
 public class ComputingTimeTest {
 
