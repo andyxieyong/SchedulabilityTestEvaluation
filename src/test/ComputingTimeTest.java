@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
 
 import ILPBasedAnalysis.FIFOLinearC;
 import basicAnalysis.MSRPRTA;
@@ -29,36 +30,42 @@ public class ComputingTimeTest {
 	public static int MAX_PERIOD = 1000;
 
 	public static void main(String[] args) throws InterruptedException {
-		int experiment = 0;
-		int parameter = 0;
-		
-		//experimentIncreasingCriticalSectionLength(2);
+		// int experiment = 0;
+		// int parameter = 0;
+		//
+		// //experimentIncreasingCriticalSectionLength(2);
+		//
+		// if (args.length == 2) {
+		// experiment = Integer.parseInt(args[0]);
+		// parameter = Integer.parseInt(args[1]);
+		//
+		// switch (experiment) {
+		// case 1:
+		// experimentIncreasingWorkLoad(parameter);
+		// break;
+		// case 2:
+		// experimentIncreasingCriticalSectionLength(parameter);
+		// break;
+		// case 3:
+		// experimentIncreasingContention(parameter);
+		// break;
+		// case 4:
+		// experimentIncreasingParallel(parameter);
+		// break;
+		// default:
+		// break;
+		// }
+		//
+		// } else
+		// System.err.println("wrong parameter.");
 
-		if (args.length == 2) {
-			experiment = Integer.parseInt(args[0]);
-			parameter = Integer.parseInt(args[1]);
+		for (int i = 1; i < 3; i++) {
+			experimentIncreasingWorkLoad(i);
+		}
 
-			switch (experiment) {
-			case 1:
-				experimentIncreasingWorkLoad(parameter);
-				break;
-			case 2:
-				experimentIncreasingCriticalSectionLength(parameter);
-				break;
-			case 3:
-				experimentIncreasingContention(parameter);
-				break;
-			case 4:
-				experimentIncreasingParallel(parameter);
-				break;
-			default:
-				break;
-			}
-
-		} else
-			System.err.println("wrong parameter.");
-		
-		
+//		for (int i = 4; i < 23; i=i+2) {
+//			experimentIncreasingParallel(i);
+//		}
 	}
 
 	public static void experimentIncreasingWorkLoad(int smallSet) {
@@ -66,9 +73,9 @@ public class ComputingTimeTest {
 		double RESOURCE_SHARING_FACTOR = 0.4;
 		int NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION = smallSet;
 
-		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION,
-				TOTAL_PARTITIONS, NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, CS_LENGTH_RANGE.SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS,
-				RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
+		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, TOTAL_PARTITIONS,
+				NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, CS_LENGTH_RANGE.SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR,
+				NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 
 		long[][] computingTime = new long[7][];
 
@@ -131,8 +138,8 @@ public class ComputingTimeTest {
 
 		}
 
-		result += "New MrsP" + "    " + "Original MrsP" + "    " + "MSRP" + "    " + "FIFONP-JAVA" + "    " + "FIFOP-JAVA" + "    " + "FIFONP-C"
-				+ "    " + "FIFOP-C" + "\n";
+		result += "New MrsP" + "    " + "Original MrsP" + "    " + "MSRP" + "    " + "FIFONP-JAVA" + "    " + "FIFOP-JAVA" + "    " + "FIFONP-C" + "    "
+				+ "FIFOP-C" + "\n";
 
 		for (int i = 0; i < TOTAL_NUMBER_OF_SYSTEMS; i++) {
 			result += computingTime[0][i] + "    " + computingTime[1][i] + "    " + computingTime[2][i] + "    " + computingTime[3][i] + "    "
@@ -169,8 +176,7 @@ public class ComputingTimeTest {
 		}
 
 		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_TASKS_ON_EACH_PARTITION, TOTAL_PARTITIONS,
-				NUMBER_OF_TASKS_ON_EACH_PARTITION, true, range, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR,
-				NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
+				NUMBER_OF_TASKS_ON_EACH_PARTITION, true, range, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 
 		long[][] computingTime = new long[7][];
 
@@ -232,8 +238,8 @@ public class ComputingTimeTest {
 			System.out.println(2 + " " + 1 + " " + csLenConfig + " times: " + i);
 		}
 
-		result += "New MrsP" + "    " + "Original MrsP" + "    " + "MSRP" + "    " + "FIFONP-JAVA" + "    " + "FIFOP-JAVA" + "    " + "FIFONP-C"
-				+ "    " + "FIFOP-C" + "\n";
+		result += "New MrsP" + "    " + "Original MrsP" + "    " + "MSRP" + "    " + "FIFONP-JAVA" + "    " + "FIFOP-JAVA" + "    " + "FIFONP-C" + "    "
+				+ "FIFOP-C" + "\n";
 
 		for (int i = 0; i < TOTAL_NUMBER_OF_SYSTEMS; i++) {
 			result += computingTime[0][i] + "    " + computingTime[1][i] + "    " + computingTime[2][i] + "    " + computingTime[3][i] + "    "
@@ -312,8 +318,8 @@ public class ComputingTimeTest {
 			System.out.println(3 + " " + 1 + " " + smallSet + " times: " + i);
 		}
 
-		result += "New MrsP" + "    " + "Original MrsP" + "    " + "MSRP" + "    " + "FIFONP-JAVA" + "    " + "FIFOP-JAVA" + "    " + "FIFONP-C"
-				+ "    " + "FIFOP-C" + "\n";
+		result += "New MrsP" + "    " + "Original MrsP" + "    " + "MSRP" + "    " + "FIFONP-JAVA" + "    " + "FIFOP-JAVA" + "    " + "FIFONP-C" + "    "
+				+ "FIFOP-C" + "\n";
 
 		for (int i = 0; i < TOTAL_NUMBER_OF_SYSTEMS; i++) {
 			result += computingTime[0][i] + "    " + computingTime[1][i] + "    " + computingTime[2][i] + "    " + computingTime[3][i] + "    "
@@ -393,8 +399,8 @@ public class ComputingTimeTest {
 
 		}
 
-		result += "New MrsP" + "    " + "Original MrsP" + "    " + "MSRP" + "    " + "FIFONP-JAVA" + "    " + "FIFOP-JAVA" + "    " + "FIFONP-C"
-				+ "    " + "FIFOP-C" + "\n";
+		result += "New MrsP" + "    " + "Original MrsP" + "    " + "MSRP" + "    " + "FIFONP-JAVA" + "    " + "FIFOP-JAVA" + "    " + "FIFONP-C" + "    "
+				+ "FIFOP-C" + "\n";
 
 		for (int i = 0; i < TOTAL_NUMBER_OF_SYSTEMS; i++) {
 			result += computingTime[0][i] + "    " + computingTime[1][i] + "    " + computingTime[2][i] + "    " + computingTime[3][i] + "    "
@@ -403,8 +409,8 @@ public class ComputingTimeTest {
 
 		writeSystem(("4 " + 1 + " " + total_partitions), result);
 	}
-	
-	public static long getTime(){
+
+	public static long getTime() {
 		return ManagementFactory.getThreadMXBean().getThreadCpuTime(Thread.currentThread().getId());
 	}
 
