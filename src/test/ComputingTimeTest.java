@@ -8,7 +8,6 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
-import java.util.concurrent.CountDownLatch;
 
 import ILPBasedAnalysis.FIFOLinearC;
 import basicAnalysis.MSRPRTA;
@@ -20,7 +19,7 @@ import generatorTools.SystemGenerator.CS_LENGTH_RANGE;
 import generatorTools.SystemGenerator.RESOURCES_RANGE;
 import newAnalysis.FIFONP;
 import newAnalysis.FIFOP;
-import newAnalysis.NewMrsPRTA;
+import newAnalysisOverheads.NewMrsPRTAWithMCNP;
 
 public class ComputingTimeTest {
 
@@ -59,11 +58,11 @@ public class ComputingTimeTest {
 		// } else
 		// System.err.println("wrong parameter.");
 
-		for (int i = 1; i < 10; i++) {
+		for (int i = 1; i < 6; i++) {
 			experimentIncreasingWorkLoad(i);
 		}
 
-		for (int i = 4; i < 23; i=i+2) {
+		for (int i = 4; i < 13; i=i+2) {
 			experimentIncreasingParallel(i);
 		}
 	}
@@ -90,7 +89,7 @@ public class ComputingTimeTest {
 		FIFONP fnp = new FIFONP();
 		FIFOP fp = new FIFOP();
 		FIFOLinearC fifo = new FIFOLinearC();
-		NewMrsPRTA new_mrsp = new NewMrsPRTA();
+		NewMrsPRTAWithMCNP new_mrsp = new NewMrsPRTAWithMCNP();
 		OriginalMrsPRTA original_mrsp = new OriginalMrsPRTA();
 		MSRPRTA msrp = new MSRPRTA();
 
@@ -100,52 +99,59 @@ public class ComputingTimeTest {
 			generator.generateResourceUsage(tasks, resources);
 
 			start = getTime();
-			new_mrsp.NewMrsPRTATest(tasks, resources, false);
+			new_mrsp.NewMrsPRTATest(tasks, resources, 8,16, false);
 			end = getTime() - start;
 			computingTime[0][i] = end;
 
-			start = getTime();
-			original_mrsp.NewMrsPRTATest(tasks, resources, false);
-			end = getTime() - start;
-			computingTime[1][i] = end;
-
-			start = getTime();
-			msrp.NewMrsPRTATest(tasks, resources, false);
-			end = getTime() - start;
-			computingTime[2][i] = end;
-
-			start = getTime();
-			fnp.NewMrsPRTATest(tasks, resources, false);
-			end = getTime() - start;
-			computingTime[3][i] = end;
-
-			start = getTime();
-			fp.NewMrsPRTATest(tasks, resources, false);
-			end = getTime() - start;
-			computingTime[4][i] = end;
-
-			start = getTime();
-			fifo.NewMrsPRTATest(tasks, resources, false, false);
-			end = getTime() - start;
-			computingTime[5][i] = end;
-
-			start = getTime();
-			fifo.NewMrsPRTATest(tasks, resources, true, false);
-			end = getTime() - start;
-			computingTime[6][i] = end;
+//			start = getTime();
+//			original_mrsp.NewMrsPRTATest(tasks, resources, false);
+//			end = getTime() - start;
+//			computingTime[1][i] = end;
+//
+//			start = getTime();
+//			msrp.NewMrsPRTATest(tasks, resources, false);
+//			end = getTime() - start;
+//			computingTime[2][i] = end;
+//
+//			start = getTime();
+//			fnp.NewMrsPRTATest(tasks, resources, false);
+//			end = getTime() - start;
+//			computingTime[3][i] = end;
+//
+//			start = getTime();
+//			fp.NewMrsPRTATest(tasks, resources, false);
+//			end = getTime() - start;
+//			computingTime[4][i] = end;
+//
+//			start = getTime();
+//			fifo.NewMrsPRTATest(tasks, resources, false, false);
+//			end = getTime() - start;
+//			computingTime[5][i] = end;
+//
+//			start = getTime();
+//			fifo.NewMrsPRTATest(tasks, resources, true, false);
+//			end = getTime() - start;
+//			computingTime[6][i] = end;
 
 			System.out.println(1 + " " + 1 + " " + smallSet + " times: " + i);
 
 		}
 
-		result += "New MrsP" + "    " + "Original MrsP" + "    " + "MSRP" + "    " + "FIFONP-JAVA" + "    " + "FIFOP-JAVA" + "    " + "FIFONP-C" + "    "
-				+ "FIFOP-C" + "\n";
+//		result += "New MrsP" + "    " + "Original MrsP" + "    " + "MSRP" + "    " + "FIFONP-JAVA" + "    " + "FIFOP-JAVA" + "    " + "FIFONP-C" + "    "
+//				+ "FIFOP-C" + "\n";
+//
+//		for (int i = 0; i < TOTAL_NUMBER_OF_SYSTEMS; i++) {
+//			result += computingTime[0][i] + "    " + computingTime[1][i] + "    " + computingTime[2][i] + "    " + computingTime[3][i] + "    "
+//					+ computingTime[4][i] + "    " + computingTime[5][i] + "    " + computingTime[6][i] + "\n";
+//		}
+
+		
+		result += "New MrsP" + "\n";
 
 		for (int i = 0; i < TOTAL_NUMBER_OF_SYSTEMS; i++) {
-			result += computingTime[0][i] + "    " + computingTime[1][i] + "    " + computingTime[2][i] + "    " + computingTime[3][i] + "    "
-					+ computingTime[4][i] + "    " + computingTime[5][i] + "    " + computingTime[6][i] + "\n";
+			result += computingTime[0][i] + "\n";
 		}
-
+		
 		writeSystem((1 + " " + 1 + " " + smallSet), result);
 	}
 
@@ -191,7 +197,7 @@ public class ComputingTimeTest {
 		FIFONP fnp = new FIFONP();
 		FIFOP fp = new FIFOP();
 		FIFOLinearC fifo = new FIFOLinearC();
-		NewMrsPRTA new_mrsp = new NewMrsPRTA();
+		NewMrsPRTAWithMCNP new_mrsp = new NewMrsPRTAWithMCNP();
 		OriginalMrsPRTA original_mrsp = new OriginalMrsPRTA();
 		MSRPRTA msrp = new MSRPRTA();
 
@@ -201,7 +207,7 @@ public class ComputingTimeTest {
 			generator.generateResourceUsage(tasks, resources);
 
 			start = getTime();
-			new_mrsp.NewMrsPRTATest(tasks, resources, false);
+			new_mrsp.NewMrsPRTATest(tasks, resources, 8,16,false);
 			end = getTime() - start;
 			computingTime[0][i] = end;
 
@@ -270,7 +276,7 @@ public class ComputingTimeTest {
 		FIFONP fnp = new FIFONP();
 		FIFOP fp = new FIFOP();
 		FIFOLinearC fifo = new FIFOLinearC();
-		NewMrsPRTA new_mrsp = new NewMrsPRTA();
+		NewMrsPRTAWithMCNP new_mrsp = new NewMrsPRTAWithMCNP();
 		OriginalMrsPRTA original_mrsp = new OriginalMrsPRTA();
 		MSRPRTA msrp = new MSRPRTA();
 
@@ -281,7 +287,7 @@ public class ComputingTimeTest {
 			generator.generateResourceUsage(tasks, resources);
 
 			start = getTime();
-			new_mrsp.NewMrsPRTATest(tasks, resources, false);
+			new_mrsp.NewMrsPRTATest(tasks, resources,8,16, false);
 			end = getTime() - start;
 			computingTime[0][i] = end;
 
@@ -351,7 +357,7 @@ public class ComputingTimeTest {
 		FIFONP fnp = new FIFONP();
 		FIFOP fp = new FIFOP();
 		FIFOLinearC fifo = new FIFOLinearC();
-		NewMrsPRTA new_mrsp = new NewMrsPRTA();
+		NewMrsPRTAWithMCNP new_mrsp = new NewMrsPRTAWithMCNP();
 		OriginalMrsPRTA original_mrsp = new OriginalMrsPRTA();
 		MSRPRTA msrp = new MSRPRTA();
 
@@ -361,50 +367,56 @@ public class ComputingTimeTest {
 			generator.generateResourceUsage(tasks, resources);
 
 			start = getTime();
-			new_mrsp.NewMrsPRTATest(tasks, resources, false);
+			new_mrsp.NewMrsPRTATest(tasks, resources,8,16, false);
 			end = getTime() - start;
 			computingTime[0][i] = end;
 
-			start = getTime();
-			original_mrsp.NewMrsPRTATest(tasks, resources, false);
-			end = getTime() - start;
-			computingTime[1][i] = end;
-
-			start = getTime();
-			msrp.NewMrsPRTATest(tasks, resources, false);
-			end = getTime() - start;
-			computingTime[2][i] = end;
-
-			start = getTime();
-			fnp.NewMrsPRTATest(tasks, resources, false);
-			end = getTime() - start;
-			computingTime[3][i] = end;
-
-			start = getTime();
-			fp.NewMrsPRTATest(tasks, resources, false);
-			end = getTime() - start;
-			computingTime[4][i] = end;
-
-			start = getTime();
-			fifo.NewMrsPRTATest(tasks, resources, false, false);
-			end = getTime() - start;
-			computingTime[5][i] = end;
-
-			start = getTime();
-			fifo.NewMrsPRTATest(tasks, resources, true, false);
-			end = getTime() - start;
-			computingTime[6][i] = end;
+//			start = getTime();
+//			original_mrsp.NewMrsPRTATest(tasks, resources, false);
+//			end = getTime() - start;
+//			computingTime[1][i] = end;
+//
+//			start = getTime();
+//			msrp.NewMrsPRTATest(tasks, resources, false);
+//			end = getTime() - start;
+//			computingTime[2][i] = end;
+//
+//			start = getTime();
+//			fnp.NewMrsPRTATest(tasks, resources, false);
+//			end = getTime() - start;
+//			computingTime[3][i] = end;
+//
+//			start = getTime();
+//			fp.NewMrsPRTATest(tasks, resources, false);
+//			end = getTime() - start;
+//			computingTime[4][i] = end;
+//
+//			start = getTime();
+//			fifo.NewMrsPRTATest(tasks, resources, false, false);
+//			end = getTime() - start;
+//			computingTime[5][i] = end;
+//
+//			start = getTime();
+//			fifo.NewMrsPRTATest(tasks, resources, true, false);
+//			end = getTime() - start;
+//			computingTime[6][i] = end;
 
 			System.out.println(4 + " " + 1 + " " + total_partitions + " times: " + i);
 
 		}
 
-		result += "New MrsP" + "    " + "Original MrsP" + "    " + "MSRP" + "    " + "FIFONP-JAVA" + "    " + "FIFOP-JAVA" + "    " + "FIFONP-C" + "    "
-				+ "FIFOP-C" + "\n";
+//		result += "New MrsP" + "    " + "Original MrsP" + "    " + "MSRP" + "    " + "FIFONP-JAVA" + "    " + "FIFOP-JAVA" + "    " + "FIFONP-C" + "    "
+//				+ "FIFOP-C" + "\n";
+//
+//		for (int i = 0; i < TOTAL_NUMBER_OF_SYSTEMS; i++) {
+//			result += computingTime[0][i] + "    " + computingTime[1][i] + "    " + computingTime[2][i] + "    " + computingTime[3][i] + "    "
+//					+ computingTime[4][i] + "    " + computingTime[5][i] + "    " + computingTime[6][i] + "\n";
+//		}
+		
+		result += "New MrsP" + "\n";
 
 		for (int i = 0; i < TOTAL_NUMBER_OF_SYSTEMS; i++) {
-			result += computingTime[0][i] + "    " + computingTime[1][i] + "    " + computingTime[2][i] + "    " + computingTime[3][i] + "    "
-					+ computingTime[4][i] + "    " + computingTime[5][i] + "    " + computingTime[6][i] + "\n";
+			result += computingTime[0][i] + "\n";
 		}
 
 		writeSystem(("4 " + 1 + " " + total_partitions), result);
