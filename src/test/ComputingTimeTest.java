@@ -59,13 +59,13 @@ public class ComputingTimeTest {
 		// } else
 		// System.err.println("wrong parameter.");
 
-		for (int i = 1; i < 3; i++) {
+		for (int i = 1; i < 10; i++) {
 			experimentIncreasingWorkLoad(i);
 		}
 
-//		for (int i = 4; i < 23; i=i+2) {
-//			experimentIncreasingParallel(i);
-//		}
+		for (int i = 4; i < 23; i=i+2) {
+			experimentIncreasingParallel(i);
+		}
 	}
 
 	public static void experimentIncreasingWorkLoad(int smallSet) {
