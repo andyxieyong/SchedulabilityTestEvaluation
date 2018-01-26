@@ -19,7 +19,7 @@ import generatorTools.SystemGenerator.CS_LENGTH_RANGE;
 import generatorTools.SystemGenerator.RESOURCES_RANGE;
 import newAnalysis.FIFONP;
 import newAnalysis.FIFOP;
-import newAnalysisOverheads.NewMrsPRTAWithMCNP;
+import newAnalysis.NewMrsPRTAWithMCNP;
 
 public class ComputingTimeTest {
 

@@ -7,7 +7,7 @@ import entity.SporadicTask;
 import generatorTools.SystemGenerator;
 import generatorTools.SystemGenerator.CS_LENGTH_RANGE;
 import generatorTools.SystemGenerator.RESOURCES_RANGE;
-import newAnalysisOverheads.NewMrsPRTAWithMC;
+import newAnalysis.NewMrsPRTAWithMC;
 
 public class MigCostNPTest {
 

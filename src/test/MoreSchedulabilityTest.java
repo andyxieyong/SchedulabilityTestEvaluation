@@ -14,7 +14,7 @@ import generatorTools.SystemGenerator.RESOURCES_RANGE;
 import newAnalysis.FIFONP;
 import newAnalysis.FIFOP;
 import newAnalysis.NewMrsPRTA;
-import newAnalysisOverheads.NewMrsPRTAWithMCNP;
+import newAnalysis.NewMrsPRTAWithMCNP;
 
 public class MoreSchedulabilityTest {
 
@@ -126,7 +126,7 @@ public class MoreSchedulabilityTest {
 			range = CS_LENGTH_RANGE.VERY_LONG_CSLEN;
 			break;
 		case 6:
-			range = CS_LENGTH_RANGE.Random;
+			range = CS_LENGTH_RANGE.RANDOM;
 			break;
 		default:
 			break;

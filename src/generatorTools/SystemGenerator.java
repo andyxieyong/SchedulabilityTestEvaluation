@@ -11,7 +11,7 @@ public class SystemGenerator {
 
 	/* define how long the critical section can be */
 	public static enum CS_LENGTH_RANGE {
-		VERY_LONG_CSLEN, LONG_CSLEN, MEDIUM_CS_LEN, SHORT_CS_LEN, VERY_SHORT_CS_LEN, Random
+		VERY_LONG_CSLEN, LONG_CSLEN, MEDIUM_CS_LEN, SHORT_CS_LEN, VERY_SHORT_CS_LEN, RANDOM
 	};
 
 	/* define how many resources in the system */
@@ -189,7 +189,7 @@ public class SystemGenerator {
 				case VERY_SHORT_CS_LEN:
 					cs_len = ran.nextInt(15) + 1;
 					break;
-				case Random:
+				case RANDOM:
 					cs_len = ran.nextInt(300) + 1;
 				default:
 					break;
