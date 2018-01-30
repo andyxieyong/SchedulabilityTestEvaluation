@@ -8,17 +8,17 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
-import ILPBasedAnalysis.FIFOLinearC;
-import basicAnalysis.MSRPRTA;
-import basicAnalysis.OriginalMrsPRTA;
-import basicAnalysis.RTAWithoutBlocking;
+import AnalysisILP.FIFOLinearC;
+import analysisBasic.MSRPBasic;
+import analysisBasic.MrsPBasic;
+import analysisBasic.RTAWithoutBlocking;
+import analysisNew.MSRPNew;
+import analysisNew.MrsPNew;
 import entity.Resource;
 import entity.SporadicTask;
 import generatorTools.SystemGenerator;
 import generatorTools.SystemGenerator.CS_LENGTH_RANGE;
 import generatorTools.SystemGenerator.RESOURCES_RANGE;
-import newAnalysis.FIFONP;
-import newAnalysis.NewMrsPRTA;
 
 public class SchedulabilityTest {
 
@@ -62,12 +62,12 @@ public class SchedulabilityTest {
 		int NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION = smallSet;
 
 		long[][] Ris;
-		NewMrsPRTA new_mrsp = new NewMrsPRTA();
-		OriginalMrsPRTA original_mrsp = new OriginalMrsPRTA();
-		MSRPRTA msrp = new MSRPRTA();
+		MrsPNew new_mrsp = new MrsPNew();
+		MrsPBasic original_mrsp = new MrsPBasic();
+		MSRPBasic msrp = new MSRPBasic();
 		RTAWithoutBlocking noblocking = new RTAWithoutBlocking();
 		FIFOLinearC fp = new FIFOLinearC();
-		FIFONP fnp = new FIFONP();
+		MSRPNew fnp = new MSRPNew();
 
 		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION,
 				TOTAL_PARTITIONS, NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, CS_LENGTH_RANGE.VERY_SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS,
@@ -86,31 +86,31 @@ public class SchedulabilityTest {
 			ArrayList<Resource> resources = generator.generateResources();
 			generator.generateResourceUsage(tasks, resources);
 
-			Ris = noblocking.NewMrsPRTATest(tasks, resources, false);
+			Ris = noblocking.getResponseTime(tasks, resources, false);
 			if (isSystemSchedulable(tasks, Ris)) {
 				schedulableSystem_No_Blocking++;
 
-				Ris = original_mrsp.NewMrsPRTATest(tasks, resources, false);
+				Ris = original_mrsp.getResponseTime(tasks, resources, false);
 				if (isSystemSchedulable(tasks, Ris)) {
 					schedulableSystem_Original_MrsP_Analysis++;
 					schedulableSystem_New_MrsP_Analysis2++;
 				} else {
-					Ris = new_mrsp.NewMrsPRTATest(tasks, resources, false);
+					Ris = new_mrsp.getResponseTime(tasks, resources, false);
 					if (isSystemSchedulable(tasks, Ris))
 						schedulableSystem_New_MrsP_Analysis2++;
 				}
 
-				Ris = msrp.NewMrsPRTATest(tasks, resources, false);
+				Ris = msrp.getResponseTime(tasks, resources, false);
 				if (isSystemSchedulable(tasks, Ris)) {
 					schedulableSystem_MSRP_Analysis++;
 					sfnp++;
 				} else {
-					Ris = fnp.NewMrsPRTATest(tasks, resources, false);
+					Ris = fnp.getResponseTime(tasks, resources, false);
 					if (isSystemSchedulable(tasks, Ris))
 						sfnp++;
 				}
 
-				Ris = fp.NewMrsPRTATest(tasks, resources, true, false);
+				Ris = fp.getResponseTime(tasks, resources, true, false);
 				if (isSystemSchedulable(tasks, Ris))
 					sfp++;
 
@@ -160,12 +160,12 @@ public class SchedulabilityTest {
 				NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 		long[][] Ris;
 
-		NewMrsPRTA new_mrsp = new NewMrsPRTA();
-		OriginalMrsPRTA original_mrsp = new OriginalMrsPRTA();
-		MSRPRTA msrp = new MSRPRTA();
+		MrsPNew new_mrsp = new MrsPNew();
+		MrsPBasic original_mrsp = new MrsPBasic();
+		MSRPBasic msrp = new MSRPBasic();
 		RTAWithoutBlocking noblocking = new RTAWithoutBlocking();
 		FIFOLinearC fp = new FIFOLinearC();
-		FIFONP fnp = new FIFONP();
+		MSRPNew fnp = new MSRPNew();
 		String result = "";
 
 		int schedulableSystem_New_MrsP_Analysis2 = 0;
@@ -180,31 +180,31 @@ public class SchedulabilityTest {
 			ArrayList<Resource> resources = generator.generateResources();
 			generator.generateResourceUsage(tasks, resources);
 
-			Ris = noblocking.NewMrsPRTATest(tasks, resources, false);
+			Ris = noblocking.getResponseTime(tasks, resources, false);
 			if (isSystemSchedulable(tasks, Ris)) {
 				schedulableSystem_No_Blocking++;
 
-				Ris = original_mrsp.NewMrsPRTATest(tasks, resources, false);
+				Ris = original_mrsp.getResponseTime(tasks, resources, false);
 				if (isSystemSchedulable(tasks, Ris)) {
 					schedulableSystem_Original_MrsP_Analysis++;
 					schedulableSystem_New_MrsP_Analysis2++;
 				} else {
-					Ris = new_mrsp.NewMrsPRTATest(tasks, resources, false);
+					Ris = new_mrsp.getResponseTime(tasks, resources, false);
 					if (isSystemSchedulable(tasks, Ris))
 						schedulableSystem_New_MrsP_Analysis2++;
 				}
 
-				Ris = msrp.NewMrsPRTATest(tasks, resources, false);
+				Ris = msrp.getResponseTime(tasks, resources, false);
 				if (isSystemSchedulable(tasks, Ris)) {
 					schedulableSystem_MSRP_Analysis++;
 					sfnp++;
 				} else {
-					Ris = fnp.NewMrsPRTATest(tasks, resources, false);
+					Ris = fnp.getResponseTime(tasks, resources, false);
 					if (isSystemSchedulable(tasks, Ris))
 						sfnp++;
 				}
 
-				Ris = fp.NewMrsPRTATest(tasks, resources, true, false);
+				Ris = fp.getResponseTime(tasks, resources, true, false);
 				if (isSystemSchedulable(tasks, Ris))
 					sfp++;
 			}
@@ -231,12 +231,12 @@ public class SchedulabilityTest {
 				NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 		long[][] Ris;
 
-		NewMrsPRTA new_mrsp = new NewMrsPRTA();
-		OriginalMrsPRTA original_mrsp = new OriginalMrsPRTA();
-		MSRPRTA msrp = new MSRPRTA();
+		MrsPNew new_mrsp = new MrsPNew();
+		MrsPBasic original_mrsp = new MrsPBasic();
+		MSRPBasic msrp = new MSRPBasic();
 		RTAWithoutBlocking noblocking = new RTAWithoutBlocking();
 		FIFOLinearC fp = new FIFOLinearC();
-		FIFONP fnp = new FIFONP();
+		MSRPNew fnp = new MSRPNew();
 
 		String result = "";
 
@@ -253,31 +253,31 @@ public class SchedulabilityTest {
 			ArrayList<Resource> resources = generator.generateResources();
 			generator.generateResourceUsage(tasks, resources);
 
-			Ris = noblocking.NewMrsPRTATest(tasks, resources, false);
+			Ris = noblocking.getResponseTime(tasks, resources, false);
 			if (isSystemSchedulable(tasks, Ris)) {
 				schedulableSystem_No_Blocking++;
 
-				Ris = original_mrsp.NewMrsPRTATest(tasks, resources, false);
+				Ris = original_mrsp.getResponseTime(tasks, resources, false);
 				if (isSystemSchedulable(tasks, Ris)) {
 					schedulableSystem_Original_MrsP_Analysis++;
 					schedulableSystem_New_MrsP_Analysis2++;
 				} else {
-					Ris = new_mrsp.NewMrsPRTATest(tasks, resources, false);
+					Ris = new_mrsp.getResponseTime(tasks, resources, false);
 					if (isSystemSchedulable(tasks, Ris))
 						schedulableSystem_New_MrsP_Analysis2++;
 				}
 
-				Ris = msrp.NewMrsPRTATest(tasks, resources, false);
+				Ris = msrp.getResponseTime(tasks, resources, false);
 				if (isSystemSchedulable(tasks, Ris)) {
 					schedulableSystem_MSRP_Analysis++;
 					sfnp++;
 				} else {
-					Ris = fnp.NewMrsPRTATest(tasks, resources, false);
+					Ris = fnp.getResponseTime(tasks, resources, false);
 					if (isSystemSchedulable(tasks, Ris))
 						sfnp++;
 				}
 
-				Ris = fp.NewMrsPRTATest(tasks, resources, true, false);
+				Ris = fp.getResponseTime(tasks, resources, true, false);
 				if (isSystemSchedulable(tasks, Ris))
 					sfp++;
 			}

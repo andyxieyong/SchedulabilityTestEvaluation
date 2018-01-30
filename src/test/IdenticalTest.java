@@ -2,14 +2,14 @@ package test;
 
 import java.util.ArrayList;
 
-import ILPBasedAnalysis.FIFOLinearC;
+import AnalysisILP.FIFOLinearC;
+import analysisNew.MSRPNew;
+import analysisNew.PWLPNew;
 import entity.Resource;
 import entity.SporadicTask;
 import generatorTools.SystemGenerator;
 import generatorTools.SystemGenerator.CS_LENGTH_RANGE;
 import generatorTools.SystemGenerator.RESOURCES_RANGE;
-import newAnalysis.FIFONP;
-import newAnalysis.FIFOP;
 
 public class IdenticalTest {
 
@@ -25,8 +25,8 @@ public class IdenticalTest {
 
 	public static void main(String[] args) {
 		FIFOLinearC fp_c = new FIFOLinearC();
-		FIFOP fp_java = new FIFOP();
-		FIFONP fnp_java = new FIFONP();
+		PWLPNew fp_java = new PWLPNew();
+		MSRPNew fnp_java = new MSRPNew();
 		long[][] r1, r2, r3, r4;
 
 		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION,
@@ -40,27 +40,27 @@ public class IdenticalTest {
 			ArrayList<Resource> resources = generator.generateResources();
 			generator.generateResourceUsage(tasks, resources);
 
-			r1 = fp_c.NewMrsPRTATest(tasks, resources, true, false);
-			r2 = fp_java.NewMrsPRTATest(tasks, resources, false);
+			r1 = fp_c.getResponseTime(tasks, resources, true, false);
+			r2 = fp_java.getResponseTime(tasks, resources, false);
 			boolean isEqual = isEqual(r1, r2, false);
 
 			if (!isEqual && isSystemSchedulable(tasks, r1) && isSystemSchedulable(tasks, r2)) {
 				System.out.println("not equal");
 				isEqual(r1, r2, true);
 				SystemGenerator.testifyGeneratedTasksetAndResource(tasks, resources);
-				r1 = fp_c.NewMrsPRTATest(tasks, resources, true, false);
-				r2 = fp_java.NewMrsPRTATest(tasks, resources, false);
+				r1 = fp_c.getResponseTime(tasks, resources, true, false);
+				r2 = fp_java.getResponseTime(tasks, resources, false);
 				System.exit(0);
 			}
 			
-			r3 = fp_c.NewMrsPRTATest(tasks, resources, false, false);
-			r4 = fnp_java.NewMrsPRTATest(tasks, resources, false);
+			r3 = fp_c.getResponseTime(tasks, resources, false, false);
+			r4 = fnp_java.getResponseTime(tasks, resources, false);
 			if (!isEqual && isSystemSchedulable(tasks, r3) && isSystemSchedulable(tasks, r4)) {
 				System.out.println("not equal");
 				isEqual(r3, r4, true);
 				SystemGenerator.testifyGeneratedTasksetAndResource(tasks, resources);
-				r3 = fp_c.NewMrsPRTATest(tasks, resources, true, false);
-				r4 = fp_java.NewMrsPRTATest(tasks, resources, false);
+				r3 = fp_c.getResponseTime(tasks, resources, true, false);
+				r4 = fp_java.getResponseTime(tasks, resources, false);
 				System.exit(0);
 			}
 			

@@ -6,21 +6,26 @@ public class Resource {
 
 	public int id;
 	public long csl;
-
-	public ArrayList<SporadicTask> requested_tasks;
-	public ArrayList<Integer> partitions;
-	public ArrayList<Integer> ceiling;
-
+	public int protocol;
 	public boolean isGlobal = false;
+
+	public ArrayList<Integer> partitions;
+	public ArrayList<SporadicTask> requested_tasks;
 
 	public Resource(int id, long cs_len) {
 		this.id = id;
 		this.csl = cs_len;
 		requested_tasks = new ArrayList<>();
 		partitions = new ArrayList<>();
-		ceiling = new ArrayList<>();
+		this.protocol = 1;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "R" + this.id + " : cs len = " + this.csl + ", partitions: " + partitions.size() + ", tasks: "
+				+ requested_tasks.size() + ", isGlobal: " + isGlobal;
+	}
+
 	public int getCeilingForProcessor(ArrayList<ArrayList<SporadicTask>> tasks, int partition) {
 		int ceiling = -1;
 
@@ -46,19 +51,7 @@ public class Resource {
 			}
 		}
 
-		// if (ceiling <= 0) {
-		// System.err.println("111the ceiling is <= 0. there must be something
-		// wrong. Check it!");
-		// System.exit(-1);
-		// }
-
 		return ceiling;
-	}
-
-	@Override
-	public String toString() {
-		return "R" + this.id + " : cs len = " + this.csl + ", partitions: " + partitions.size() + ", tasks: " + requested_tasks.size()
-				+ ", isGlobal: " + isGlobal;
 	}
 
 }

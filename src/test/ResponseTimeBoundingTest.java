@@ -8,13 +8,13 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
+import analysisNew.MSRPNew;
+import analysisNew.MrsPNew;
 import entity.Resource;
 import entity.SporadicTask;
 import generatorTools.SystemGenerator;
 import generatorTools.SystemGenerator.CS_LENGTH_RANGE;
 import generatorTools.SystemGenerator.RESOURCES_RANGE;
-import newAnalysis.FIFONP;
-import newAnalysis.NewMrsPRTA;
 
 public class ResponseTimeBoundingTest {
 
@@ -36,8 +36,8 @@ public class ResponseTimeBoundingTest {
 
 	public static void run() {
 
-		NewMrsPRTA new_mrsp = new NewMrsPRTA();
-		FIFONP fnp = new FIFONP();
+		MrsPNew new_mrsp = new MrsPNew();
+		MSRPNew fnp = new MSRPNew();
 
 		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION,
 				TOTAL_PARTITIONS, NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, range, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR,
@@ -55,8 +55,8 @@ public class ResponseTimeBoundingTest {
 			ArrayList<Resource> resources = generator.generateResources();
 			generator.generateResourceUsage(tasks, resources);
 
-			r1 = fnp.NewMrsPRTATest(tasks, resources, false);
-			r2 = new_mrsp.NewMrsPRTATest(tasks, resources, false);
+			r1 = fnp.getResponseTime(tasks, resources, false);
+			r2 = new_mrsp.getResponseTime(tasks, resources, false);
 
 			if (isSystemSchedulable(tasks, r1) && isSystemSchedulable(tasks, r2)) {
 				diff = diff(r1, r2);

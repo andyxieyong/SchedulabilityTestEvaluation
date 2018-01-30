@@ -9,7 +9,12 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 
-import Utils.AnalysisUtils;
+import analysisNew.MSRPNew;
+import analysisNew.MrsPNew;
+import analysisNew.PWLPNew;
+import analysisNewOverheads.MSRPIO;
+import analysisNewOverheads.MrsPIO;
+import analysisNewOverheads.PWLPIO;
 import entity.Resource;
 import entity.SporadicTask;
 import generatorTools.SystemGenerator;
@@ -80,13 +85,13 @@ public class TestRunTimeOverheads {
 				NUMBER_OF_TASKS_ON_EACH_PARTITION, true, cs_range, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 
 		long[][] Ris;
-		newAnalysis.FIFONP fnp = new newAnalysis.FIFONP();
-		newAnalysis.FIFOP fp = new newAnalysis.FIFOP();
-		newAnalysis.NewMrsPRTA mrsp = new newAnalysis.NewMrsPRTA();
+		MSRPNew fnp = new MSRPNew();
+		PWLPNew fp = new PWLPNew();
+		MrsPNew mrsp = new MrsPNew();
 
-		newAnalysisOverheads.FIFONP fnpIO = new newAnalysisOverheads.FIFONP();
-		newAnalysisOverheads.FIFOP fpIO = new newAnalysisOverheads.FIFOP();
-		newAnalysisOverheads.MrsP mrspIO = new newAnalysisOverheads.MrsP();
+		MSRPIO fnpIO = new MSRPIO();
+		PWLPIO fpIO = new PWLPIO();
+		MrsPIO mrspIO = new MrsPIO();
 
 		String result = "";
 		int sfnpIO = 0;
@@ -102,31 +107,31 @@ public class TestRunTimeOverheads {
 			ArrayList<Resource> resources = generator.generateResources();
 			generator.generateResourceUsage(tasks, resources);
 
-			Ris = fnpIO.getResponseTimeByDMPO(tasks, resources, AnalysisUtils.extendCalForStatic, testSchedulability, btbHit, useRi, false);
+			Ris = fnpIO.getResponseTime(tasks, resources, false);
 			if (isSystemSchedulable(tasks, Ris))
 				sfnpIO++;
 
-			Ris = fpIO.getResponseTimeByDMPO(tasks, resources, AnalysisUtils.extendCalForStatic, testSchedulability, btbHit, useRi, false);
+			Ris = fpIO.getResponseTime(tasks, resources, false);
 			if (isSystemSchedulable(tasks, Ris))
 				sfpIO++;
 
-			Ris = mrspIO.getResponseTimeByDMPO(tasks, resources, AnalysisUtils.extendCalForStatic, testSchedulability, btbHit, useRi, false);
+			Ris = mrspIO.getResponseTime(tasks, resources, true, true, false);
 			if (isSystemSchedulable(tasks, Ris))
 				smrspIONP++;
 
-			Ris = mrspIO.getResponseTimeByDMPO(tasks, resources, AnalysisUtils.extendCalForStatic, testSchedulability, btbHit, useRi, true, false, false);
+			Ris = mrspIO.getResponseTime(tasks, resources, true, false, false);
 			if (isSystemSchedulable(tasks, Ris))
 				smrspIO++;
 
-			Ris = fnp.NewMrsPRTATest(tasks, resources, false);
+			Ris = fnp.getResponseTime(tasks, resources, false);
 			if (isSystemSchedulable(tasks, Ris))
 				sfnp++;
 
-			Ris = fp.NewMrsPRTATest(tasks, resources, false);
+			Ris = fp.getResponseTime(tasks, resources, false);
 			if (isSystemSchedulable(tasks, Ris))
 				sfp++;
 
-			Ris = mrsp.NewMrsPRTATest(tasks, resources, false);
+			Ris = mrsp.getResponseTime(tasks, resources, false);
 			if (isSystemSchedulable(tasks, Ris))
 				smrsp++;
 

@@ -9,15 +9,15 @@ import java.io.UnsupportedEncodingException;
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 
-import ILPBasedAnalysis.FIFOLinearC;
+import AnalysisILP.FIFOLinearC;
+import analysisNewOverheads.MSRPIO;
+import analysisNewOverheads.MrsPIO;
+import analysisNewOverheads.PWLPIO;
 import entity.Resource;
 import entity.SporadicTask;
 import generatorTools.SystemGenerator;
 import generatorTools.SystemGenerator.CS_LENGTH_RANGE;
 import generatorTools.SystemGenerator.RESOURCES_RANGE;
-import newAnalysis.FIFONP;
-import newAnalysis.FIFOP;
-import newAnalysis.NewMrsPRTAWithMCNP;
 
 public class ComputingTimeTest {
 
@@ -57,39 +57,39 @@ public class ComputingTimeTest {
 
 		long start, end = 0;
 
-		FIFONP fnp = new FIFONP();
-		FIFOP fp = new FIFOP();
+		MSRPIO fnp = new MSRPIO();
+		PWLPIO fp = new PWLPIO();
 		FIFOLinearC fifo = new FIFOLinearC();
-		NewMrsPRTAWithMCNP new_mrsp = new NewMrsPRTAWithMCNP();
+		MrsPIO new_mrsp = new MrsPIO();
 
 		for (int i = 0; i < TOTAL_NUMBER_OF_SYSTEMS; i++) {
 			ArrayList<ArrayList<SporadicTask>> tasks = generator.generateTasks();
 			ArrayList<Resource> resources = generator.generateResources();
 			generator.generateResourceUsage(tasks, resources);
 
-			start = System.nanoTime();
-			fnp.NewMrsPRTATest(tasks, resources, false);
-			end = System.nanoTime() - start;
+			start = getTime();
+			fnp.getResponseTime(tasks, resources, false);
+			end = getTime() - start;
 			computingTime[0][i] = end;
 
-			start = System.nanoTime();
-			new_mrsp.NewMrsPRTATest(tasks, resources, 8, 16, false);
-			end = System.nanoTime() - start;
+			start = getTime();
+			new_mrsp.getResponseTime(tasks, resources, true, true, false);
+			end = getTime() - start;
 			computingTime[1][i] = end;
 
-			start = System.nanoTime();
-			fp.NewMrsPRTATest(tasks, resources, false);
-			end = System.nanoTime() - start;
+			start = getTime();
+			fp.getResponseTime(tasks, resources, false);
+			end = getTime() - start;
 			computingTime[2][i] = end;
 
-			start = System.nanoTime();
-			fifo.NewMrsPRTATest(tasks, resources, false, false);
-			end = System.nanoTime() - start;
+			start = getTime();
+			fifo.getResponseTime(tasks, resources, false, false);
+			end = getTime() - start;
 			computingTime[3][i] = end;
 
-			start = System.nanoTime();
-			fifo.NewMrsPRTATest(tasks, resources, true, false);
-			end = System.nanoTime() - start;
+			start = getTime();
+			fifo.getResponseTime(tasks, resources, true, false);
+			end = getTime() - start;
 			computingTime[4][i] = end;
 
 			System.out.println(1 + " " + 1 + " " + smallSet + " times: " + i);
@@ -126,39 +126,39 @@ public class ComputingTimeTest {
 
 		long start, end = 0;
 
-		FIFONP fnp = new FIFONP();
-		FIFOP fp = new FIFOP();
+		MSRPIO fnp = new MSRPIO();
+		PWLPIO fp = new PWLPIO();
 		FIFOLinearC fifo = new FIFOLinearC();
-		NewMrsPRTAWithMCNP new_mrsp = new NewMrsPRTAWithMCNP();
+		MrsPIO new_mrsp = new MrsPIO();
 
 		for (int i = 0; i < TOTAL_NUMBER_OF_SYSTEMS; i++) {
 			ArrayList<ArrayList<SporadicTask>> tasks = generator.generateTasks();
 			ArrayList<Resource> resources = generator.generateResources();
 			generator.generateResourceUsage(tasks, resources);
 			
-			start = System.nanoTime();
-			fnp.NewMrsPRTATest(tasks, resources, false);
-			end = System.nanoTime() - start;
+			start = getTime();
+			fnp.getResponseTime(tasks, resources, false);
+			end = getTime() - start;
 			computingTime[0][i] = end;
 
-			start = System.nanoTime();
-			new_mrsp.NewMrsPRTATest(tasks, resources, 8, 16, false);
-			end = System.nanoTime() - start;
+			start = getTime();
+			new_mrsp.getResponseTime(tasks, resources, true, true, false);
+			end = getTime() - start;
 			computingTime[1][i] = end;
 
-			start = System.nanoTime();
-			fp.NewMrsPRTATest(tasks, resources, false);
-			end = System.nanoTime() - start;
+			start = getTime();
+			fp.getResponseTime(tasks, resources, false);
+			end = getTime() - start;
 			computingTime[2][i] = end;
 
-			start = System.nanoTime();
-			fifo.NewMrsPRTATest(tasks, resources, false, false);
-			end = System.nanoTime() - start;
+			start = getTime();
+			fifo.getResponseTime(tasks, resources, false, false);
+			end = getTime() - start;
 			computingTime[3][i] = end;
 
-			start = System.nanoTime();
-			fifo.NewMrsPRTATest(tasks, resources, true, false);
-			end = System.nanoTime() - start;
+			start = getTime();
+			fifo.getResponseTime(tasks, resources, true, false);
+			end = getTime() - start;
 			computingTime[4][i] = end;
 
 			System.out.println(4 + " " + 1 + " " + total_partitions + " times: " + i);

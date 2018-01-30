@@ -142,7 +142,7 @@ public class SystemGenerator {
 		}
 
 		/* assign priorities */
-		new PriorityUtil().deadlineMonotonicPriorityAssignment(tasks, number_of_tasks_per_processor);
+		new PriorityGeneator().deadlineMonotonicPriorityAssignment(tasks,number_of_tasks_per_processor);
 		return tasks;
 	}
 
@@ -313,23 +313,17 @@ public class SystemGenerator {
 
 			/* for each partition */
 			for (int j = 0; j < tasks.size(); j++) {
-				int ceiling = 0;
-
 				/* for each task in the given partition */
 				for (int k = 0; k < tasks.get(j).size(); k++) {
 					SporadicTask task = tasks.get(j).get(k);
 
 					if (task.resource_required_index.contains(resource.id - 1)) {
 						resource.requested_tasks.add(task);
-						ceiling = task.priority > ceiling ? task.priority : ceiling;
 						if (!resource.partitions.contains(task.partition)) {
 							resource.partitions.add(task.partition);
 						}
 					}
 				}
-
-				if (ceiling > 0)
-					resource.ceiling.add(ceiling);
 			}
 
 			if (resource.partitions.size() > 1)
