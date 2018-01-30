@@ -32,11 +32,6 @@ public class TestRunTimeOverheads {
 	public static int TOTAL_NUMBER_OF_SYSTEMS = 1000;
 	public static int TOTAL_PARTITIONS = 16;
 
-	public static boolean testSchedulability = true;
-	public static boolean useRi = true;
-	public static boolean btbHit = true;
-	public static int PROTOCOLS = 3;
-
 	public static void main(String[] args) throws InterruptedException {
 		TestRunTimeOverheads test = new TestRunTimeOverheads();
 

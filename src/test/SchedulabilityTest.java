@@ -14,6 +14,10 @@ import analysisBasic.MrsPBasic;
 import analysisBasic.RTAWithoutBlocking;
 import analysisNew.MSRPNew;
 import analysisNew.MrsPNew;
+import analysisNew.PWLPNew;
+import analysisNewOverheads.MSRPIO;
+import analysisNewOverheads.MrsPIO;
+import analysisNewOverheads.PWLPIO;
 import entity.Resource;
 import entity.SporadicTask;
 import generatorTools.SystemGenerator;
@@ -28,56 +32,40 @@ public class SchedulabilityTest {
 	public static int MAX_PERIOD = 1000;
 
 	public static void main(String[] args) throws InterruptedException {
-		int experiment = 0;
-		int bigSet = 0;
-		int smallSet = 0;
 
-		if (args.length == 3) {
-			experiment = Integer.parseInt(args[0]);
-			bigSet = Integer.parseInt(args[1]);
-			smallSet = Integer.parseInt(args[2]);
+		for (int i = 1; i < 10; i++)
+			experimentIncreasingWorkLoad(i);
 
-			switch (experiment) {
-			case 1:
-				experimentIncreasingWorkLoad(bigSet, smallSet);
-				break;
-			case 2:
-				experimentIncreasingCriticalSectionLength(bigSet, smallSet);
-				break;
-			case 3:
-				experimentIncreasingContention(bigSet, smallSet);
-				break;
-			default:
-				break;
-			}
+		for (int i = 1; i < 7; i++)
+			experimentIncreasingCriticalSectionLength(i);
 
-		} else
-			System.err.println("wrong parameter.");
+		for (int i = 1; i < 23; i = i + 2)
+			experimentIncreasingParallelism(i);
+
+		for (int i = 1; i < 42; i = 1 + 5)
+			experimentIncreasingContention(i);
 	}
 
-	public static void experimentIncreasingWorkLoad(int bigSet, int smallSet) {
+	public static void experimentIncreasingWorkLoad(int NoT) {
 		int NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE = 2;
-		double RESOURCE_SHARING_FACTOR = 0.2 + 0.1 * (double) (bigSet - 1);
-
-		int NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION = smallSet;
+		double RESOURCE_SHARING_FACTOR = 0.4;
 
 		long[][] Ris;
 		MrsPNew new_mrsp = new MrsPNew();
 		MrsPBasic original_mrsp = new MrsPBasic();
 		MSRPBasic msrp = new MSRPBasic();
 		RTAWithoutBlocking noblocking = new RTAWithoutBlocking();
-		FIFOLinearC fp = new FIFOLinearC();
+		PWLPNew fp = new PWLPNew();
 		MSRPNew fnp = new MSRPNew();
 
-		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION,
-				TOTAL_PARTITIONS, NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, CS_LENGTH_RANGE.VERY_SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS,
-				RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
+		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NoT, TOTAL_PARTITIONS, NoT, true,
+				CS_LENGTH_RANGE.VERY_SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 
 		String result = "";
-		int schedulableSystem_New_MrsP_Analysis2 = 0;
-		int schedulableSystem_Original_MrsP_Analysis = 0;
-		int schedulableSystem_MSRP_Analysis = 0;
-		int schedulableSystem_No_Blocking = 0;
+		int smrsp = 0;
+		int smrspOld = 0;
+		int smsrpOld = 0;
+		int sNoBlocking = 0;
 		int sfnp = 0;
 		int sfp = 0;
 
@@ -88,21 +76,21 @@ public class SchedulabilityTest {
 
 			Ris = noblocking.getResponseTime(tasks, resources, false);
 			if (isSystemSchedulable(tasks, Ris)) {
-				schedulableSystem_No_Blocking++;
+				sNoBlocking++;
 
 				Ris = original_mrsp.getResponseTime(tasks, resources, false);
 				if (isSystemSchedulable(tasks, Ris)) {
-					schedulableSystem_Original_MrsP_Analysis++;
-					schedulableSystem_New_MrsP_Analysis2++;
+					smrspOld++;
+					smrsp++;
 				} else {
 					Ris = new_mrsp.getResponseTime(tasks, resources, false);
 					if (isSystemSchedulable(tasks, Ris))
-						schedulableSystem_New_MrsP_Analysis2++;
+						smrsp++;
 				}
 
 				Ris = msrp.getResponseTime(tasks, resources, false);
 				if (isSystemSchedulable(tasks, Ris)) {
-					schedulableSystem_MSRP_Analysis++;
+					smsrpOld++;
 					sfnp++;
 				} else {
 					Ris = fnp.getResponseTime(tasks, resources, false);
@@ -110,121 +98,192 @@ public class SchedulabilityTest {
 						sfnp++;
 				}
 
-				Ris = fp.getResponseTime(tasks, resources, true, false);
+				Ris = fp.getResponseTime(tasks, resources, false);
 				if (isSystemSchedulable(tasks, Ris))
 					sfp++;
 
 			}
 
-			System.out.println(1 + "" + bigSet + " " + smallSet + " times: " + i);
+			System.out.println(1 + "" + 1 + " " + NoT + " times: " + i);
 
 		}
 
-		result += (double) schedulableSystem_New_MrsP_Analysis2 / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
-				+ (double) schedulableSystem_Original_MrsP_Analysis / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
-				+ (double) schedulableSystem_MSRP_Analysis / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
-				+ (double) schedulableSystem_No_Blocking / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) sfnp / (double) TOTAL_NUMBER_OF_SYSTEMS
-				+ " " + (double) sfp / (double) TOTAL_NUMBER_OF_SYSTEMS + "\n";
+		result += (double) smrsp / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) smrspOld / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
+				+ (double) smsrpOld / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) sNoBlocking / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
+				+ (double) sfnp / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) sfp / (double) TOTAL_NUMBER_OF_SYSTEMS + "\n";
 
-		writeSystem((1 + " " + bigSet + " " + smallSet), result);
+		writeSystem((1 + " " + 1 + " " + NoT), result);
 	}
 
-	public static void experimentIncreasingCriticalSectionLength(int tasksNumConfig, int csLenConfig) {
+	public static void experimentIncreasingParallelism(int NoP) {
+		int NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE = 2;
 		double RESOURCE_SHARING_FACTOR = 0.4;
-		int NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE = 3;
-		int NUMBER_OF_TASKS_ON_EACH_PARTITION = 3 + 1 * (tasksNumConfig - 1);
+		int NoT = 5;
 
-		CS_LENGTH_RANGE range = null;
-		switch (csLenConfig) {
+		long[][] Ris;
+		MrsPNew new_mrsp = new MrsPNew();
+		MrsPBasic original_mrsp = new MrsPBasic();
+		MSRPBasic msrp = new MSRPBasic();
+		RTAWithoutBlocking noblocking = new RTAWithoutBlocking();
+		PWLPNew fp = new PWLPNew();
+		MSRPNew fnp = new MSRPNew();
+
+		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NoT, NoP, NoT, true, CS_LENGTH_RANGE.VERY_SHORT_CS_LEN,
+				RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
+
+		String result = "";
+		int smrsp = 0;
+		int smrspOld = 0;
+		int smsrpOld = 0;
+		int sNoBlocking = 0;
+		int sfnp = 0;
+		int sfp = 0;
+
+		for (int i = 0; i < TOTAL_NUMBER_OF_SYSTEMS; i++) {
+			ArrayList<ArrayList<SporadicTask>> tasks = generator.generateTasks();
+			ArrayList<Resource> resources = generator.generateResources();
+			generator.generateResourceUsage(tasks, resources);
+
+			Ris = noblocking.getResponseTime(tasks, resources, false);
+			if (isSystemSchedulable(tasks, Ris)) {
+				sNoBlocking++;
+
+				Ris = original_mrsp.getResponseTime(tasks, resources, false);
+				if (isSystemSchedulable(tasks, Ris)) {
+					smrspOld++;
+					smrsp++;
+				} else {
+					Ris = new_mrsp.getResponseTime(tasks, resources, false);
+					if (isSystemSchedulable(tasks, Ris))
+						smrsp++;
+				}
+
+				Ris = msrp.getResponseTime(tasks, resources, false);
+				if (isSystemSchedulable(tasks, Ris)) {
+					smsrpOld++;
+					sfnp++;
+				} else {
+					Ris = fnp.getResponseTime(tasks, resources, false);
+					if (isSystemSchedulable(tasks, Ris))
+						sfnp++;
+				}
+
+				Ris = fp.getResponseTime(tasks, resources, false);
+				if (isSystemSchedulable(tasks, Ris))
+					sfp++;
+
+			}
+
+			System.out.println(4 + "" + 1 + " " + NoP + " times: " + i);
+
+		}
+
+		result += (double) smrsp / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) smrspOld / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
+				+ (double) smsrpOld / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) sNoBlocking / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
+				+ (double) sfnp / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) sfp / (double) TOTAL_NUMBER_OF_SYSTEMS + "\n";
+
+		writeSystem((4 + " " + 1 + " " + NoP), result);
+	}
+
+	public static void experimentIncreasingCriticalSectionLength(int cs_len) {
+		int NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE = 3;
+		int NUMBER_OF_TASKS_ON_EACH_PARTITION = 4;
+		double RESOURCE_SHARING_FACTOR = 0.4;
+
+		final CS_LENGTH_RANGE cs_range;
+		switch (cs_len) {
 		case 1:
-			range = CS_LENGTH_RANGE.VERY_SHORT_CS_LEN;
+			cs_range = CS_LENGTH_RANGE.VERY_SHORT_CS_LEN;
 			break;
 		case 2:
-			range = CS_LENGTH_RANGE.SHORT_CS_LEN;
+			cs_range = CS_LENGTH_RANGE.SHORT_CS_LEN;
 			break;
 		case 3:
-			range = CS_LENGTH_RANGE.MEDIUM_CS_LEN;
+			cs_range = CS_LENGTH_RANGE.MEDIUM_CS_LEN;
 			break;
 		case 4:
-			range = CS_LENGTH_RANGE.LONG_CSLEN;
+			cs_range = CS_LENGTH_RANGE.LONG_CSLEN;
 			break;
 		case 5:
-			range = CS_LENGTH_RANGE.VERY_LONG_CSLEN;
+			cs_range = CS_LENGTH_RANGE.VERY_LONG_CSLEN;
+			break;
+		case 6:
+			cs_range = CS_LENGTH_RANGE.RANDOM;
 			break;
 		default:
+			cs_range = null;
 			break;
 		}
 
 		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_TASKS_ON_EACH_PARTITION, TOTAL_PARTITIONS,
-				NUMBER_OF_TASKS_ON_EACH_PARTITION, true, range, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR,
-				NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
+				NUMBER_OF_TASKS_ON_EACH_PARTITION, true, cs_range, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
+
 		long[][] Ris;
-
-		MrsPNew new_mrsp = new MrsPNew();
-		MrsPBasic original_mrsp = new MrsPBasic();
-		MSRPBasic msrp = new MSRPBasic();
-		RTAWithoutBlocking noblocking = new RTAWithoutBlocking();
-		FIFOLinearC fp = new FIFOLinearC();
 		MSRPNew fnp = new MSRPNew();
-		String result = "";
+		PWLPNew fp = new PWLPNew();
+		MrsPNew mrsp = new MrsPNew();
 
-		int schedulableSystem_New_MrsP_Analysis2 = 0;
-		int schedulableSystem_Original_MrsP_Analysis = 0;
-		int schedulableSystem_MSRP_Analysis = 0;
-		int schedulableSystem_No_Blocking = 0;
+		MSRPIO fnpIO = new MSRPIO();
+		PWLPIO fpIO = new PWLPIO();
+		MrsPIO mrspIO = new MrsPIO();
+
+		String result = "";
+		int sfnpIO = 0;
+		int sfpIO = 0;
+		int smrspIONP = 0;
+		int smrspIO = 0;
 		int sfnp = 0;
 		int sfp = 0;
+		int smrsp = 0;
 
 		for (int i = 0; i < TOTAL_NUMBER_OF_SYSTEMS; i++) {
 			ArrayList<ArrayList<SporadicTask>> tasks = generator.generateTasks();
 			ArrayList<Resource> resources = generator.generateResources();
 			generator.generateResourceUsage(tasks, resources);
 
-			Ris = noblocking.getResponseTime(tasks, resources, false);
-			if (isSystemSchedulable(tasks, Ris)) {
-				schedulableSystem_No_Blocking++;
+			Ris = fnpIO.getResponseTime(tasks, resources, false);
+			if (isSystemSchedulable(tasks, Ris))
+				sfnpIO++;
 
-				Ris = original_mrsp.getResponseTime(tasks, resources, false);
-				if (isSystemSchedulable(tasks, Ris)) {
-					schedulableSystem_Original_MrsP_Analysis++;
-					schedulableSystem_New_MrsP_Analysis2++;
-				} else {
-					Ris = new_mrsp.getResponseTime(tasks, resources, false);
-					if (isSystemSchedulable(tasks, Ris))
-						schedulableSystem_New_MrsP_Analysis2++;
-				}
+			Ris = fpIO.getResponseTime(tasks, resources, false);
+			if (isSystemSchedulable(tasks, Ris))
+				sfpIO++;
 
-				Ris = msrp.getResponseTime(tasks, resources, false);
-				if (isSystemSchedulable(tasks, Ris)) {
-					schedulableSystem_MSRP_Analysis++;
-					sfnp++;
-				} else {
-					Ris = fnp.getResponseTime(tasks, resources, false);
-					if (isSystemSchedulable(tasks, Ris))
-						sfnp++;
-				}
+			Ris = mrspIO.getResponseTime(tasks, resources, true, true, false);
+			if (isSystemSchedulable(tasks, Ris))
+				smrspIONP++;
 
-				Ris = fp.getResponseTime(tasks, resources, true, false);
-				if (isSystemSchedulable(tasks, Ris))
-					sfp++;
-			}
+			Ris = mrspIO.getResponseTime(tasks, resources, true, false, false);
+			if (isSystemSchedulable(tasks, Ris))
+				smrspIO++;
 
-			System.out.println(2 + "" + tasksNumConfig + " " + csLenConfig + " times: " + i);
+			Ris = fnp.getResponseTime(tasks, resources, false);
+			if (isSystemSchedulable(tasks, Ris))
+				sfnp++;
+
+			Ris = fp.getResponseTime(tasks, resources, false);
+			if (isSystemSchedulable(tasks, Ris))
+				sfp++;
+
+			Ris = mrsp.getResponseTime(tasks, resources, false);
+			if (isSystemSchedulable(tasks, Ris))
+				smrsp++;
+
+			System.out.println(2 + " " + 1 + " " + cs_len + " times: " + i);
 		}
 
-		result += (double) schedulableSystem_New_MrsP_Analysis2 / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
-				+ (double) schedulableSystem_Original_MrsP_Analysis / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
-				+ (double) schedulableSystem_MSRP_Analysis / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
-				+ (double) schedulableSystem_No_Blocking / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) sfnp / (double) TOTAL_NUMBER_OF_SYSTEMS
-				+ " " + (double) sfp / (double) TOTAL_NUMBER_OF_SYSTEMS + "\n";
+		result += (double) sfnp / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) sfnpIO / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
+				+ (double) sfp / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) sfpIO / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
+				+ (double) smrsp / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) smrspIO / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
+				+ (double) smrspIONP / (double) TOTAL_NUMBER_OF_SYSTEMS + "\n";
 
-		writeSystem((2 + " " + tasksNumConfig + " " + csLenConfig), result);
+		writeSystem(("ioa " + 2 + " " + 1 + " " + cs_len), result);
 	}
 
-	public static void experimentIncreasingContention(int bigSet, int smallSet) {
+	public static void experimentIncreasingContention(int smallSet) {
 		double RESOURCE_SHARING_FACTOR = 0.4;
 		int NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE = 1 + 5 * (smallSet - 1);
-		int NUMBER_OF_TASKS_ON_EACH_PARTITION = 4 + 2 * (bigSet - 1);
+		int NUMBER_OF_TASKS_ON_EACH_PARTITION = 5;
 
 		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_TASKS_ON_EACH_PARTITION, TOTAL_PARTITIONS,
 				NUMBER_OF_TASKS_ON_EACH_PARTITION, true, CS_LENGTH_RANGE.VERY_SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR,
@@ -282,20 +341,18 @@ public class SchedulabilityTest {
 					sfp++;
 			}
 
-			System.out.println(3 + "" + bigSet + " " + smallSet + " times: " + i);
+			System.out.println(3 + "" + 1 + " " + smallSet + " times: " + i);
 		}
 
 		result += (double) schedulableSystem_New_MrsP_Analysis2 / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
 				+ (double) schedulableSystem_Original_MrsP_Analysis / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
 				+ (double) schedulableSystem_MSRP_Analysis / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
-				+ (double) schedulableSystem_No_Blocking / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) sfnp / (double) TOTAL_NUMBER_OF_SYSTEMS
-				+ " " + (double) sfp / (double) TOTAL_NUMBER_OF_SYSTEMS + "\n";
+				+ (double) schedulableSystem_No_Blocking / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) sfnp / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
+				+ (double) sfp / (double) TOTAL_NUMBER_OF_SYSTEMS + "\n";
 
-		writeSystem((3 + " " + bigSet + " " + smallSet), result);
+		writeSystem((3 + " " + 1 + " " + smallSet), result);
 	}
 
-	
-	
 	public static boolean isSystemSchedulable(ArrayList<ArrayList<SporadicTask>> tasks, long[][] Ris) {
 		for (int i = 0; i < tasks.size(); i++) {
 			for (int j = 0; j < tasks.get(i).size(); j++) {
