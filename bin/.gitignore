@@ -1,1 +1,10 @@
 /native/
+/AnalysisILP/
+/analysisBasic/
+/analysisNew/
+/analysisNewOverheads/
+/entity/
+/generatorTools/
+/javaToC/
+/test/
+/utils/
