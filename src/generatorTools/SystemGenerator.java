@@ -69,15 +69,72 @@ public class SystemGenerator {
 	 * system
 	 */
 	public ArrayList<ArrayList<SporadicTask>> generateTasks() {
-		task_id = 1;
-		ArrayList<ArrayList<SporadicTask>> tasks = new ArrayList<>();
+
+		ArrayList<SporadicTask> tasksToAlloc = new ArrayList<>();
 		for (int i = 0; i < total_partitions; i++) {
 			ArrayList<SporadicTask> tasks_on_one_partition = null;
 			while (tasks_on_one_partition == null) {
 				tasks_on_one_partition = generateTaskset(i);
 			}
-			tasks.add(tasks_on_one_partition);
+			tasksToAlloc.addAll(tasks_on_one_partition);
 		}
+		
+		tasksToAlloc.sort((p1, p2) -> -Double.compare(p1.util, p2.util));
+
+		return WorstFitAllocation(tasksToAlloc, total_partitions);
+	}
+
+	private ArrayList<ArrayList<SporadicTask>> WorstFitAllocation(ArrayList<SporadicTask> tasksToAllocate, int partitions) {
+		// clear tasks' partitions
+		for (int i = 0; i < tasksToAllocate.size(); i++) {
+			tasksToAllocate.get(i).partition = -1;
+		}
+
+		// Init allocated tasks array
+		ArrayList<ArrayList<SporadicTask>> tasks = new ArrayList<>();
+		for (int i = 0; i < partitions; i++) {
+			ArrayList<SporadicTask> task = new ArrayList<>();
+			tasks.add(task);
+		}
+
+		// init util array
+		ArrayList<Double> utilPerPartition = new ArrayList<>();
+		for (int i = 0; i < partitions; i++) {
+			utilPerPartition.add((double) 0);
+		}
+
+		for (int i = 0; i < tasksToAllocate.size(); i++) {
+			SporadicTask task = tasksToAllocate.get(i);
+			int target = -1;
+			double minUtil = 2;
+			for (int j = 0; j < partitions; j++) {
+				if (minUtil > utilPerPartition.get(j)) {
+					minUtil = utilPerPartition.get(j);
+					target = j;
+				}
+			}
+
+			if (target == -1) {
+				System.err.println("WF error!");
+				return null;
+			}
+
+			if ((double) 1 - minUtil >= task.util) {
+				task.partition = target;
+				utilPerPartition.set(target, utilPerPartition.get(target) + task.util);
+			} else
+				return null;
+		}
+
+		for (int i = 0; i < tasksToAllocate.size(); i++) {
+			int partition = tasksToAllocate.get(i).partition;
+			tasks.get(partition).add(tasksToAllocate.get(i));
+		}
+
+		for (int i = 0; i < tasks.size(); i++) {
+			tasks.get(i).sort((p1, p2) -> Double.compare(p1.period, p2.period));
+		}
+
 		return tasks;
 	}
 
@@ -136,13 +193,13 @@ public class SystemGenerator {
 			long computation_time = (long) (periods.get(i) * utils.get(i));
 			if (computation_time == 0)
 				return null;
-			SporadicTask t = new SporadicTask(-1, periods.get(i), computation_time, partition_id, task_id);
+			SporadicTask t = new SporadicTask(-1, periods.get(i), computation_time, partition_id, task_id, utils.get(i));
 			task_id++;
 			tasks.add(t);
 		}
 
 		/* assign priorities */
-		new PriorityGeneator().deadlineMonotonicPriorityAssignment(tasks,number_of_tasks_per_processor);
+		new PriorityGeneator().deadlineMonotonicPriorityAssignment(tasks, number_of_tasks_per_processor);
 		return tasks;
 	}
 

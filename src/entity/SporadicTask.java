@@ -9,6 +9,7 @@ public class SporadicTask {
 	public long WCET;
 	public int partition;
 	public int id;
+	public double util;
 
 	public long pure_resource_execution_time = 0;
 	public long Ri = 0, spin = 0, interference = 0, local = 0, total_blocking = 0, indirectspin = 0;
@@ -32,13 +33,14 @@ public class SporadicTask {
 	public double[] fifonp = null;
 	public double[] fifop = null;
 
-	public SporadicTask(int priority, long t, long c, int partition, int id) {
+	public SporadicTask(int priority, long t, long c, int partition, int id, double util) {
 		this.priority = priority;
 		this.period = t;
 		this.WCET = c;
 		this.deadline = t;
 		this.partition = partition;
 		this.id = id;
+		this.util = util;
 
 		resource_required_index = new ArrayList<>();
 		number_of_access_in_one_release = new ArrayList<>();
