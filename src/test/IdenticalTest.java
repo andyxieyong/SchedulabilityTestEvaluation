@@ -45,7 +45,7 @@ public class IdenticalTest {
 			boolean isEqual = isEqual(r1, r2, false);
 
 			if (!isEqual && isSystemSchedulable(tasks, r1) && isSystemSchedulable(tasks, r2)) {
-				System.out.println("not equal");
+				System.out.println("not equal1");
 				isEqual(r1, r2, true);
 				SystemGenerator.testifyGeneratedTasksetAndResource(tasks, resources);
 				r1 = fp_c.getResponseTime(tasks, resources, true, false);
@@ -56,7 +56,7 @@ public class IdenticalTest {
 			r3 = fp_c.getResponseTime(tasks, resources, false, false);
 			r4 = fnp_java.getResponseTime(tasks, resources, false);
 			if (!isEqual && isSystemSchedulable(tasks, r3) && isSystemSchedulable(tasks, r4)) {
-				System.out.println("not equal");
+				System.out.println("not equal2");
 				isEqual(r3, r4, true);
 				SystemGenerator.testifyGeneratedTasksetAndResource(tasks, resources);
 				r3 = fp_c.getResponseTime(tasks, resources, true, false);
