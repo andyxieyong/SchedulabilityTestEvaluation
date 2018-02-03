@@ -1,25 +1,24 @@
-package AnalysisILP;
+package analysisILP;
 
 import java.util.ArrayList;
 
+import Utils.AnalysisUtils;
 import analysisBasic.RTAWithoutBlocking;
 import entity.Resource;
 import entity.SporadicTask;
 import javaToC.MIPSolverC;
-import utils.AnalysisUtils;
 
 public class FIFOLinearC {
 
 	long count = 0;
 	MIPSolverC solver = new MIPSolverC();
 
-	public long[][] getResponseTime(ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, boolean isPreemptable,
-			boolean printDebug) {
+	public long[][] getResponseTime(ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, boolean isPreemptable, boolean printDebug) {
 		long[][] init_Ri = null;
 		if (isPreemptable) {
 			init_Ri = new RTAWithoutBlocking().getResponseTime(tasks, resources, false);
 		} else {
-			init_Ri = AnalysisUtils.initResponseTime(tasks);
+			init_Ri = new AnalysisUtils().initResponseTime(tasks);
 		}
 
 		for (int i = 0; i < tasks.size(); i++) {
@@ -40,7 +39,7 @@ public class FIFOLinearC {
 			response_time[i] = new long[init_Ri[i].length];
 		}
 
-		AnalysisUtils.cloneList(init_Ri, response_time);
+		new AnalysisUtils().cloneList(init_Ri, response_time);
 
 		/* a huge busy window to get a fixed Ri */
 		while (!isEqual) {
@@ -58,7 +57,7 @@ public class FIFOLinearC {
 			}
 
 			count++;
-			AnalysisUtils.cloneList(response_time_plus, response_time);
+			new AnalysisUtils().cloneList(response_time_plus, response_time);
 
 			if (missDeadline)
 				break;
@@ -79,14 +78,13 @@ public class FIFOLinearC {
 					System.out.println("FIFO NONE Preemptive LinearC    after " + count + " tims of recursion, we got the response time.");
 			}
 
-			AnalysisUtils.printResponseTime(response_time, tasks);
+			new AnalysisUtils().printResponseTime(response_time, tasks);
 		}
 
 		return response_time;
 	}
 
-	private long[][] busyWindow(ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, long[][] response_time,
-			boolean isPreemptable) {
+	private long[][] busyWindow(ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, long[][] response_time, boolean isPreemptable) {
 		int taskSize = 0;
 		long[][] response_time_plus = new long[tasks.size()][];
 
@@ -113,8 +111,7 @@ public class FIFOLinearC {
 	 * Calculate the local high priority tasks' interference for a given task t.
 	 * CI is a set of computation time of local tasks, including spin delay.
 	 */
-	private long highPriorityInterference(SporadicTask t, ArrayList<ArrayList<SporadicTask>> allTasks, long Ri, long[][] Ris,
-			ArrayList<Resource> resources) {
+	private long highPriorityInterference(SporadicTask t, ArrayList<ArrayList<SporadicTask>> allTasks, long Ri, long[][] Ris, ArrayList<Resource> resources) {
 		long interference = 0;
 		int partition = t.partition;
 		ArrayList<SporadicTask> tasks = allTasks.get(partition);

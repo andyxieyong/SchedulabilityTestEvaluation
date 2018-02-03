@@ -18,20 +18,19 @@ public class SporadicTask {
 	public ArrayList<Integer> number_of_access_in_one_release;
 
 	public long spin_delay_by_preemptions = 0;
-	public double np_section = 0;
+
+	public double implementation_overheads = 0, blocking_overheads = 0;
+	public double mrsp_arrivalblocking_overheads = 0, fifonp_arrivalblocking_overheads = 0, fifop_arrivalblocking_overheads = 0;
+	public double migration_overheads_plus = 0;
 
 	/* Used by LP solver from C code */
 	public int hasResource = 0;
 	public int[] resource_required_index_cpoy = null;
 	public int[] number_of_access_in_one_release_copy = null;
-	
-	public double implementation_overheads = 0, blocking_overheads = 0;
-	public double mrsp_arrivalblocking_overheads = 0, fifonp_arrivalblocking_overheads = 0, fifop_arrivalblocking_overheads = 0;
-	public double migration_overheads_plus = 0;
-	
-	public double[] mrsp = null;
-	public double[] fifonp = null;
-	public double[] fifop = null;
+
+	public SporadicTask(int priority, long t, long c, int partition, int id) {
+		this(priority, t, c, partition, id, -1);
+	}
 
 	public SporadicTask(int priority, long t, long c, int partition, int id, double util) {
 		this.priority = priority;

@@ -1,21 +1,20 @@
-package analysisNewOverheads;
+package analysisNewIO;
 
 import java.util.ArrayList;
 
+import Utils.AnalysisUtils;
 import entity.Resource;
 import entity.SporadicTask;
-import utils.AnalysisUtils;
 
 public class MrsPIO {
 
-	public long[][] getResponseTime(ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, boolean mig, boolean np,
-			boolean printDebug) {
+	public long[][] getResponseTime(ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, boolean mig, boolean np, boolean printDebug) {
 		if (tasks == null)
 			return null;
 
 		long count = 0;
 		boolean isEqual = false, missdeadline = false;
-		long[][] response_time = AnalysisUtils.initResponseTime(tasks);
+		long[][] response_time = new AnalysisUtils().initResponseTime(tasks);
 
 		long npsection = 0;
 		if (np) {
@@ -42,14 +41,14 @@ public class MrsPIO {
 			}
 
 			count++;
-			AnalysisUtils.cloneList(response_time_plus, response_time);
+			new AnalysisUtils().cloneList(response_time_plus, response_time);
 			if (missdeadline)
 				break;
 		}
 
 		if (printDebug) {
 			System.out.println("MrsP NP    after " + count + " tims of recursion, we got the response time.");
-			AnalysisUtils.printResponseTime(response_time, tasks);
+			new AnalysisUtils().printResponseTime(response_time, tasks);
 		}
 
 		return response_time;
@@ -72,11 +71,6 @@ public class MrsPIO {
 					continue;
 				}
 
-				task.mrsp = new double[resources.size()];
-				for (int k = 0; k < task.mrsp.length; k++) {
-					task.mrsp[k] = 0;
-				}
-
 				task.indirectspin = 0;
 				task.implementation_overheads = 0;
 				task.migration_overheads_plus = 0;
@@ -88,10 +82,8 @@ public class MrsPIO {
 				long npsection = (np > 0 && isTaskIncurNPSection(task, tasks.get(task.partition), resources) ? np : 0);
 
 				if (npsection > task.local + task.mrsp_arrivalblocking_overheads) {
-					task.np_section = npsection;
 					task.local = npsection;
 				} else {
-					task.np_section = 0;
 					// task.local Remains.
 					task.implementation_overheads += task.mrsp_arrivalblocking_overheads;
 				}
@@ -115,10 +107,9 @@ public class MrsPIO {
 
 		for (int i = 0; i < resources.size(); i++) {
 			Resource resource = resources.get(i);
-			int ceiling = resource.getCeilingForProcessor(tasksOnItsParititon);
 
-			if (resource.partitions.contains(partition) && minCeiling > ceiling) {
-				minCeiling = ceiling;
+			if (resource.partitions.contains(partition) && minCeiling > resource.ceiling.get(resource.partitions.indexOf(partition))) {
+				minCeiling = resource.ceiling.get(resource.partitions.indexOf(partition));
 			}
 		}
 
@@ -211,9 +202,6 @@ public class MrsPIO {
 		number_of_access++;
 
 		calTask.implementation_overheads += number_of_access * (AnalysisUtils.MrsP_LOCK + AnalysisUtils.MrsP_UNLOCK);
-
-		calTask.mrsp[resource.id - 1] += number_of_access * resource.csl + number_of_access * (AnalysisUtils.MrsP_LOCK + AnalysisUtils.MrsP_UNLOCK);
-
 		return number_of_access * resource.csl;
 	}
 
@@ -232,7 +220,6 @@ public class MrsPIO {
 
 			Resource res = LocalBlockingResources.get(i);
 			long local_blocking = res.csl;
-			t.mrsp[res.id - 1] += res.csl + AnalysisUtils.MrsP_LOCK + AnalysisUtils.MrsP_UNLOCK;
 			arrivalBlockingOverheads += AnalysisUtils.MrsP_LOCK + AnalysisUtils.MrsP_UNLOCK;
 
 			migration_targets.add(t.partition);
@@ -254,7 +241,6 @@ public class MrsPIO {
 					if (partition != t.partition && (norHP + norT) < norR) {
 						local_blocking += res.csl;
 						remoteblocking++;
-						t.mrsp[res.id - 1] += res.csl + AnalysisUtils.MrsP_LOCK + AnalysisUtils.MrsP_UNLOCK;
 						migration_targets.add(partition);
 					}
 				}
@@ -302,7 +288,7 @@ public class MrsPIO {
 		for (int i = 0; i < resources.size(); i++) {
 			Resource resource = resources.get(i);
 
-			if (resource.partitions.contains(partition) && resource.getCeilingForProcessor(localTasks) >= task.priority) {
+			if (resource.partitions.contains(partition) && resource.ceiling.get(resource.partitions.indexOf(partition)) >= task.priority) {
 				for (int j = 0; j < resource.requested_tasks.size(); j++) {
 					SporadicTask LP_task = resource.requested_tasks.get(j);
 					if (LP_task.partition == partition && LP_task.priority < task.priority) {
@@ -339,14 +325,12 @@ public class MrsPIO {
 		}
 
 		double mcspin = migrationCost(oneMig, np, migration_targets, resource, tasks, calT);
-		calT.mrsp[resource.id - 1] += mcspin;
 		return mcspin;
 	}
 
 	private double migrationCostForArrival(double oneMig, long np, ArrayList<Integer> migration_targets, Resource resource,
 			ArrayList<ArrayList<SporadicTask>> tasks, SporadicTask calT) {
 		double mcarrival = migrationCost(oneMig, np, migration_targets, resource, tasks, calT);
-		calT.mrsp[resource.id - 1] += mcarrival;
 		return mcarrival;
 	}
 
@@ -358,7 +342,7 @@ public class MrsPIO {
 		// identify the migration targets with preemptors
 		for (int i = 0; i < migration_targets.size(); i++) {
 			int partition = migration_targets.get(i);
-			if (tasks.get(partition).get(0).priority > resource.getCeilingForProcessor(tasks, partition))
+			if (tasks.get(partition).get(0).priority > resource.ceiling.get(resource.partitions.indexOf(partition)))
 				migration_targets_with_P.add(migration_targets.get(i));
 		}
 
@@ -432,11 +416,12 @@ public class MrsPIO {
 
 		for (int i = 0; i < migration_targets_with_P.size(); i++) {
 			int partition_with_p = migration_targets_with_P.get(i);
+			int ceiling_index = resource.partitions.indexOf(partition_with_p);
 
 			for (int j = 0; j < tasks.get(partition_with_p).size(); j++) {
 				SporadicTask hpTask = tasks.get(partition_with_p).get(j);
 
-				if (hpTask.priority > resource.getCeilingForProcessor(tasks, partition_with_p))
+				if (hpTask.priority > resource.ceiling.get(ceiling_index))
 					migCost += Math.ceil((duration) / hpTask.period) * oneMig;
 			}
 		}

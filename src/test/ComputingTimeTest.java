@@ -9,10 +9,10 @@ import java.io.UnsupportedEncodingException;
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 
-import AnalysisILP.FIFOLinearC;
-import analysisNewOverheads.MSRPIO;
-import analysisNewOverheads.MrsPIO;
-import analysisNewOverheads.PWLPIO;
+import analysisILP.FIFOLinearC;
+import analysisNewIO.MSRPIO;
+import analysisNewIO.MrsPIO;
+import analysisNewIO.PWLPIO;
 import entity.Resource;
 import entity.SporadicTask;
 import generatorTools.SystemGenerator;

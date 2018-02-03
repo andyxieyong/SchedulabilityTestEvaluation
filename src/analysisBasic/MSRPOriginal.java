@@ -1,15 +1,16 @@
 package analysisBasic;
 
 import java.util.ArrayList;
+
+import Utils.AnalysisUtils;
 import entity.Resource;
 import entity.SporadicTask;
-import utils.AnalysisUtils;
 
-public class MSRPBasic {
+public class MSRPOriginal {
 	long count = 0;
 
 	public long[][] getResponseTime(ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, boolean printBebug) {
-		long[][] init_Ri = AnalysisUtils.initResponseTime(tasks);
+		long[][] init_Ri = new AnalysisUtils().initResponseTime(tasks);
 
 		long[][] response_time = new long[tasks.size()][];
 		boolean isEqual = false, missDeadline = false;
@@ -18,7 +19,7 @@ public class MSRPBasic {
 		for (int i = 0; i < init_Ri.length; i++)
 			response_time[i] = new long[init_Ri[i].length];
 
-		AnalysisUtils.cloneList(init_Ri, response_time);
+		new AnalysisUtils().cloneList(init_Ri, response_time);
 
 		/* a huge busy window to get a fixed Ri */
 		while (!isEqual) {
@@ -35,7 +36,7 @@ public class MSRPBasic {
 			}
 
 			count++;
-			AnalysisUtils.cloneList(response_time_plus, response_time);
+			new AnalysisUtils().cloneList(response_time_plus, response_time);
 
 			if (missDeadline)
 				break;
@@ -47,7 +48,7 @@ public class MSRPBasic {
 			else
 				System.out.println("MSRPRTA	   after " + count + " tims of recursion, we got the response time.");
 
-			AnalysisUtils.printResponseTime(response_time, tasks);
+			new AnalysisUtils().printResponseTime(response_time, tasks);
 		}
 
 		return response_time;
@@ -108,9 +109,8 @@ public class MSRPBasic {
 	/*
 	 * Calculate the local blocking for task t.
 	 */
-	private long localBlocking(SporadicTask t, ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, long[][] Ris,
-			long Ri) {
-		ArrayList<Resource> LocalBlockingResources = getLocalBlockingResources(t, resources, tasks.get(t.partition));
+	private long localBlocking(SporadicTask t, ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, long[][] Ris, long Ri) {
+		ArrayList<Resource> LocalBlockingResources = getLocalBlockingResources(t, resources);
 		ArrayList<Long> local_blocking_each_resource = new ArrayList<>();
 
 		for (int i = 0; i < LocalBlockingResources.size(); i++) {
@@ -129,16 +129,14 @@ public class MSRPBasic {
 	/*
 	 * gives a set of resources that can cause local blocking for a given task
 	 */
-	private ArrayList<Resource> getLocalBlockingResources(SporadicTask task, ArrayList<Resource> resources,
-			ArrayList<SporadicTask> localTasks) {
+	private ArrayList<Resource> getLocalBlockingResources(SporadicTask task, ArrayList<Resource> resources) {
 		ArrayList<Resource> localBlockingResources = new ArrayList<>();
 		int partition = task.partition;
 
 		for (int i = 0; i < resources.size(); i++) {
 			Resource resource = resources.get(i);
-			// local resources that have a higher ceiling
-			if (resource.partitions.size() == 1 && resource.partitions.get(0) == partition
-					&& resource.getCeilingForProcessor(localTasks) >= task.priority) {
+
+			if (resource.partitions.size() == 1 && resource.partitions.get(0) == task.partition && resource.ceiling.get(0) >= task.priority) {
 				for (int j = 0; j < resource.requested_tasks.size(); j++) {
 					SporadicTask LP_task = resource.requested_tasks.get(j);
 					if (LP_task.partition == partition && LP_task.priority < task.priority) {
@@ -147,8 +145,8 @@ public class MSRPBasic {
 					}
 				}
 			}
-			// global resources that are accessed from the partition
-			if (resource.partitions.contains(partition) && resource.partitions.size() > 1) {
+
+			if (resource.partitions.size() > 1 && resource.partitions.contains(task.partition)) {
 				for (int j = 0; j < resource.requested_tasks.size(); j++) {
 					SporadicTask LP_task = resource.requested_tasks.get(j);
 					if (LP_task.partition == partition && LP_task.priority < task.priority) {

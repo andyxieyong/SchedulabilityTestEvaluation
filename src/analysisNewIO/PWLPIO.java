@@ -1,10 +1,10 @@
-package analysisNewOverheads;
+package analysisNewIO;
 
 import java.util.ArrayList;
 
+import Utils.AnalysisUtils;
 import entity.Resource;
 import entity.SporadicTask;
-import utils.AnalysisUtils;
 
 public class PWLPIO {
 
@@ -14,7 +14,7 @@ public class PWLPIO {
 
 		long count = 0;
 		boolean isEqual = false, missdeadline = false;
-		long[][] response_time = AnalysisUtils.initResponseTime(tasks);
+		long[][] response_time = new AnalysisUtils().initResponseTime(tasks);
 
 		/* a huge busy window to get a fixed Ri */
 		while (!isEqual) {
@@ -33,10 +33,10 @@ public class PWLPIO {
 				}
 			}
 			if (count > 1000) {
-				AnalysisUtils.printResponseTime(response_time, tasks);
+				new AnalysisUtils().printResponseTime(response_time, tasks);
 			}
 			count++;
-			AnalysisUtils.cloneList(response_time_plus, response_time);
+			new AnalysisUtils().cloneList(response_time_plus, response_time);
 
 			if (missdeadline)
 				break;
@@ -45,7 +45,7 @@ public class PWLPIO {
 
 		if (printDebug) {
 			System.out.println("FIFONP JAVA    after " + count + " tims of recursion, we got the response time.");
-			AnalysisUtils.printResponseTime(response_time, tasks);
+			new AnalysisUtils().printResponseTime(response_time, tasks);
 		}
 
 		return response_time;
@@ -66,10 +66,6 @@ public class PWLPIO {
 					continue;
 				}
 
-				task.fifop = new double[resources.size()];
-				for (int k = 0; k < task.fifop.length; k++) {
-					task.fifop[k] = 0;
-				}
 				task.spin_delay_by_preemptions = 0;
 				task.implementation_overheads = 0;
 				task.implementation_overheads += AnalysisUtils.FULL_CONTEXT_SWTICH1;
@@ -114,19 +110,16 @@ public class PWLPIO {
 		while (preemptions > 0) {
 
 			long max_delay = 0;
-			Resource resource = null;
 			int max_delay_resource_index = -1;
 			for (int i = 0; i < fifop_resources.size(); i++) {
 				if (max_delay < fifop_resources.get(i).csl * requestsLeftOnRemoteP.get(i).size()) {
 					max_delay = fifop_resources.get(i).csl * requestsLeftOnRemoteP.get(i).size();
 					max_delay_resource_index = i;
-					resource = fifop_resources.get(i);
 				}
 			}
 
 			if (max_delay > 0) {
 				spin += max_delay;
-				task.fifop[resource.id - 1] += max_delay;
 				for (int i = 0; i < requestsLeftOnRemoteP.get(max_delay_resource_index).size(); i++) {
 					requestsLeftOnRemoteP.get(max_delay_resource_index).set(i, requestsLeftOnRemoteP.get(max_delay_resource_index).get(i) - 1);
 					if (requestsLeftOnRemoteP.get(max_delay_resource_index).get(i) < 1) {
@@ -170,8 +163,7 @@ public class PWLPIO {
 						if (tasks.get(i).get(j).resource_required_index.contains(resource.id - 1)) {
 							SporadicTask remote_task = tasks.get(i).get(j);
 							int indexR = getIndexRInTask(remote_task, resource);
-							int number_of_release = (int) Math
-									.ceil((double) (time + Ris[i][j]) / (double) remote_task.period);
+							int number_of_release = (int) Math.ceil((double) (time + Ris[i][j]) / (double) remote_task.period);
 							number_of_request_by_Remote_P += number_of_release * remote_task.number_of_access_in_one_release.get(indexR);
 						}
 					}
@@ -185,8 +177,6 @@ public class PWLPIO {
 		}
 
 		task.implementation_overheads += (spin + ncs) * (AnalysisUtils.FIFOP_LOCK + AnalysisUtils.FIFOP_UNLOCK);
-
-		task.fifop[resource.id - 1] += spin * resource.csl + ncs * resource.csl + (spin + ncs) * (AnalysisUtils.FIFOP_LOCK + AnalysisUtils.FIFOP_UNLOCK);
 		return spin * resource.csl + ncs * resource.csl;
 	}
 
@@ -217,7 +207,6 @@ public class PWLPIO {
 			Resource res = LocalBlockingResources.get(i);
 			long local_blocking = res.csl;
 			local_blocking_each_resource.add(local_blocking);
-			t.fifop[res.id - 1] += res.csl + AnalysisUtils.FIFOP_LOCK + AnalysisUtils.FIFOP_UNLOCK;
 		}
 
 		if (local_blocking_each_resource.size() > 1)
@@ -236,7 +225,8 @@ public class PWLPIO {
 		for (int i = 0; i < resources.size(); i++) {
 			Resource resource = resources.get(i);
 			// local resources that have a higher ceiling
-			if (resource.partitions.size() == 1 && resource.partitions.get(0) == partition && resource.getCeilingForProcessor(localTasks) >= task.priority) {
+			if (resource.partitions.size() == 1 && resource.partitions.get(0) == partition
+					&& resource.ceiling.get(resource.partitions.indexOf(partition)) >= task.priority) {
 				for (int j = 0; j < resource.requested_tasks.size(); j++) {
 					SporadicTask LP_task = resource.requested_tasks.get(j);
 					if (LP_task.partition == partition && LP_task.priority < task.priority) {

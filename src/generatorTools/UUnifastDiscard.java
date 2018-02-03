@@ -9,11 +9,11 @@ import java.util.Random;
 
 public class UUnifastDiscard {
 
-	private int discardNum;
-	private boolean shallDiscard;
+	private double uUtil;
 	private int uNum;
 	private ArrayList<Double> uUs;
-	private double uUtil;
+	private boolean shallDiscard;
+	private int discardNum;
 
 	public UUnifastDiscard(double util, int num, int discard) {
 		this.uUtil = util;
@@ -23,12 +23,20 @@ public class UUnifastDiscard {
 		this.discardNum = discard;
 	}
 
-	public int getNum() {
-		return this.uNum;
+	public void setUtil(double x) {
+		this.uUtil = x;
+	}
+
+	public void setNum(int x) {
+		this.uNum = x;
 	}
 
 	public double getUtil() {
 		return this.uUtil;
+	}
+
+	public int getNum() {
+		return this.uNum;
 	}
 
 	public ArrayList<Double> getUtils() {
@@ -36,27 +44,6 @@ public class UUnifastDiscard {
 			return uUs;
 		else
 			return null;
-	}
-
-	public void setNum(int x) {
-		this.uNum = x;
-	}
-
-	public void setUtil(double x) {
-		this.uUtil = x;
-	}
-
-	private boolean uUifastDiscard() {
-		boolean isComplete = false;
-		for (int i = 0; i < this.discardNum; i++) {
-			if (!this.uUnifast()) {
-				isComplete = true;
-				break;
-			} else {
-				this.uUs.clear();
-			}
-		}
-		return isComplete;
 	}
 
 	private boolean uUnifast() {
@@ -85,6 +72,19 @@ public class UUnifastDiscard {
 		}
 		return this.shallDiscard;
 
+	}
+
+	private boolean uUifastDiscard() {
+		boolean isComplete = false;
+		for (int i = 0; i < this.discardNum; i++) {
+			if (!this.uUnifast()) {
+				isComplete = true;
+				break;
+			} else {
+				this.uUs.clear();
+			}
+		}
+		return isComplete;
 	}
 
 }

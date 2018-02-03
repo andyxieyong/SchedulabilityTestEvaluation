@@ -9,12 +9,13 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 
+import Utils.ResultReader;
 import analysisNew.MSRPNew;
 import analysisNew.MrsPNew;
 import analysisNew.PWLPNew;
-import analysisNewOverheads.MSRPIO;
-import analysisNewOverheads.MrsPIO;
-import analysisNewOverheads.PWLPIO;
+import analysisNewIO.MSRPIO;
+import analysisNewIO.MrsPIO;
+import analysisNewIO.PWLPIO;
 import entity.Resource;
 import entity.SporadicTask;
 import generatorTools.SystemGenerator;
@@ -48,6 +49,7 @@ public class TestRunTimeOverheads {
 		}
 
 		cslencountdown.await();
+		ResultReader.schedreader();
 	}
 
 	public void experimentIncreasingCriticalSectionLength(int cs_len) {
@@ -69,7 +71,7 @@ public class TestRunTimeOverheads {
 			cs_range = CS_LENGTH_RANGE.VERY_LONG_CSLEN;
 			break;
 		case 6:
-			cs_range = CS_LENGTH_RANGE.RANDOM;
+			cs_range = CS_LENGTH_RANGE.Random;
 			break;
 		default:
 			cs_range = null;
@@ -138,7 +140,7 @@ public class TestRunTimeOverheads {
 				+ (double) smrsp / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) smrspIO / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
 				+ (double) smrspIONP / (double) TOTAL_NUMBER_OF_SYSTEMS + "\n";
 
-		writeSystem(("ioa " + 2 + " " + 1 + " " + cs_len), result);
+		writeSystem((2 + " " + 1 + " " + cs_len), result);
 	}
 
 	public boolean isSystemSchedulable(ArrayList<ArrayList<SporadicTask>> tasks, long[][] Ris) {

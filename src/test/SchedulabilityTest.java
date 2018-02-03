@@ -8,16 +8,16 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
-import AnalysisILP.FIFOLinearC;
-import analysisBasic.MSRPBasic;
-import analysisBasic.MrsPBasic;
+import analysisBasic.MSRPOriginal;
+import analysisBasic.MrsPOriginal;
 import analysisBasic.RTAWithoutBlocking;
+import analysisILP.FIFOLinearC;
 import analysisNew.MSRPNew;
 import analysisNew.MrsPNew;
 import analysisNew.PWLPNew;
-import analysisNewOverheads.MSRPIO;
-import analysisNewOverheads.MrsPIO;
-import analysisNewOverheads.PWLPIO;
+import analysisNewIO.MSRPIO;
+import analysisNewIO.MrsPIO;
+import analysisNewIO.PWLPIO;
 import entity.Resource;
 import entity.SporadicTask;
 import generatorTools.SystemGenerator;
@@ -52,8 +52,8 @@ public class SchedulabilityTest {
 
 		long[][] Ris;
 		MrsPNew new_mrsp = new MrsPNew();
-		MrsPBasic original_mrsp = new MrsPBasic();
-		MSRPBasic msrp = new MSRPBasic();
+		MrsPOriginal original_mrsp = new MrsPOriginal();
+		MSRPOriginal msrp = new MSRPOriginal();
 		RTAWithoutBlocking noblocking = new RTAWithoutBlocking();
 		PWLPNew fp = new PWLPNew();
 		MSRPNew fnp = new MSRPNew();
@@ -122,8 +122,8 @@ public class SchedulabilityTest {
 
 		long[][] Ris;
 		MrsPNew new_mrsp = new MrsPNew();
-		MrsPBasic original_mrsp = new MrsPBasic();
-		MSRPBasic msrp = new MSRPBasic();
+		MrsPOriginal original_mrsp = new MrsPOriginal();
+		MSRPOriginal msrp = new MSRPOriginal();
 		RTAWithoutBlocking noblocking = new RTAWithoutBlocking();
 		PWLPNew fp = new PWLPNew();
 		MSRPNew fnp = new MSRPNew();
@@ -208,7 +208,7 @@ public class SchedulabilityTest {
 			cs_range = CS_LENGTH_RANGE.VERY_LONG_CSLEN;
 			break;
 		case 6:
-			cs_range = CS_LENGTH_RANGE.RANDOM;
+			cs_range = CS_LENGTH_RANGE.Random;
 			break;
 		default:
 			cs_range = null;
@@ -291,8 +291,8 @@ public class SchedulabilityTest {
 		long[][] Ris;
 
 		MrsPNew new_mrsp = new MrsPNew();
-		MrsPBasic original_mrsp = new MrsPBasic();
-		MSRPBasic msrp = new MSRPBasic();
+		MrsPOriginal original_mrsp = new MrsPOriginal();
+		MSRPOriginal msrp = new MSRPOriginal();
 		RTAWithoutBlocking noblocking = new RTAWithoutBlocking();
 		FIFOLinearC fp = new FIFOLinearC();
 		MSRPNew fnp = new MSRPNew();

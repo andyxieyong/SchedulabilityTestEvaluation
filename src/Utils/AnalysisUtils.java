@@ -1,10 +1,11 @@
-package utils;
+package Utils;
 
 import java.util.ArrayList;
 
 import entity.SporadicTask;
 
 public class AnalysisUtils {
+
 	public static int extendCalForGA = 5;
 	public static int extendCalForStatic = 1;
 
@@ -56,15 +57,7 @@ public class AnalysisUtils {
 	// public static double FULL_CONTEXT_SWTICH2 = 0;
 	// public static double MrsP_PREEMPTION_AND_MIGRATION = 6;
 
-	public static void cloneList(long[][] oldList, long[][] newList) {
-		for (int i = 0; i < oldList.length; i++) {
-			for (int j = 0; j < oldList[i].length; j++) {
-				newList[i][j] = oldList[i][j];
-			}
-		}
-	}
-
-	public static long[][] initResponseTime(ArrayList<ArrayList<SporadicTask>> tasks) {
+	public long[][] initResponseTime(ArrayList<ArrayList<SporadicTask>> tasks) {
 		long[][] response_times = new long[tasks.size()][];
 
 		for (int i = 0; i < tasks.size(); i++) {
@@ -77,7 +70,7 @@ public class AnalysisUtils {
 				SporadicTask t = task_on_a_partition.get(j);
 				Ri[j] = t.Ri = t.WCET + t.pure_resource_execution_time;
 				t.spin = t.interference = t.local = t.indirectspin = t.total_blocking = 0;
-				t.blocking_overheads = t.np_section = t.implementation_overheads = t.migration_overheads_plus = t.mrsp_arrivalblocking_overheads = t.fifonp_arrivalblocking_overheads = t.fifop_arrivalblocking_overheads = 0;
+				t.blocking_overheads = t.implementation_overheads = t.migration_overheads_plus = t.mrsp_arrivalblocking_overheads = t.fifonp_arrivalblocking_overheads = t.fifop_arrivalblocking_overheads = 0;
 
 			}
 			response_times[i] = Ri;
@@ -85,16 +78,7 @@ public class AnalysisUtils {
 		return response_times;
 	}
 
-	public static boolean isArrayContain(int[] array, int value) {
-
-		for (int i = 0; i < array.length; i++) {
-			if (array[i] == value)
-				return true;
-		}
-		return false;
-	}
-
-	public static boolean isSystemSchedulable(ArrayList<ArrayList<SporadicTask>> tasks, long[][] Ris) {
+	public boolean isSystemSchedulable(ArrayList<ArrayList<SporadicTask>> tasks, long[][] Ris) {
 		for (int i = 0; i < tasks.size(); i++) {
 			for (int j = 0; j < tasks.get(i).size(); j++) {
 				if (tasks.get(i).get(j).deadline < Ris[i][j])
@@ -104,7 +88,24 @@ public class AnalysisUtils {
 		return true;
 	}
 
-	public static void printResponseTime(long[][] Ris, ArrayList<ArrayList<SporadicTask>> tasks) {
+	public void cloneList(long[][] oldList, long[][] newList) {
+		for (int i = 0; i < oldList.length; i++) {
+			for (int j = 0; j < oldList[i].length; j++) {
+				newList[i][j] = oldList[i][j];
+			}
+		}
+	}
+
+	public boolean isArrayContain(int[] array, int value) {
+
+		for (int i = 0; i < array.length; i++) {
+			if (array[i] == value)
+				return true;
+		}
+		return false;
+	}
+
+	public void printResponseTime(long[][] Ris, ArrayList<ArrayList<SporadicTask>> tasks) {
 
 		for (int i = 0; i < Ris.length; i++) {
 			for (int j = 0; j < Ris[i].length; j++) {
@@ -119,7 +120,7 @@ public class AnalysisUtils {
 		}
 	}
 
-	public static void main(String args[]) {
+	public void main(String args[]) {
 		System.out.println(" FIFO-P Lock:   " + FIFOP_LOCK + "   FIFO-P UNLOCK:   " + FIFOP_UNLOCK + "   RE-REQUEST:   " + FIFOP_CANCEL);
 		System.out.println(" FIFO-NP Lock:   " + FIFONP_LOCK + "   FIFO-NP UNLOCK:   " + FIFONP_UNLOCK);
 		System.out.println(" MrsP Lock:   " + MrsP_LOCK + "   MrsP UNLOCK:   " + MrsP_UNLOCK + "   MIG:   " + MrsP_PREEMPTION_AND_MIGRATION);

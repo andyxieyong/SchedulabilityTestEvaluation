@@ -1,10 +1,10 @@
-package analysisNewOverheads;
+package analysisNewIO;
 
 import java.util.ArrayList;
 
+import Utils.AnalysisUtils;
 import entity.Resource;
 import entity.SporadicTask;
-import utils.AnalysisUtils;
 
 public class MSRPIO {
 
@@ -14,7 +14,7 @@ public class MSRPIO {
 
 		long count = 0;
 		boolean isEqual = false, missdeadline = false;
-		long[][] response_time = AnalysisUtils.initResponseTime(tasks);
+		long[][] response_time = new AnalysisUtils().initResponseTime(tasks);
 
 		/* a huge busy window to get a fixed Ri */
 		while (!isEqual) {
@@ -31,7 +31,7 @@ public class MSRPIO {
 			}
 
 			count++;
-			AnalysisUtils.cloneList(response_time_plus, response_time);
+			new AnalysisUtils().cloneList(response_time_plus, response_time);
 
 			if (missdeadline)
 				break;
@@ -40,7 +40,7 @@ public class MSRPIO {
 
 		if (printDebug) {
 			System.out.println("FIFONP JAVA    after " + count + " tims of recursion, we got the response time.");
-			AnalysisUtils.printResponseTime(response_time, tasks);
+			new AnalysisUtils().printResponseTime(response_time, tasks);
 		}
 
 		return response_time;
@@ -61,10 +61,6 @@ public class MSRPIO {
 					continue;
 				}
 
-				task.fifonp = new double[resources.size()];
-				for (int k = 0; k < task.fifonp.length; k++) {
-					task.fifonp[k] = 0;
-				}
 				task.indirectspin = 0;
 				task.implementation_overheads = 0;
 				task.implementation_overheads += AnalysisUtils.FULL_CONTEXT_SWTICH1;
@@ -95,9 +91,6 @@ public class MSRPIO {
 			spin_delay += (NoS + t.number_of_access_in_one_release.get(t.resource_required_index.indexOf(resource.id - 1))) * resource.csl;
 			t.implementation_overheads += (NoS + t.number_of_access_in_one_release.get(t.resource_required_index.indexOf(resource.id - 1)))
 					* (AnalysisUtils.FIFONP_LOCK + AnalysisUtils.FIFONP_UNLOCK);
-
-			t.fifonp[resource.id - 1] += (NoS + t.number_of_access_in_one_release.get(k))
-					* (resource.csl + AnalysisUtils.FIFONP_LOCK + AnalysisUtils.FIFONP_UNLOCK);
 		}
 		return spin_delay;
 	}
@@ -117,8 +110,7 @@ public class MSRPIO {
 					if (tasks.get(i).get(j).resource_required_index.contains(resource.id - 1)) {
 						SporadicTask remote_task = tasks.get(i).get(j);
 						int indexR = getIndexRInTask(remote_task, resource);
-						int number_of_release = (int) Math
-								.ceil((double) (Ri + Ris[i][j] ) / (double) remote_task.period);
+						int number_of_release = (int) Math.ceil((double) (Ri + Ris[i][j]) / (double) remote_task.period);
 						number_of_request_by_Remote_P += number_of_release * remote_task.number_of_access_in_one_release.get(indexR);
 					}
 				}
@@ -168,13 +160,10 @@ public class MSRPIO {
 			Resource resource = resources.get(hpTask.resource_required_index.get(i));
 
 			int number_of_higher_request = getNoRFromHP(hpTask, resource, allTasks.get(hpTask.partition), Ris[hpTask.partition], Ri);
-			int number_of_request_with_btb = (int) Math.ceil((double) (Ri + Rihp) / (double) hpTask.period)
-					* hpTask.number_of_access_in_one_release.get(i);
+			int number_of_request_with_btb = (int) Math.ceil((double) (Ri + Rihp) / (double) hpTask.period) * hpTask.number_of_access_in_one_release.get(i);
 
 			BTBhit += number_of_request_with_btb * resource.csl;
 			calTask.implementation_overheads += number_of_request_with_btb * (AnalysisUtils.FIFONP_LOCK + AnalysisUtils.FIFONP_UNLOCK);
-			calTask.fifonp[resource.id - 1] += number_of_request_with_btb * resource.csl
-					+ number_of_request_with_btb * (AnalysisUtils.FIFONP_LOCK + AnalysisUtils.FIFONP_UNLOCK);
 
 			for (int j = 0; j < resource.partitions.size(); j++) {
 				if (resource.partitions.get(j) != hpTask.partition) {
@@ -187,9 +176,6 @@ public class MSRPIO {
 
 					BTBhit += spin_delay_with_btb * resource.csl;
 					calTask.implementation_overheads += spin_delay_with_btb * (AnalysisUtils.FIFONP_LOCK + AnalysisUtils.FIFONP_UNLOCK);
-
-					calTask.fifonp[resource.id - 1] += spin_delay_with_btb * resource.csl
-							+ spin_delay_with_btb * (AnalysisUtils.FIFONP_LOCK + AnalysisUtils.FIFONP_UNLOCK);
 				}
 			}
 
@@ -205,7 +191,6 @@ public class MSRPIO {
 		for (int i = 0; i < LocalBlockingResources.size(); i++) {
 			Resource res = LocalBlockingResources.get(i);
 			long local_blocking = res.csl;
-			t.fifonp[res.id - 1] += res.csl + AnalysisUtils.FIFONP_LOCK + AnalysisUtils.FIFONP_UNLOCK;
 
 			if (res.isGlobal) {
 				for (int parition_index = 0; parition_index < res.partitions.size(); parition_index++) {
@@ -218,7 +203,6 @@ public class MSRPIO {
 
 					if (partition != t.partition && (norHP + norT) < norR) {
 						local_blocking += res.csl;
-						t.fifonp[res.id - 1] += res.csl + AnalysisUtils.FIFONP_LOCK + AnalysisUtils.FIFONP_UNLOCK;
 					}
 				}
 			}
@@ -242,7 +226,8 @@ public class MSRPIO {
 		for (int i = 0; i < resources.size(); i++) {
 			Resource resource = resources.get(i);
 			// local resources that have a higher ceiling
-			if (resource.partitions.size() == 1 && resource.partitions.get(0) == partition && resource.getCeilingForProcessor(localTasks) >= task.priority) {
+			if (resource.partitions.size() == 1 && resource.partitions.get(0) == partition
+					&& resource.ceiling.get(resource.partitions.indexOf(partition)) >= task.priority) {
 				for (int j = 0; j < resource.requested_tasks.size(); j++) {
 					SporadicTask LP_task = resource.requested_tasks.get(j);
 					if (LP_task.partition == partition && LP_task.priority < task.priority) {
@@ -278,8 +263,7 @@ public class MSRPIO {
 			if (tasks.get(i).priority > priority && tasks.get(i).resource_required_index.contains(resource.id - 1)) {
 				SporadicTask hpTask = tasks.get(i);
 				int indexR = getIndexRInTask(hpTask, resource);
-				number_of_request_by_HP += Math.ceil((double) (Ri + Ris[i]) / (double) hpTask.period)
-						* hpTask.number_of_access_in_one_release.get(indexR);
+				number_of_request_by_HP += Math.ceil((double) (Ri + Ris[i]) / (double) hpTask.period) * hpTask.number_of_access_in_one_release.get(indexR);
 			}
 		}
 		return number_of_request_by_HP;

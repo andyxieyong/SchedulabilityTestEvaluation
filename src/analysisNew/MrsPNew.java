@@ -2,15 +2,15 @@ package analysisNew;
 
 import java.util.ArrayList;
 
+import Utils.AnalysisUtils;
 import entity.Resource;
 import entity.SporadicTask;
-import utils.AnalysisUtils;
 
 public class MrsPNew {
 	long count = 0;
 
 	public long[][] getResponseTime(ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, boolean printDebug) {
-		long[][] init_Ri = AnalysisUtils.initResponseTime(tasks);
+		long[][] init_Ri = new AnalysisUtils().initResponseTime(tasks);
 
 		long[][] response_time = new long[tasks.size()][];
 		boolean isEqual = false, missDeadline = false;
@@ -20,7 +20,7 @@ public class MrsPNew {
 			response_time[i] = new long[init_Ri[i].length];
 		}
 
-		AnalysisUtils.cloneList(init_Ri, response_time);
+		new AnalysisUtils().cloneList(init_Ri, response_time);
 
 		/* a huge busy window to get a fixed Ri */
 		while (!isEqual) {
@@ -38,7 +38,7 @@ public class MrsPNew {
 			}
 
 			count++;
-			AnalysisUtils.cloneList(response_time_plus, response_time);
+			new AnalysisUtils().cloneList(response_time_plus, response_time);
 
 			if (missDeadline)
 				break;
@@ -50,7 +50,7 @@ public class MrsPNew {
 			else
 				System.out.println("NewMrsPRTA    after " + count + " tims of recursion, we got the response time.");
 
-			AnalysisUtils.printResponseTime(response_time, tasks);
+			new AnalysisUtils().printResponseTime(response_time, tasks);
 		}
 
 		return response_time;
@@ -124,7 +124,7 @@ public class MrsPNew {
 		for (int i = 0; i < resources.size(); i++) {
 			Resource resource = resources.get(i);
 
-			if (resource.partitions.contains(partition) && resource.getCeilingForProcessor(LocalTasks) >= task.priority) {
+			if (resource.partitions.contains(partition) && resource.ceiling.get(resource.partitions.indexOf(partition)) >= task.priority) {
 				for (int j = 0; j < resource.requested_tasks.size(); j++) {
 					SporadicTask LP_task = resource.requested_tasks.get(j);
 					if (LP_task.partition == partition && LP_task.priority < task.priority) {

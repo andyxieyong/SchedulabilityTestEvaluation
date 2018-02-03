@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import entity.SporadicTask;
 
-public class PriorityGeneator {
+public class PriorityGenerator {
 	public static final int MAX_PRIORITY = 1000;
 
 	private ArrayList<Integer> generatePriorities(int number) {

@@ -11,7 +11,7 @@ public class SystemGenerator {
 
 	/* define how long the critical section can be */
 	public static enum CS_LENGTH_RANGE {
-		VERY_LONG_CSLEN, LONG_CSLEN, MEDIUM_CS_LEN, SHORT_CS_LEN, VERY_SHORT_CS_LEN, RANDOM
+		VERY_LONG_CSLEN, LONG_CSLEN, MEDIUM_CS_LEN, SHORT_CS_LEN, VERY_SHORT_CS_LEN, Random
 	};
 
 	/* define how many resources in the system */
@@ -70,74 +70,16 @@ public class SystemGenerator {
 	 */
 	public ArrayList<ArrayList<SporadicTask>> generateTasks() {
 		task_id = 1;
-		ArrayList<ArrayList<SporadicTask>> tasksToAlloc = new ArrayList<>();
+		ArrayList<ArrayList<SporadicTask>> tasks = new ArrayList<>();
 		for (int i = 0; i < total_partitions; i++) {
 			ArrayList<SporadicTask> tasks_on_one_partition = null;
 			while (tasks_on_one_partition == null) {
 				tasks_on_one_partition = generateTaskset(i);
 			}
-			tasksToAlloc.add(tasks_on_one_partition);
+			tasks.add(tasks_on_one_partition);
 		}
-		
-		//tasksToAlloc.sort((p1, p2) -> -Double.compare(p1.util, p2.util));
-
-//		return WorstFitAllocation(tasksToAlloc, total_partitions);
-		return tasksToAlloc;
+		return tasks;
 	}
-
-//	private ArrayList<ArrayList<SporadicTask>> WorstFitAllocation(ArrayList<SporadicTask> tasksToAllocate, int partitions) {
-//		// clear tasks' partitions
-//		for (int i = 0; i < tasksToAllocate.size(); i++) {
-//			tasksToAllocate.get(i).partition = -1;
-//		}
-//
-//		// Init allocated tasks array
-//		ArrayList<ArrayList<SporadicTask>> tasks = new ArrayList<>();
-//		for (int i = 0; i < partitions; i++) {
-//			ArrayList<SporadicTask> task = new ArrayList<>();
-//			tasks.add(task);
-//		}
-//
-//		// init util array
-//		ArrayList<Double> utilPerPartition = new ArrayList<>();
-//		for (int i = 0; i < partitions; i++) {
-//			utilPerPartition.add((double) 0);
-//		}
-//
-//		for (int i = 0; i < tasksToAllocate.size(); i++) {
-//			SporadicTask task = tasksToAllocate.get(i);
-//			int target = -1;
-//			double minUtil = 2;
-//			for (int j = 0; j < partitions; j++) {
-//				if (minUtil > utilPerPartition.get(j)) {
-//					minUtil = utilPerPartition.get(j);
-//					target = j;
-//				}
-//			}
-//
-//			if (target == -1) {
-//				System.err.println("WF error!");
-//				return null;
-//			}
-//
-//			if ((double) 1 - minUtil >= task.util) {
-//				task.partition = target;
-//				utilPerPartition.set(target, utilPerPartition.get(target) + task.util);
-//			} else
-//				return null;
-//		}
-//
-//		for (int i = 0; i < tasksToAllocate.size(); i++) {
-//			int partition = tasksToAllocate.get(i).partition;
-//			tasks.get(partition).add(tasksToAllocate.get(i));
-//		}
-//
-//		for (int i = 0; i < tasks.size(); i++) {
-//			tasks.get(i).sort((p1, p2) -> Double.compare(p1.period, p2.period));
-//		}
-//
-//		return tasks;
-//	}
 
 	private ArrayList<SporadicTask> generateTaskset(int partition_id) {
 		ArrayList<SporadicTask> tasks = new ArrayList<>(number_of_tasks_per_processor);
@@ -194,13 +136,13 @@ public class SystemGenerator {
 			long computation_time = (long) (periods.get(i) * utils.get(i));
 			if (computation_time == 0)
 				return null;
-			SporadicTask t = new SporadicTask(-1, periods.get(i), computation_time, partition_id, task_id, utils.get(i));
+			SporadicTask t = new SporadicTask(-1, periods.get(i), computation_time, partition_id, task_id);
 			task_id++;
 			tasks.add(t);
 		}
 
 		/* assign priorities */
-		new PriorityGeneator().deadlineMonotonicPriorityAssignment(tasks, number_of_tasks_per_processor);
+		new PriorityGenerator().deadlineMonotonicPriorityAssignment(tasks, number_of_tasks_per_processor);
 		return tasks;
 	}
 
@@ -247,7 +189,7 @@ public class SystemGenerator {
 				case VERY_SHORT_CS_LEN:
 					cs_len = ran.nextInt(15) + 1;
 					break;
-				case RANDOM:
+				case Random:
 					cs_len = ran.nextInt(300) + 1;
 				default:
 					break;
@@ -371,17 +313,23 @@ public class SystemGenerator {
 
 			/* for each partition */
 			for (int j = 0; j < tasks.size(); j++) {
+				int ceiling = 0;
+
 				/* for each task in the given partition */
 				for (int k = 0; k < tasks.get(j).size(); k++) {
 					SporadicTask task = tasks.get(j).get(k);
 
 					if (task.resource_required_index.contains(resource.id - 1)) {
 						resource.requested_tasks.add(task);
+						ceiling = task.priority > ceiling ? task.priority : ceiling;
 						if (!resource.partitions.contains(task.partition)) {
 							resource.partitions.add(task.partition);
 						}
 					}
 				}
+
+				if (ceiling > 0)
+					resource.ceiling.add(ceiling);
 			}
 
 			if (resource.partitions.size() > 1)
