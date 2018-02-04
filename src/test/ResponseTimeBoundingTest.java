@@ -39,9 +39,8 @@ public class ResponseTimeBoundingTest {
 		MrsPNew new_mrsp = new MrsPNew();
 		MSRPNew fnp = new MSRPNew();
 
-		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION,
-				TOTAL_PARTITIONS, NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, range, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR,
-				NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
+		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, TOTAL_PARTITIONS, NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION * TOTAL_PARTITIONS,
+				true, range, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 
 		long[][] r1, r2, diff;
 		double[][] totaldiff = new double[TOTAL_PARTITIONS][NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION];
@@ -51,9 +50,9 @@ public class ResponseTimeBoundingTest {
 		int actual_count = 0;
 
 		while (count < TOTAL_NUMBER_OF_SYSTEMS) {
-			ArrayList<ArrayList<SporadicTask>> tasks = generator.generateTasks();
+			ArrayList<SporadicTask> tasksToAlloc = generator.generateTasks();
 			ArrayList<Resource> resources = generator.generateResources();
-			generator.generateResourceUsage(tasks, resources);
+			ArrayList<ArrayList<SporadicTask>> tasks = generator.generateResourceUsage(tasksToAlloc, resources);
 
 			r1 = fnp.getResponseTime(tasks, resources, false);
 			r2 = new_mrsp.getResponseTime(tasks, resources, false);
@@ -85,8 +84,8 @@ public class ResponseTimeBoundingTest {
 
 		PrintWriter writer = null;
 		try {
-			writer = new PrintWriter(new FileWriter(
-					new File("result/access m5 n5 k4 Rm vshort/diff mrsp fifonp " + NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE + ".txt"), false));
+			writer = new PrintWriter(
+					new FileWriter(new File("result/access m5 n5 k4 Rm vshort/diff mrsp fifonp " + NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE + ".txt"), false));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {

@@ -2,11 +2,11 @@ package analysisILP;
 
 import java.util.ArrayList;
 
-import Utils.AnalysisUtils;
 import analysisBasic.RTAWithoutBlocking;
 import entity.Resource;
 import entity.SporadicTask;
 import javaToC.MIPSolverC;
+import utils.AnalysisUtils;
 
 public class FIFOLinearC {
 

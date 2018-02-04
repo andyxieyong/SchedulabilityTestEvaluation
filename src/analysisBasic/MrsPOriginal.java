@@ -2,9 +2,9 @@ package analysisBasic;
 
 import java.util.ArrayList;
 
-import Utils.AnalysisUtils;
 import entity.Resource;
 import entity.SporadicTask;
+import utils.AnalysisUtils;
 
 public class MrsPOriginal {
 	long count = 0;

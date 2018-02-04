@@ -29,16 +29,15 @@ public class IdenticalTest {
 		MSRPNew fnp_java = new MSRPNew();
 		long[][] r1, r2, r3, r4;
 
-		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, 0.1 * (double) NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, TOTAL_PARTITIONS,
-				NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION, true, CS_LENGTH_RANGE.VERY_SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR,
-				NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
+		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, TOTAL_PARTITIONS, NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION * TOTAL_PARTITIONS,
+				true, CS_LENGTH_RANGE.VERY_SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 
 		int i = 0;
 		while (i <= TOTAL_NUMBER_OF_SYSTEMS) {
 
-			ArrayList<ArrayList<SporadicTask>> tasks = generator.generateTasks();
+			ArrayList<SporadicTask> tasksToAlloc = generator.generateTasks();
 			ArrayList<Resource> resources = generator.generateResources();
-			generator.generateResourceUsage(tasks, resources);
+			ArrayList<ArrayList<SporadicTask>> tasks = generator.generateResourceUsage(tasksToAlloc, resources);
 
 			r1 = fp_c.getResponseTime(tasks, resources, true, false);
 			r2 = fp_java.getResponseTime(tasks, resources, false);
@@ -47,7 +46,6 @@ public class IdenticalTest {
 			if (!isEqual1 && isSystemSchedulable(tasks, r1) && isSystemSchedulable(tasks, r2)) {
 				System.out.println("not equal");
 				isEqual(r1, r2, true);
-				SystemGenerator.testifyGeneratedTasksetAndResource(tasks, resources);
 				r1 = fp_c.getResponseTime(tasks, resources, true, false);
 				r2 = fp_java.getResponseTime(tasks, resources, false);
 				System.exit(0);
@@ -56,11 +54,10 @@ public class IdenticalTest {
 			r3 = fp_c.getResponseTime(tasks, resources, false, false);
 			r4 = fnp_java.getResponseTime(tasks, resources, false);
 			boolean isEqual2 = isEqual(r3, r4, true);
-			
+
 			if (!isEqual2 && isSystemSchedulable(tasks, r3) && isSystemSchedulable(tasks, r4)) {
 				System.out.println("not equal");
 				isEqual(r3, r4, true);
-				SystemGenerator.testifyGeneratedTasksetAndResource(tasks, resources);
 				r3 = fp_c.getResponseTime(tasks, resources, true, false);
 				r4 = fp_java.getResponseTime(tasks, resources, false);
 				System.exit(0);
