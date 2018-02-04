@@ -23,9 +23,6 @@ public class ResultReader {
 		String result = "Work Load \n";
 		for (int bigSet = 1; bigSet < 10; bigSet++) {
 
-			// result += "access: " + (2 + (bigSet - 1) * 3) + " and rsf: " +
-			// (.2 + (bigSet - 1) * .3) + "\n";
-
 			for (int smallSet = 1; smallSet < 10; smallSet++) {
 				String filepath = "result/" + "1" + " " + bigSet + " " + smallSet + ".txt";
 
@@ -44,7 +41,6 @@ public class ResultReader {
 		result += "\n \n CS Length \n";
 
 		for (int bigSet = 1; bigSet < 10; bigSet++) {
-			result += "tasks per core: " + (3 + (bigSet - 1) * 2) + "\n";
 
 			for (int smallSet = 1; smallSet < 10; smallSet++) {
 				String filepath = "result/" + "2" + " " + bigSet + " " + smallSet + ".txt";
@@ -64,7 +60,6 @@ public class ResultReader {
 		result += "\n \n Resource Access \n";
 
 		for (int bigSet = 1; bigSet < 10; bigSet++) {
-			result += "tasks per core: " + (3 + (bigSet - 1) * 2) + "\n";
 
 			for (int smallSet = 1; smallSet < 42; smallSet++) {
 				String filepath = "result/" + "3" + " " + bigSet + " " + smallSet + ".txt";
@@ -85,7 +80,6 @@ public class ResultReader {
 		result += "\n \n Parallelism \n";
 
 		for (int bigSet = 1; bigSet < 10; bigSet++) {
-			result += "tasks per core: " + (3 + (bigSet - 1) * 2) + "\n";
 
 			for (int smallSet = 1; smallSet < 42; smallSet++) {
 				String filepath = "result/" + "4" + " " + bigSet + " " + smallSet + ".txt";

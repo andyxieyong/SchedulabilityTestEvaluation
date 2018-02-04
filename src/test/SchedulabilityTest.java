@@ -30,17 +30,17 @@ public class SchedulabilityTest {
 
 	public static void main(String[] args) throws InterruptedException {
 
-		for (int i = 1; i < 10; i++)
-			experimentIncreasingWorkLoad(i);
-
-		for (int i = 1; i < 7; i++)
-			experimentIncreasingCriticalSectionLength(i);
-		
-		for (int i = 1; i < 42; i = 1 + 5)
+//		for (int i = 1; i < 10; i++)
+//			experimentIncreasingWorkLoad(i);
+//
+//		for (int i = 1; i < 7; i++)
+//			experimentIncreasingCriticalSectionLength(i);
+//		
+		for (int i = 1; i < 42; i = i + 5)
 			experimentIncreasingContention(i);
 
-		for (int i = 1; i < 25; i = i + 2)
-			experimentIncreasingParallelism(i);
+//		for (int i = 2; i < 25; i = i + 2)
+//			experimentIncreasingParallelism(i);
 
 		ResultReader.schedreader();
 	}
@@ -58,7 +58,7 @@ public class SchedulabilityTest {
 		MSRPNew fnp = new MSRPNew();
 
 		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, TOTAL_PARTITIONS, NoT * TOTAL_PARTITIONS, true,
-				CS_LENGTH_RANGE.VERY_SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
+				CS_LENGTH_RANGE.SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 
 		String result = "";
 		int smrsp = 0;
@@ -115,8 +115,8 @@ public class SchedulabilityTest {
 	}
 
 	public static void experimentIncreasingCriticalSectionLength(int cs_len) {
-		int NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE = 3;
-		int NUMBER_OF_TASKS_ON_EACH_PARTITION = 4;
+		int NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE = 2;
+		int NUMBER_OF_TASKS_ON_EACH_PARTITION = 3;
 		double RESOURCE_SHARING_FACTOR = 0.4;
 
 		final CS_LENGTH_RANGE cs_range;
@@ -210,10 +210,10 @@ public class SchedulabilityTest {
 
 	public static void experimentIncreasingContention(int NoA) {
 		double RESOURCE_SHARING_FACTOR = 0.4;
-		int NUMBER_OF_TASKS_ON_EACH_PARTITION = 5;
+		int NUMBER_OF_TASKS_ON_EACH_PARTITION = 4;
 
 		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, TOTAL_PARTITIONS, NUMBER_OF_TASKS_ON_EACH_PARTITION * TOTAL_PARTITIONS, true,
-				CS_LENGTH_RANGE.VERY_SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR, NoA);
+				CS_LENGTH_RANGE.SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR, NoA);
 		long[][] Ris;
 
 		MrsPNew new_mrsp = new MrsPNew();
@@ -278,9 +278,9 @@ public class SchedulabilityTest {
 	}
 
 	public static void experimentIncreasingParallelism(int NoP) {
-		int NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE = 2;
+		int NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE = 3;
 		double RESOURCE_SHARING_FACTOR = 0.4;
-		int NoT = 5;
+		int NoT = 4;
 
 		long[][] Ris;
 		MrsPNew new_mrsp = new MrsPNew();
@@ -290,7 +290,7 @@ public class SchedulabilityTest {
 		PWLPNew fp = new PWLPNew();
 		MSRPNew fnp = new MSRPNew();
 
-		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, NoP, NoT * NoP, true, CS_LENGTH_RANGE.VERY_SHORT_CS_LEN,
+		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, NoP, NoT * NoP, true, CS_LENGTH_RANGE.SHORT_CS_LEN,
 				RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 
 		String result = "";

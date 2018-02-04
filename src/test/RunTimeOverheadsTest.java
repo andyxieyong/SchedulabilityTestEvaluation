@@ -26,8 +26,8 @@ public class RunTimeOverheadsTest {
 
 	public static int MAX_PERIOD = 1000;
 	public static int MIN_PERIOD = 1;
-	static int NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE = 2;
-	static int NUMBER_OF_TASKS_ON_EACH_PARTITION = 4;
+	static int NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE =3;
+	static int NUMBER_OF_TASKS_ON_EACH_PARTITION = 3;
 
 	static double RESOURCE_SHARING_FACTOR = 0.4;
 	public static int TOTAL_NUMBER_OF_SYSTEMS = 1000;
