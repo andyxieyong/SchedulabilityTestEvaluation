@@ -22,11 +22,11 @@ import generatorTools.SystemGenerator.CS_LENGTH_RANGE;
 import generatorTools.SystemGenerator.RESOURCES_RANGE;
 import utils.ResultReader;
 
-public class TestRunTimeOverheads {
+public class RunTimeOverheadsTest {
 
 	public static int MAX_PERIOD = 1000;
 	public static int MIN_PERIOD = 1;
-	static int NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE = 3;
+	static int NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE = 2;
 	static int NUMBER_OF_TASKS_ON_EACH_PARTITION = 4;
 
 	static double RESOURCE_SHARING_FACTOR = 0.4;
@@ -34,7 +34,7 @@ public class TestRunTimeOverheads {
 	public static int TOTAL_PARTITIONS = 16;
 
 	public static void main(String[] args) throws InterruptedException {
-		TestRunTimeOverheads test = new TestRunTimeOverheads();
+		RunTimeOverheadsTest test = new RunTimeOverheadsTest();
 
 		final CountDownLatch cslencountdown = new CountDownLatch(6);
 		for (int i = 1; i < 7; i++) {

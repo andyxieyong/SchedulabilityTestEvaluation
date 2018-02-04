@@ -46,7 +46,7 @@ public class ResultReader {
 		for (int bigSet = 1; bigSet < 10; bigSet++) {
 			result += "tasks per core: " + (3 + (bigSet - 1) * 2) + "\n";
 
-			for (int smallSet = 1; smallSet < 6; smallSet++) {
+			for (int smallSet = 1; smallSet < 10; smallSet++) {
 				String filepath = "result/" + "2" + " " + bigSet + " " + smallSet + ".txt";
 
 				List<String> lines = null;
