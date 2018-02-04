@@ -338,6 +338,8 @@ public class SystemGenerator {
 				for (int j = 0; j < generatedTaskSets.get(i).size(); j++) {
 					generatedTaskSets.get(i).get(j).partition = i;
 				}
+				
+				new PriorityGenerator().deadlineMonotonicPriorityAssignment(generatedTaskSets.get(i), generatedTaskSets.get(i).size());
 			}
 
 			if (resources != null && resources.size() > 0) {
@@ -346,6 +348,7 @@ public class SystemGenerator {
 					res.isGlobal = false;
 					res.partitions.clear();
 					res.requested_tasks.clear();
+					res.ceiling.clear();
 				}
 
 				/* for each resource */
