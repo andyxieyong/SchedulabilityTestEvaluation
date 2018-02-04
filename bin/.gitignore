@@ -1,7 +1,6 @@
 /native/
 /.DS_Store
 /.gitignore
-/Utils/
 /analysisBasic/
 /analysisILP/
 /analysisNew/

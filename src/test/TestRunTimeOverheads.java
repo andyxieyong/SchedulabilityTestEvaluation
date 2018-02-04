@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
 
 import analysisNew.MSRPNew;
 import analysisNew.MrsPNew;
@@ -19,10 +20,11 @@ import entity.SporadicTask;
 import generatorTools.SystemGenerator;
 import generatorTools.SystemGenerator.CS_LENGTH_RANGE;
 import generatorTools.SystemGenerator.RESOURCES_RANGE;
+import utils.ResultReader;
 
 public class TestRunTimeOverheads {
 
-	public static int MAX_PERIOD = 5000;
+	public static int MAX_PERIOD = 1000;
 	public static int MIN_PERIOD = 1;
 	static int NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE = 3;
 	static int NUMBER_OF_TASKS_ON_EACH_PARTITION = 4;
@@ -34,24 +36,21 @@ public class TestRunTimeOverheads {
 	public static void main(String[] args) throws InterruptedException {
 		TestRunTimeOverheads test = new TestRunTimeOverheads();
 
-//		final CountDownLatch cslencountdown = new CountDownLatch(6);
-//		for (int i = 1; i < 7; i++) {
-//			final int cslen = i;
-//			new Thread(new Runnable() {
-//				@Override
-//				public void run() {
-//					test.experimentIncreasingCriticalSectionLength(cslen);
-//					cslencountdown.countDown();
-//				}
-//			}).start();
-//		}
-//
-//		cslencountdown.await();
-//		ResultReader.schedreader();
+		final CountDownLatch cslencountdown = new CountDownLatch(6);
+		for (int i = 1; i < 7; i++) {
+			final int cslen = i;
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					test.experimentIncreasingCriticalSectionLength(cslen);
+					cslencountdown.countDown();
+				}
+			}).start();
+		}
+
+		cslencountdown.await();
+		ResultReader.schedreader();
 		
-		
-		
-		test.experimentIncreasingCriticalSectionLength(1);
 	}
 
 	public void experimentIncreasingCriticalSectionLength(int cs_len) {
