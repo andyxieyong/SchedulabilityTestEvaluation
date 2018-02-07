@@ -20,7 +20,6 @@ import entity.SporadicTask;
 import generatorTools.SystemGenerator;
 import generatorTools.SystemGenerator.CS_LENGTH_RANGE;
 import generatorTools.SystemGenerator.RESOURCES_RANGE;
-import utils.ResultReader;
 
 public class ConfidenceTest1000 {
 
@@ -115,7 +114,7 @@ public class ConfidenceTest1000 {
 		p2.start();
 
 		downLatch.await();
-		ResultReader.schedreader();
+		System.out.println("Down");
 	}
 
 	public void experimentIncreasingWorkLoad(int NoT) {
@@ -142,6 +141,8 @@ public class ConfidenceTest1000 {
 		int sfp = 0;
 
 		for (int j = 0; j < NUMBER_OF_TIMES; j++) {
+			smrsp = smrspOld = smsrpOld = sNoBlocking = sfnp = sfp = 0;
+
 			for (int i = 0; i < TOTAL_NUMBER_OF_SYSTEMS; i++) {
 				ArrayList<SporadicTask> tasksToAlloc = generator.generateTasks();
 				ArrayList<Resource> resources = generator.generateResources();
@@ -244,6 +245,7 @@ public class ConfidenceTest1000 {
 		int sfp = 0;
 
 		for (int j = 0; j < NUMBER_OF_TIMES; j++) {
+			smrsp = smrspOld = smsrpOld = sNoBlocking = sfnp = sfp = 0;
 			for (int i = 0; i < TOTAL_NUMBER_OF_SYSTEMS; i++) {
 				ArrayList<SporadicTask> tasksToAlloc = generator.generateTasks();
 				ArrayList<Resource> resources = generator.generateResources();
@@ -320,6 +322,7 @@ public class ConfidenceTest1000 {
 		int sfp = 0;
 
 		for (int j = 0; j < NUMBER_OF_TIMES; j++) {
+			smrsp = smrspOld = smsrpOld = sNoBlocking = sfnp = sfp = 0;
 			for (int i = 0; i < TOTAL_NUMBER_OF_SYSTEMS; i++) {
 				ArrayList<SporadicTask> tasksToAlloc = generator.generateTasks();
 				ArrayList<Resource> resources = generator.generateResources();
@@ -396,6 +399,7 @@ public class ConfidenceTest1000 {
 		int sfp = 0;
 
 		for (int j = 0; j < NUMBER_OF_TIMES; j++) {
+			smrsp = smrspOld = smsrpOld = sNoBlocking = sfnp = sfp = 0;
 			for (int i = 0; i < TOTAL_NUMBER_OF_SYSTEMS; i++) {
 				ArrayList<SporadicTask> tasksToAlloc = generator.generateTasks();
 				ArrayList<Resource> resources = generator.generateResources();

@@ -4,12 +4,12 @@ pathServer = "/usr/userfs/z/zs673/"
 
 
 
-cd $pathMy+"SchedulabilityTestEvaluation/result"
+cd $pathServer+"SchedulabilityTestEvaluation/result"
 pwd
 
 rm -rf *.txt
-cd $pathMy+"SchedulabilityTestEvaluation"
+cd $pathServer+"SchedulabilityTestEvaluation"
 pwd
 
 
-LD_LIBRARY_PATH=src nohup java -cp $pathMy+"SchedulabilityTestEvaluation/bin" test.IdenticalTest &
+LD_LIBRARY_PATH=src nohup java -cp $pathServer+"SchedulabilityTestEvaluation/bin" test.IdenticalTest &
