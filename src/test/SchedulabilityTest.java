@@ -30,17 +30,17 @@ public class SchedulabilityTest {
 
 	public static void main(String[] args) throws InterruptedException {
 
-//		for (int i = 1; i < 10; i++)
-//			experimentIncreasingWorkLoad(i);
-//
-//		for (int i = 1; i < 7; i++)
-//			experimentIncreasingCriticalSectionLength(i);
-//		
+		for (int i = 1; i < 10; i++)
+			experimentIncreasingWorkLoad(i);
+
+		for (int i = 1; i < 7; i++)
+			experimentIncreasingCriticalSectionLength(i);
+		
 		for (int i = 1; i < 42; i = i + 5)
 			experimentIncreasingContention(i);
 
-//		for (int i = 2; i < 25; i = i + 2)
-//			experimentIncreasingParallelism(i);
+		for (int i = 2; i < 25; i = i + 2)
+			experimentIncreasingParallelism(i);
 
 		ResultReader.schedreader();
 	}
