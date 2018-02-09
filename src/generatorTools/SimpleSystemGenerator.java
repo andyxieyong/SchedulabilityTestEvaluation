@@ -5,22 +5,10 @@ import java.util.Random;
 
 import entity.Resource;
 import entity.SporadicTask;
+import utils.AnalysisUtils.CS_LENGTH_RANGE;
+import utils.AnalysisUtils.RESOURCES_RANGE;
 
 public class SimpleSystemGenerator {
-	
-	public static final int MAX_PRIORITY = 1000;
-	
-	/* define how long the critical section can be */
-	public static enum CS_LENGTH_RANGE {
-		VERY_LONG_CSLEN, LONG_CSLEN, MEDIUM_CS_LEN, SHORT_CS_LEN, VERY_SHORT_CS_LEN, Random
-	};
-
-	/* define how many resources in the system */
-	public static enum RESOURCES_RANGE {
-		HALF_PARITIONS, /* partitions / 2 us */
-		PARTITIONS, /* partitions us */
-		DOUBLE_PARTITIONS, /* partitions * 2 us */
-	};
 
 	public CS_LENGTH_RANGE cs_len_range;
 	long csl = -1;
@@ -341,9 +329,9 @@ public class SimpleSystemGenerator {
 				for (int j = 0; j < generatedTaskSets.get(i).size(); j++) {
 					generatedTaskSets.get(i).get(j).partition = i;
 				}
-				
-				deadlineMonotonicPriorityAssignment(generatedTaskSets.get(i), generatedTaskSets.get(i).size());
 			}
+			
+			new PriorityGeneator().assignPrioritiesByDM(generatedTaskSets);
 
 			if (resources != null && resources.size() > 0) {
 				for (int i = 0; i < resources.size(); i++) {
@@ -389,19 +377,6 @@ public class SimpleSystemGenerator {
 		}
 		
 		return generatedTaskSets;
-	}
-	
-	public void deadlineMonotonicPriorityAssignment(ArrayList<SporadicTask> taskset, int number) {
-		ArrayList<Integer> priorities = new ArrayList<>();
-		for (int i = 0; i < number; i++)
-			priorities.add(MAX_PRIORITY - (i + 1) * 2);
-		
-		/* deadline monotonic assignment */
-		taskset.sort((t1, t2) -> Double.compare(t1.deadline, t2.deadline));
-		priorities.sort((p1, p2) -> -Integer.compare(p1, p2));
-		for (int i = 0; i < taskset.size(); i++) {
-			taskset.get(i).priority = priorities.get(i);
-		}
 	}
 
 }

@@ -18,8 +18,8 @@ import analysisNewIO.PWLPIO;
 import entity.Resource;
 import entity.SporadicTask;
 import generatorTools.SimpleSystemGenerator;
-import generatorTools.SimpleSystemGenerator.CS_LENGTH_RANGE;
-import generatorTools.SimpleSystemGenerator.RESOURCES_RANGE;
+import utils.AnalysisUtils.CS_LENGTH_RANGE;
+import utils.AnalysisUtils.RESOURCES_RANGE;
 import utils.ResultReader;
 
 public class RunTimeOverheadsTest {
