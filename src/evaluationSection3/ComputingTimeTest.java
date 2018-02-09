@@ -43,8 +43,9 @@ public class ComputingTimeTest {
 		double RESOURCE_SHARING_FACTOR = 0.4;
 		int NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION = smallSet;
 
-		SimpleSystemGenerator generator = new SimpleSystemGenerator(MIN_PERIOD, MAX_PERIOD, TOTAL_PARTITIONS, NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION * TOTAL_PARTITIONS,
-				true, CS_LENGTH_RANGE.SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
+		SimpleSystemGenerator generator = new SimpleSystemGenerator(MIN_PERIOD, MAX_PERIOD, TOTAL_PARTITIONS,
+				NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION * TOTAL_PARTITIONS, true, CS_LENGTH_RANGE.SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS,
+				RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 
 		long[][] computingTime = new long[5][];
 
@@ -67,17 +68,17 @@ public class ComputingTimeTest {
 			ArrayList<ArrayList<SporadicTask>> tasks = generator.generateResourceUsage(tasksToAlloc, resources);
 
 			start = getTime();
-			fnp.getResponseTimeDM(tasks, resources,true,true, false);
+			fnp.getResponseTimeDM(tasks, resources, true, true, false);
 			end = getTime() - start;
 			computingTime[0][i] = end;
 
 			start = getTime();
-			new_mrsp.getResponseTimeDM(tasks, resources, true, true,true,true, false);
+			new_mrsp.getResponseTimeDM(tasks, resources, true, true, true, true, false);
 			end = getTime() - start;
 			computingTime[1][i] = end;
 
 			start = getTime();
-			fp.getResponseTimeDM(tasks, resources,true,true, false);
+			fp.getResponseTimeDM(tasks, resources, true, true, false);
 			end = getTime() - start;
 			computingTime[2][i] = end;
 
@@ -111,8 +112,9 @@ public class ComputingTimeTest {
 		int NUMBER_OF_TASKS_ON_EACH_PARTITION = 5;
 		int total_partitions = partitions;
 
-		SimpleSystemGenerator generator = new SimpleSystemGenerator(MIN_PERIOD, MAX_PERIOD, total_partitions, NUMBER_OF_TASKS_ON_EACH_PARTITION * total_partitions, true,
-				CS_LENGTH_RANGE.VERY_SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
+		SimpleSystemGenerator generator = new SimpleSystemGenerator(MIN_PERIOD, MAX_PERIOD, total_partitions,
+				NUMBER_OF_TASKS_ON_EACH_PARTITION * total_partitions, true, CS_LENGTH_RANGE.VERY_SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS,
+				RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 
 		long[][] computingTime = new long[5][];
 
@@ -135,17 +137,17 @@ public class ComputingTimeTest {
 			ArrayList<ArrayList<SporadicTask>> tasks = generator.generateResourceUsage(tasksToAlloc, resources);
 
 			start = getTime();
-			fnp.getResponseTimeDM(tasks, resources,true,true, false);
+			fnp.getResponseTimeDM(tasks, resources, true, true, false);
 			end = getTime() - start;
 			computingTime[0][i] = end;
 
 			start = getTime();
-			new_mrsp.getResponseTimeDM(tasks, resources, true, true,true,true, false);
+			new_mrsp.getResponseTimeDM(tasks, resources, true, true, true, true, false);
 			end = getTime() - start;
 			computingTime[1][i] = end;
 
 			start = getTime();
-			fp.getResponseTimeDM(tasks, resources,true,true, false);
+			fp.getResponseTimeDM(tasks, resources, true, true, false);
 			end = getTime() - start;
 			computingTime[2][i] = end;
 

@@ -13,7 +13,6 @@ import utils.AnalysisUtils.RESOURCES_RANGE;
 
 public class IdenticalTest {
 
-
 	public static int TOTAL_NUMBER_OF_SYSTEMS = 99999999;
 	public static int TOTAL_PARTITIONS = 10;
 	public static int MIN_PERIOD = 1;

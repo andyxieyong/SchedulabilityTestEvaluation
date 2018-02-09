@@ -330,7 +330,7 @@ public class SimpleSystemGenerator {
 					generatedTaskSets.get(i).get(j).partition = i;
 				}
 			}
-			
+
 			new PriorityGeneator().assignPrioritiesByDM(generatedTaskSets);
 
 			if (resources != null && resources.size() > 0) {
@@ -375,7 +375,7 @@ public class SimpleSystemGenerator {
 			System.err.print("ERROR at resource usage, taskset is NULL!");
 			System.exit(-1);
 		}
-		
+
 		return generatedTaskSets;
 	}
 
