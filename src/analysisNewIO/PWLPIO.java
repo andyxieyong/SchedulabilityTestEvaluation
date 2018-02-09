@@ -4,13 +4,18 @@ import java.util.ArrayList;
 
 import entity.Resource;
 import entity.SporadicTask;
+import generatorTools.PriorityGeneator;
 import utils.AnalysisUtils;
 
 public class PWLPIO {
 
-	public long[][] getResponseTime(ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, boolean printDebug) {
+	public long[][] getResponseTimeDM(ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, boolean btbHit, boolean useRi,
+			boolean printDebug) {
 		if (tasks == null)
 			return null;
+
+		// assign priorities by Deadline Monotonic
+		tasks = new PriorityGeneator().assignPrioritiesByDM(tasks);
 
 		long count = 0;
 		boolean isEqual = false, missdeadline = false;
@@ -19,28 +24,24 @@ public class PWLPIO {
 		/* a huge busy window to get a fixed Ri */
 		while (!isEqual) {
 			isEqual = true;
-			long[][] response_time_plus = busyWindow(tasks, resources, response_time);
+			long[][] response_time_plus = busyWindow(tasks, resources, response_time, btbHit, useRi);
 
 			for (int i = 0; i < response_time_plus.length; i++) {
 				for (int j = 0; j < response_time_plus[i].length; j++) {
 					if (response_time[i][j] != response_time_plus[i][j]) {
 						isEqual = false;
 					}
-
 					if (response_time_plus[i][j] > tasks.get(i).get(j).deadline)
 						missdeadline = true;
 
 				}
 			}
-			if (count > 1000) {
-				new AnalysisUtils().printResponseTime(response_time, tasks);
-			}
+
 			count++;
 			new AnalysisUtils().cloneList(response_time_plus, response_time);
 
 			if (missdeadline)
 				break;
-
 		}
 
 		if (printDebug) {
@@ -51,7 +52,8 @@ public class PWLPIO {
 		return response_time;
 	}
 
-	private long[][] busyWindow(ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, long[][] response_time) {
+	private long[][] busyWindow(ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, long[][] response_time, boolean btbHit,
+			boolean useRi) {
 		long[][] response_time_plus = new long[tasks.size()][];
 
 		for (int i = 0; i < response_time.length; i++) {
@@ -70,9 +72,9 @@ public class PWLPIO {
 				task.implementation_overheads = 0;
 				task.implementation_overheads += AnalysisUtils.FULL_CONTEXT_SWTICH1;
 
-				task.spin = getSpinDelay(task, tasks, resources, response_time[i][j], response_time);
-				task.interference = highPriorityInterference(task, tasks, resources, response_time, response_time[i][j]);
-				task.local = localBlocking(task, tasks, resources, response_time, response_time[i][j]);
+				task.spin = getSpinDelay(task, tasks, resources, response_time[i][j], response_time, btbHit, useRi);
+				task.interference = highPriorityInterference(task, tasks, resources, response_time, response_time[i][j], btbHit, useRi);
+				task.local = localBlocking(task, tasks, resources, response_time, response_time[i][j], btbHit, useRi);
 
 				long implementation_overheads = (long) Math.ceil(task.implementation_overheads);
 				response_time_plus[i][j] = task.Ri = task.WCET + task.spin + task.interference + task.local + implementation_overheads;
@@ -85,7 +87,8 @@ public class PWLPIO {
 		return response_time_plus;
 	}
 
-	private long getSpinDelay(SporadicTask task, ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, long time, long[][] Ris) {
+	private long getSpinDelay(SporadicTask task, ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, long time, long[][] Ris,
+			boolean btbHit, boolean useRi) {
 		long spin = 0;
 		ArrayList<ArrayList<Long>> requestsLeftOnRemoteP = new ArrayList<>();
 		ArrayList<Resource> fifop_resources = new ArrayList<>();
@@ -93,7 +96,7 @@ public class PWLPIO {
 			requestsLeftOnRemoteP.add(new ArrayList<Long>());
 			fifop_resources.add(resources.get(i));
 			Resource res = resources.get(i);
-			spin += getSpinDelayForOneResoruce(task, res, tasks, requestsLeftOnRemoteP.get(i), time, Ris);
+			spin += getSpinDelayForOneResoruce(task, res, tasks, requestsLeftOnRemoteP.get(i), time, Ris, btbHit, useRi);
 		}
 
 		// Preemption
@@ -139,14 +142,14 @@ public class PWLPIO {
 	}
 
 	private long getSpinDelayForOneResoruce(SporadicTask task, Resource resource, ArrayList<ArrayList<SporadicTask>> tasks,
-			ArrayList<Long> requestsLeftOnRemoteP, long time, long[][] Ris) {
+			ArrayList<Long> requestsLeftOnRemoteP, long time, long[][] Ris, boolean btbHit, boolean useRi) {
 		long spin = 0;
 		long ncs = 0;
 
 		for (int i = 0; i < tasks.get(task.partition).size(); i++) {
 			SporadicTask hpTask = tasks.get(task.partition).get(i);
 			if (hpTask.priority > task.priority && hpTask.resource_required_index.contains(resource.id - 1)) {
-				ncs += (int) Math.ceil((double) (time + Ris[hpTask.partition][i]) / (double) hpTask.period)
+				ncs += (int) Math.ceil((double) (time + (btbHit ? (useRi ? Ris[hpTask.partition][i] : hpTask.deadline) : 0)) / (double) hpTask.period)
 						* hpTask.number_of_access_in_one_release.get(hpTask.resource_required_index.indexOf(resource.id - 1));
 			}
 		}
@@ -163,7 +166,8 @@ public class PWLPIO {
 						if (tasks.get(i).get(j).resource_required_index.contains(resource.id - 1)) {
 							SporadicTask remote_task = tasks.get(i).get(j);
 							int indexR = getIndexRInTask(remote_task, resource);
-							int number_of_release = (int) Math.ceil((double) (time + Ris[i][j]) / (double) remote_task.period);
+							int number_of_release = (int) Math
+									.ceil((double) (time + (btbHit ? (useRi ? Ris[i][j] : remote_task.deadline) : 0)) / (double) remote_task.period);
 							number_of_request_by_Remote_P += number_of_release * remote_task.number_of_access_in_one_release.get(indexR);
 						}
 					}
@@ -184,7 +188,8 @@ public class PWLPIO {
 	 * Calculate the local high priority tasks' interference for a given task t.
 	 * CI is a set of computation time of local tasks, including spin delay.
 	 */
-	private long highPriorityInterference(SporadicTask t, ArrayList<ArrayList<SporadicTask>> allTasks, ArrayList<Resource> resources, long[][] Ris, long time) {
+	private long highPriorityInterference(SporadicTask t, ArrayList<ArrayList<SporadicTask>> allTasks, ArrayList<Resource> resources, long[][] Ris, long time,
+			boolean btbHit, boolean useRi) {
 		long interference = 0;
 		int partition = t.partition;
 		ArrayList<SporadicTask> tasks = allTasks.get(partition);
@@ -199,7 +204,8 @@ public class PWLPIO {
 		return interference;
 	}
 
-	private long localBlocking(SporadicTask t, ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, long[][] Ris, long Ri) {
+	private long localBlocking(SporadicTask t, ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, long[][] Ris, long Ri, boolean btbHit,
+			boolean useRi) {
 		ArrayList<Resource> LocalBlockingResources = getLocalBlockingResources(t, resources, tasks.get(t.partition));
 		ArrayList<Long> local_blocking_each_resource = new ArrayList<>();
 
@@ -225,8 +231,7 @@ public class PWLPIO {
 		for (int i = 0; i < resources.size(); i++) {
 			Resource resource = resources.get(i);
 			// local resources that have a higher ceiling
-			if (resource.partitions.size() == 1 && resource.partitions.get(0) == partition
-					&& resource.ceiling.get(resource.partitions.indexOf(partition)) >= task.priority) {
+			if (resource.partitions.size() == 1 && resource.partitions.get(0) == partition && resource.getCeilingForProcessor(localTasks) >= task.priority) {
 				for (int j = 0; j < resource.requested_tasks.size(); j++) {
 					SporadicTask LP_task = resource.requested_tasks.get(j);
 					if (LP_task.partition == partition && LP_task.priority < task.priority) {

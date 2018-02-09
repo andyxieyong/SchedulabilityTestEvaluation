@@ -67,17 +67,17 @@ public class ComputingTimeTest {
 			ArrayList<ArrayList<SporadicTask>> tasks = generator.generateResourceUsage(tasksToAlloc, resources);
 
 			start = getTime();
-			fnp.getResponseTime(tasks, resources, false);
+			fnp.getResponseTimeDM(tasks, resources,true,true, false);
 			end = getTime() - start;
 			computingTime[0][i] = end;
 
 			start = getTime();
-			new_mrsp.getResponseTime(tasks, resources, true, true, false);
+			new_mrsp.getResponseTimeDM(tasks, resources, true, true,true,true, false);
 			end = getTime() - start;
 			computingTime[1][i] = end;
 
 			start = getTime();
-			fp.getResponseTime(tasks, resources, false);
+			fp.getResponseTimeDM(tasks, resources,true,true, false);
 			end = getTime() - start;
 			computingTime[2][i] = end;
 
@@ -135,17 +135,17 @@ public class ComputingTimeTest {
 			ArrayList<ArrayList<SporadicTask>> tasks = generator.generateResourceUsage(tasksToAlloc, resources);
 
 			start = getTime();
-			fnp.getResponseTime(tasks, resources, false);
+			fnp.getResponseTimeDM(tasks, resources,true,true, false);
 			end = getTime() - start;
 			computingTime[0][i] = end;
 
 			start = getTime();
-			new_mrsp.getResponseTime(tasks, resources, true, true, false);
+			new_mrsp.getResponseTimeDM(tasks, resources, true, true,true,true, false);
 			end = getTime() - start;
 			computingTime[1][i] = end;
 
 			start = getTime();
-			fp.getResponseTime(tasks, resources, false);
+			fp.getResponseTimeDM(tasks, resources,true,true, false);
 			end = getTime() - start;
 			computingTime[2][i] = end;
 

@@ -105,19 +105,19 @@ public class RunTimeOverheadsTest {
 			ArrayList<Resource> resources = generator.generateResources();
 			ArrayList<ArrayList<SporadicTask>> tasks = generator.generateResourceUsage(tasksToAlloc, resources);
 
-			Ris = fnpIO.getResponseTime(tasks, resources, false);
+			Ris = fnpIO.getResponseTimeDM(tasks, resources,true,true, false);
 			if (isSystemSchedulable(tasks, Ris))
 				sfnpIO++;
 
-			Ris = fpIO.getResponseTime(tasks, resources, false);
+			Ris = fpIO.getResponseTimeDM(tasks, resources,true,true, false);
 			if (isSystemSchedulable(tasks, Ris))
 				sfpIO++;
 
-			Ris = mrspIO.getResponseTime(tasks, resources, true, true, false);
+			Ris = mrspIO.getResponseTimeDM(tasks, resources, true, true,true,true, false);
 			if (isSystemSchedulable(tasks, Ris))
 				smrspIONP++;
 
-			Ris = mrspIO.getResponseTime(tasks, resources, true, false, false);
+			Ris = mrspIO.getResponseTimeDM(tasks, resources, true, false,true,true, false);
 			if (isSystemSchedulable(tasks, Ris))
 				smrspIO++;
 
