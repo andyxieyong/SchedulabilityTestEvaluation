@@ -1,4 +1,4 @@
-package test;
+package evaluationSection3;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -17,9 +17,9 @@ import analysisNewIO.MrsPIO;
 import analysisNewIO.PWLPIO;
 import entity.Resource;
 import entity.SporadicTask;
-import generatorTools.SystemGenerator;
-import generatorTools.SystemGenerator.CS_LENGTH_RANGE;
-import generatorTools.SystemGenerator.RESOURCES_RANGE;
+import generatorTools.SimpleSystemGenerator;
+import generatorTools.SimpleSystemGenerator.CS_LENGTH_RANGE;
+import generatorTools.SimpleSystemGenerator.RESOURCES_RANGE;
 import utils.ResultReader;
 
 public class RunTimeOverheadsTest {
@@ -79,7 +79,7 @@ public class RunTimeOverheadsTest {
 			break;
 		}
 
-		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, TOTAL_PARTITIONS, NUMBER_OF_TASKS_ON_EACH_PARTITION * TOTAL_PARTITIONS, true,
+		SimpleSystemGenerator generator = new SimpleSystemGenerator(MIN_PERIOD, MAX_PERIOD, TOTAL_PARTITIONS, NUMBER_OF_TASKS_ON_EACH_PARTITION * TOTAL_PARTITIONS, true,
 				cs_range, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 
 		long[][] Ris;

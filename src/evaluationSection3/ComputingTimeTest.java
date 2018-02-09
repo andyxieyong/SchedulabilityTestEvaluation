@@ -1,4 +1,4 @@
-package test;
+package evaluationSection3;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,9 +15,9 @@ import analysisNewIO.MrsPIO;
 import analysisNewIO.PWLPIO;
 import entity.Resource;
 import entity.SporadicTask;
-import generatorTools.SystemGenerator;
-import generatorTools.SystemGenerator.CS_LENGTH_RANGE;
-import generatorTools.SystemGenerator.RESOURCES_RANGE;
+import generatorTools.SimpleSystemGenerator;
+import generatorTools.SimpleSystemGenerator.CS_LENGTH_RANGE;
+import generatorTools.SimpleSystemGenerator.RESOURCES_RANGE;
 
 public class ComputingTimeTest {
 
@@ -43,7 +43,7 @@ public class ComputingTimeTest {
 		double RESOURCE_SHARING_FACTOR = 0.4;
 		int NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION = smallSet;
 
-		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, TOTAL_PARTITIONS, NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION * TOTAL_PARTITIONS,
+		SimpleSystemGenerator generator = new SimpleSystemGenerator(MIN_PERIOD, MAX_PERIOD, TOTAL_PARTITIONS, NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION * TOTAL_PARTITIONS,
 				true, CS_LENGTH_RANGE.SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 
 		long[][] computingTime = new long[5][];
@@ -111,7 +111,7 @@ public class ComputingTimeTest {
 		int NUMBER_OF_TASKS_ON_EACH_PARTITION = 5;
 		int total_partitions = partitions;
 
-		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, total_partitions, NUMBER_OF_TASKS_ON_EACH_PARTITION * total_partitions, true,
+		SimpleSystemGenerator generator = new SimpleSystemGenerator(MIN_PERIOD, MAX_PERIOD, total_partitions, NUMBER_OF_TASKS_ON_EACH_PARTITION * total_partitions, true,
 				CS_LENGTH_RANGE.VERY_SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 
 		long[][] computingTime = new long[5][];

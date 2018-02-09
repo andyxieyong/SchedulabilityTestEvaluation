@@ -1,5 +1,6 @@
 package entity;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class SporadicTask {
@@ -22,6 +23,8 @@ public class SporadicTask {
 	public double implementation_overheads = 0, blocking_overheads = 0;
 	public double mrsp_arrivalblocking_overheads = 0, fifonp_arrivalblocking_overheads = 0, fifop_arrivalblocking_overheads = 0;
 	public double migration_overheads_plus = 0;
+	
+	public long addition_slack_by_newOPA = 0;
 
 	/* Used by LP solver from C code */
 	public int hasResource = 0;
@@ -62,6 +65,14 @@ public class SporadicTask {
 	public String RTA() {
 		return "T" + this.id + " : R = " + this.Ri + ", S = " + this.spin + ", I = " + this.interference + ", A = " + this.local + ". is schedulable: "
 				+ (Ri <= deadline);
+	}
+	
+
+	public String getInfo() {
+		DecimalFormat df = new DecimalFormat("#.#######");
+		return "T" + this.id + " : T = " + this.period + ", C = " + this.WCET + ", PRET: " + this.pure_resource_execution_time
+				+ ", D = " + this.deadline + ", Priority = " + this.priority + ", Partition = " + this.partition + ", Util: "
+				+ Double.parseDouble(df.format(util));
 	}
 
 }

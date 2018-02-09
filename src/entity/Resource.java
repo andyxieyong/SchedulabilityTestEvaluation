@@ -27,4 +27,31 @@ public class Resource {
 				+ isGlobal;
 	}
 
+	public int getCeilingForProcessor(ArrayList<ArrayList<SporadicTask>> tasks, int partition) {
+		int ceiling = -1;
+
+		for (int k = 0; k < tasks.get(partition).size(); k++) {
+			SporadicTask task = tasks.get(partition).get(k);
+
+			if (task.resource_required_index.contains(this.id - 1)) {
+				ceiling = task.priority > ceiling ? task.priority : ceiling;
+			}
+		}
+
+		return ceiling;
+	}
+
+	public int getCeilingForProcessor(ArrayList<SporadicTask> tasks) {
+		int ceiling = -1;
+
+		for (int k = 0; k < tasks.size(); k++) {
+			SporadicTask task = tasks.get(k);
+
+			if (task.resource_required_index.contains(this.id - 1)) {
+				ceiling = task.priority > ceiling ? task.priority : ceiling;
+			}
+		}
+
+		return ceiling;
+	}
 }

@@ -1,4 +1,4 @@
-package test;
+package evaluationSection3;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,9 +12,9 @@ import analysisNew.MSRPNew;
 import analysisNew.MrsPNew;
 import entity.Resource;
 import entity.SporadicTask;
-import generatorTools.SystemGenerator;
-import generatorTools.SystemGenerator.CS_LENGTH_RANGE;
-import generatorTools.SystemGenerator.RESOURCES_RANGE;
+import generatorTools.SimpleSystemGenerator;
+import generatorTools.SimpleSystemGenerator.CS_LENGTH_RANGE;
+import generatorTools.SimpleSystemGenerator.RESOURCES_RANGE;
 
 public class ResponseTimeBoundingTest {
 
@@ -39,7 +39,7 @@ public class ResponseTimeBoundingTest {
 		MrsPNew new_mrsp = new MrsPNew();
 		MSRPNew fnp = new MSRPNew();
 
-		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, TOTAL_PARTITIONS, NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION * TOTAL_PARTITIONS,
+		SimpleSystemGenerator generator = new SimpleSystemGenerator(MIN_PERIOD, MAX_PERIOD, TOTAL_PARTITIONS, NUMBER_OF_MAX_TASKS_ON_EACH_PARTITION * TOTAL_PARTITIONS,
 				true, range, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 
 		long[][] r1, r2, diff;

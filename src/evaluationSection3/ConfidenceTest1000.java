@@ -1,4 +1,4 @@
-package test;
+package evaluationSection3;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -17,9 +17,9 @@ import analysisNew.MrsPNew;
 import analysisNew.PWLPNew;
 import entity.Resource;
 import entity.SporadicTask;
-import generatorTools.SystemGenerator;
-import generatorTools.SystemGenerator.CS_LENGTH_RANGE;
-import generatorTools.SystemGenerator.RESOURCES_RANGE;
+import generatorTools.SimpleSystemGenerator;
+import generatorTools.SimpleSystemGenerator.CS_LENGTH_RANGE;
+import generatorTools.SimpleSystemGenerator.RESOURCES_RANGE;
 
 public class ConfidenceTest1000 {
 
@@ -129,7 +129,7 @@ public class ConfidenceTest1000 {
 		PWLPNew fp = new PWLPNew();
 		MSRPNew fnp = new MSRPNew();
 
-		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, TOTAL_PARTITIONS, NoT * TOTAL_PARTITIONS, true, CS_LENGTH_RANGE.SHORT_CS_LEN,
+		SimpleSystemGenerator generator = new SimpleSystemGenerator(MIN_PERIOD, MAX_PERIOD, TOTAL_PARTITIONS, NoT * TOTAL_PARTITIONS, true, CS_LENGTH_RANGE.SHORT_CS_LEN,
 				RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 
 		String result = "";
@@ -225,7 +225,7 @@ public class ConfidenceTest1000 {
 			break;
 		}
 
-		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, TOTAL_PARTITIONS, NUMBER_OF_TASKS_ON_EACH_PARTITION * TOTAL_PARTITIONS, true,
+		SimpleSystemGenerator generator = new SimpleSystemGenerator(MIN_PERIOD, MAX_PERIOD, TOTAL_PARTITIONS, NUMBER_OF_TASKS_ON_EACH_PARTITION * TOTAL_PARTITIONS, true,
 				cs_range, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 
 		long[][] Ris;
@@ -301,7 +301,7 @@ public class ConfidenceTest1000 {
 		double RESOURCE_SHARING_FACTOR = 0.4;
 		int NUMBER_OF_TASKS_ON_EACH_PARTITION = 4;
 
-		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, TOTAL_PARTITIONS, NUMBER_OF_TASKS_ON_EACH_PARTITION * TOTAL_PARTITIONS, true,
+		SimpleSystemGenerator generator = new SimpleSystemGenerator(MIN_PERIOD, MAX_PERIOD, TOTAL_PARTITIONS, NUMBER_OF_TASKS_ON_EACH_PARTITION * TOTAL_PARTITIONS, true,
 				CS_LENGTH_RANGE.SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR, NoA);
 		long[][] Ris;
 
@@ -387,7 +387,7 @@ public class ConfidenceTest1000 {
 		PWLPNew fp = new PWLPNew();
 		MSRPNew fnp = new MSRPNew();
 
-		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, NoP, NoT * NoP, true, CS_LENGTH_RANGE.SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS,
+		SimpleSystemGenerator generator = new SimpleSystemGenerator(MIN_PERIOD, MAX_PERIOD, NoP, NoT * NoP, true, CS_LENGTH_RANGE.SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS,
 				RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 
 		String result = "";
