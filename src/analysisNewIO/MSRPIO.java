@@ -9,6 +9,208 @@ import utils.AnalysisUtils;
 
 public class MSRPIO {
 
+	public long[][] getResponseTimeBySBPO(ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, boolean isprint) {
+		if (tasks == null)
+			return null;
+
+		// Default as deadline monotonic
+		tasks = new PriorityGeneator().assignPrioritiesByDM(tasks);
+
+		// now we check each task. we begin from the task with largest deadline
+		for (int i = 0; i < tasks.size(); i++) {
+			ArrayList<SporadicTask> unassignedTasks = new ArrayList<>(tasks.get(i));
+			int sratingP = 500 - unassignedTasks.size() * 2;
+			int prioLevels = tasks.get(i).size();
+
+			for (int currentLevel = 0; currentLevel < prioLevels; currentLevel++) {
+
+				int startingIndex = unassignedTasks.size() - 1;
+				for (int j = startingIndex; j >= 0; j--) {
+					SporadicTask task = unassignedTasks.get(j);
+					int originalP = task.priority;
+					task.priority = sratingP;
+
+					tasks.get(i).sort((t1, t2) -> -Integer.compare(t1.priority, t2.priority));
+					long time = getResponseTimeForOneTask(task, tasks, resources, true);
+					task.priority = originalP;
+					tasks.get(i).sort((t1, t2) -> -Integer.compare(t1.priority, t2.priority));
+
+					task.addition_slack_by_newOPA = task.deadline - time;
+				}
+
+				unassignedTasks.sort((t1, t2) -> -compareSlack(t1, t2));
+
+				if (isprint) {
+					for (int k = 0; k < unassignedTasks.size(); k++) {
+						SporadicTask task = unassignedTasks.get(k);
+						System.out.print("T" + task.id + ":  " + task.addition_slack_by_newOPA + " | " + task.deadline + " 	  ");
+					}
+					System.out.println();
+				}
+
+				for (int k = 0; k < unassignedTasks.size() - 1; k++) {
+					SporadicTask task1 = unassignedTasks.get(k);
+					SporadicTask task2 = unassignedTasks.get(k + 1);
+
+					if (task1.addition_slack_by_newOPA < task2.addition_slack_by_newOPA) {
+						System.err.println("newOPA reuslt error! in Task " + task1.id + " and task " + task2.id);
+						System.exit(-1);
+					}
+
+					if (task1.addition_slack_by_newOPA == task2.addition_slack_by_newOPA && task1.deadline < task2.deadline) {
+						System.err.println("newOPA reuslt error! in Task " + task1.id + " and task " + task2.id);
+						System.exit(-1);
+					}
+
+				}
+
+				unassignedTasks.get(0).priority = sratingP;
+				tasks.get(i).sort((t1, t2) -> -Integer.compare(t1.priority, t2.priority));
+				unassignedTasks.remove(0);
+
+				sratingP += 2;
+			}
+		}
+		
+		for (int i = 0; i < tasks.size(); i++) {
+			tasks.get(i).sort((t1, t2) -> -Integer.compare(t1.priority, t2.priority));
+		}
+
+		long count = 0;
+		boolean isEqual = false, missdeadline = false;
+		long[][] response_time = new AnalysisUtils().initResponseTime(tasks);
+
+		/* a huge busy window to get a fixed Ri */
+		while (!isEqual) {
+			isEqual = true;
+			long[][] response_time_plus = busyWindow(tasks, resources, response_time, true, true);
+
+			for (int i = 0; i < response_time_plus.length; i++) {
+				for (int j = 0; j < response_time_plus[i].length; j++) {
+					if (response_time[i][j] != response_time_plus[i][j])
+						isEqual = false;
+					if (response_time_plus[i][j] > tasks.get(i).get(j).deadline)
+						missdeadline = true;
+
+				}
+			}
+
+			count++;
+			new AnalysisUtils().cloneList(response_time_plus, response_time);
+
+			if (missdeadline)
+				break;
+		}
+
+		if (isprint) {
+			System.out.println("FIFONP JAVA    after " + count + " tims of recursion, we got the response time.");
+			new AnalysisUtils().printResponseTime(response_time, tasks);
+		}
+
+		return response_time;
+	}
+
+	private int compareSlack(SporadicTask t1, SporadicTask t2) {
+		long slack1 = t1.addition_slack_by_newOPA;
+		long deadline1 = t1.deadline;
+
+		long slack2 = t2.addition_slack_by_newOPA;
+		long deadline2 = t2.deadline;
+
+		if (slack1 < slack2) {
+			return -1;
+		}
+
+		if (slack1 > slack2) {
+			return 1;
+		}
+
+		if (slack1 == slack2) {
+			if (deadline1 < deadline2)
+				return -1;
+			if (deadline1 > deadline2)
+				return 1;
+			if (deadline1 == deadline2)
+				return 0;
+		}
+
+		System.err.println(
+				"New OPA comparator error!" + " slack1:  " + slack1 + " deadline1:  " + deadline1 + " slack2:  " + slack2 + " deadline2:  " + deadline2);
+		System.exit(-1);
+		return 0;
+	}
+
+	public long[][] getResponseTimeByOPA(ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, boolean isprint) {
+		if (tasks == null)
+			return null;
+
+		// Default as deadline monotonic
+		tasks = new PriorityGeneator().assignPrioritiesByDM(tasks);
+
+		// now we check each task. we begin from the task with largest deadline
+		for (int i = 0; i < tasks.size(); i++) {
+
+			ArrayList<SporadicTask> unassignedTasks = new ArrayList<>(tasks.get(i));
+			int sratingP = 500 - unassignedTasks.size() * 2;
+			int prioLevels = tasks.get(i).size();
+
+			for (int currentLevel = 0; currentLevel < prioLevels; currentLevel++) {
+				boolean isTaskSchedulable = false;
+				int startingIndex = unassignedTasks.size() - 1;
+
+				for (int j = startingIndex; j >= 0; j--) {
+					SporadicTask task = unassignedTasks.get(j);
+					int originalP = task.priority;
+					task.priority = sratingP;
+
+					tasks.get(i).sort((t1, t2) -> -Integer.compare(t1.priority, t2.priority));
+					long time = getResponseTimeForOneTask(task, tasks, resources, true);
+					boolean isSchedulable = time <= task.deadline;
+
+					if (!isSchedulable) {
+						task.priority = originalP;
+						tasks.get(i).sort((t1, t2) -> -Integer.compare(t1.priority, t2.priority));
+						if (isprint) {
+							System.out.println("Task T" + task.id + " unschedulable");
+						}
+					} else {
+						unassignedTasks.remove(task);
+						isTaskSchedulable = true;
+						break;
+					}
+				}
+
+				if (!isTaskSchedulable) {
+					long[][] response_time = new long[tasks.size()][];
+					for (int j = 0; j < tasks.size(); j++) {
+						response_time[j] = new long[tasks.get(j).size()];
+						for (int k = 0; k < tasks.get(j).size(); k++) {
+							response_time[j][k] = tasks.get(j).get(k).Ri;
+						}
+					}
+					return response_time;
+				}
+
+				sratingP += 2;
+			}
+		}
+
+		long[][] response_time = new long[tasks.size()][];
+		for (int j = 0; j < tasks.size(); j++) {
+			response_time[j] = new long[tasks.get(j).size()];
+			for (int k = 0; k < tasks.get(j).size(); k++) {
+				response_time[j][k] = tasks.get(j).get(k).Ri;
+			}
+		}
+
+		if (isprint) {
+			System.out.println("OPA, we got the response time.");
+			new AnalysisUtils().printResponseTime(response_time, tasks);
+		}
+
+		return response_time;
+	}
+
 	public long[][] getResponseTimeDM(ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, boolean btbHit, boolean useRi,
 			boolean printDebug) {
 		if (tasks == null)
@@ -49,6 +251,54 @@ public class MSRPIO {
 		}
 
 		return response_time;
+	}
+
+	private long getResponseTimeForOneTask(SporadicTask caltask, ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, boolean btbHit) {
+
+		long[][] dummy_response_time = new long[tasks.size()][];
+		for (int i = 0; i < dummy_response_time.length; i++) {
+			dummy_response_time[i] = new long[tasks.get(i).size()];
+		}
+
+		SporadicTask task = caltask;
+		long Ri = 0;
+		long newRi = task.WCET + task.pure_resource_execution_time;
+
+		if (newRi > task.deadline) {
+			return newRi;
+		}
+
+		while (Ri != newRi) {
+			if (newRi > task.deadline) {
+				return newRi;
+			}
+
+			Ri = newRi;
+			newRi = oneCalculation(task, tasks, resources, dummy_response_time, Ri, btbHit, false);
+
+			if (newRi > task.deadline) {
+				return newRi;
+			}
+		}
+
+		return newRi;
+	}
+
+	private long oneCalculation(SporadicTask task, ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, long[][] response_time, long Ri,
+			boolean btbHit, boolean useRi) {
+
+		task.indirectspin = 0;
+		task.implementation_overheads = 0;
+		task.implementation_overheads += AnalysisUtils.FULL_CONTEXT_SWTICH1;
+
+		task.spin = directRemoteDelay(task, tasks, resources, response_time, Ri, btbHit, useRi);
+		task.interference = highPriorityInterference(task, tasks, resources, response_time, Ri, btbHit, useRi);
+		task.local = localBlocking(task, tasks, resources, response_time, Ri, btbHit, useRi);
+
+		long implementation_overheads = (long) Math.ceil(task.implementation_overheads);
+		long newRi = task.Ri = task.WCET + task.spin + task.interference + task.local + implementation_overheads;
+
+		return newRi;
 	}
 
 	private long[][] busyWindow(ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, long[][] response_time, boolean btbHit,
