@@ -41,14 +41,14 @@ public class ResourceOrientedAllocationTest {
 
 	public static int MAX_PERIOD = 1000;
 	public static int MIN_PERIOD = 1;
-	static int NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE = 3;
-	static int NUMBER_OF_TASKS_ON_EACH_PARTITION = 4;
-	static CS_LENGTH_RANGE range = CS_LENGTH_RANGE.MEDIUM_CS_LEN;
-	static double RESOURCE_SHARING_FACTOR = 0.3;
 	public static int TOTAL_PARTITIONS = 16;
 	public static boolean useRi = true;
 	public static boolean btbHit = true;
-	public static int PROTOCOLS = 3;
+	
+	static CS_LENGTH_RANGE range = CS_LENGTH_RANGE.MEDIUM_CS_LEN;
+	static int NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE = 3;
+	static int NUMBER_OF_TASKS_ON_EACH_PARTITION = 4;
+	static double RESOURCE_SHARING_FACTOR = 0.3;
 
 	AllocationGeneator allocGeneator = new AllocationGeneator();
 
@@ -66,47 +66,47 @@ public class ResourceOrientedAllocationTest {
 				}
 			}).start();
 		}
-
-		final CountDownLatch accesscountdown = new CountDownLatch(9);
-		for (int i = 1; i < 42; i = i + 5) {
-			final int access = i;
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					test.experimentIncreasingContention(access);
-					accesscountdown.countDown();
-				}
-			}).start();
-		}
-		
-		final CountDownLatch Taskcountdown = new CountDownLatch(9);
-		for (int i = 1; i < 10; i++) {
-			final int NoT = i;
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					test.experimentIncreasingWorkLoad(NoT);
-					Taskcountdown.countDown();
-				}
-			}).start();
-		}
-		
-		final CountDownLatch Processorcountdown = new CountDownLatch(11);
-		for (int i = 4; i < 25; i=i+2) {
-			final int NoP = i;
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					test.experimentIncreasingParallel(NoP);
-					Processorcountdown.countDown();
-				}
-			}).start();
-		}
-
-		Taskcountdown.await();
-		accesscountdown.await();
 		cslencountdown.await();
-		Processorcountdown.await();
+
+//		final CountDownLatch accesscountdown = new CountDownLatch(9);
+//		for (int i = 1; i < 42; i = i + 5) {
+//			final int access = i;
+//			new Thread(new Runnable() {
+//				@Override
+//				public void run() {
+//					test.experimentIncreasingContention(access);
+//					accesscountdown.countDown();
+//				}
+//			}).start();
+//		}
+//
+//		final CountDownLatch Taskcountdown = new CountDownLatch(9);
+//		for (int i = 1; i < 10; i++) {
+//			final int NoT = i;
+//			new Thread(new Runnable() {
+//				@Override
+//				public void run() {
+//					test.experimentIncreasingWorkLoad(NoT);
+//					Taskcountdown.countDown();
+//				}
+//			}).start();
+//		}
+//
+//		final CountDownLatch Processorcountdown = new CountDownLatch(11);
+//		for (int i = 4; i < 25; i = i + 2) {
+//			final int NoP = i;
+//			new Thread(new Runnable() {
+//				@Override
+//				public void run() {
+//					test.experimentIncreasingParallel(NoP);
+//					Processorcountdown.countDown();
+//				}
+//			}).start();
+//		}
+//
+//		Taskcountdown.await();
+//		accesscountdown.await();
+//		Processorcountdown.await();
 
 		ResultReader.schedreader();
 	}
@@ -317,7 +317,7 @@ public class ResourceOrientedAllocationTest {
 
 		result += "NF: " + (double) nfsfnp / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) nfsfp / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
 				+ (double) nfsmrsp / (double) TOTAL_NUMBER_OF_SYSTEMS + "  ";
-		
+
 		result += "SPA: " + (double) rlfsfnp / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) rlfsfp / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
 				+ (double) rlfsmrsp / (double) TOTAL_NUMBER_OF_SYSTEMS + "  ";
 
@@ -515,7 +515,7 @@ public class ResourceOrientedAllocationTest {
 
 		result += "NF: " + (double) nfsfnp / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) nfsfp / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
 				+ (double) nfsmrsp / (double) TOTAL_NUMBER_OF_SYSTEMS + "  ";
-		
+
 		result += "SPA: " + (double) rlfsfnp / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) rlfsfp / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
 				+ (double) rlfsmrsp / (double) TOTAL_NUMBER_OF_SYSTEMS + "  ";
 
@@ -566,7 +566,6 @@ public class ResourceOrientedAllocationTest {
 					tasksToAlloc = null;
 				}
 			}
-
 
 			/**
 			 * WORST FIT
@@ -714,7 +713,7 @@ public class ResourceOrientedAllocationTest {
 
 		result += "NF: " + (double) nfsfnp / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) nfsfp / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
 				+ (double) nfsmrsp / (double) TOTAL_NUMBER_OF_SYSTEMS + "  ";
-		
+
 		result += "SPA: " + (double) rlfsfnp / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) rlfsfp / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
 				+ (double) rlfsmrsp / (double) TOTAL_NUMBER_OF_SYSTEMS + "  ";
 
@@ -736,7 +735,7 @@ public class ResourceOrientedAllocationTest {
 		int wfsfnp = 0, ffsfnp = 0, bfsfnp = 0, nfsfnp = 0, rrfsfnp = 0, rlfsfnp = 0, rldfsfnp = 0, rlifsfnp = 0;
 		int wfsmrsp = 0, ffsmrsp = 0, bfsmrsp = 0, nfsmrsp = 0, rrfsmrsp = 0, rlfsmrsp = 0, rldfsmrsp = 0, rlifsmrsp = 0;
 		int wfsfp = 0, ffsfp = 0, bfsfp = 0, nfsfp = 0, rrfsfp = 0, rlfsfp = 0, rldfsfp = 0, rlifsfp = 0;
-		
+
 		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, true, TOTAL_PARTITIONS, NUMBER_OF_TASKS_ON_EACH_PARTITION * TOTAL_PARTITIONS,
 				RESOURCE_SHARING_FACTOR, range, RESOURCES_RANGE.PARTITIONS, NoA, false);
 
@@ -897,7 +896,6 @@ public class ResourceOrientedAllocationTest {
 			if (isSystemSchedulable(tasksRLFS, Ris))
 				rlifsmrsp++;
 
-
 			System.out.println(3 + " " + 3 + " " + NoA + " times: " + i);
 		}
 
@@ -912,7 +910,7 @@ public class ResourceOrientedAllocationTest {
 
 		result += "NF: " + (double) nfsfnp / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) nfsfp / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
 				+ (double) nfsmrsp / (double) TOTAL_NUMBER_OF_SYSTEMS + "  ";
-		
+
 		result += "SPA: " + (double) rlfsfnp / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) rlfsfp / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
 				+ (double) rlfsmrsp / (double) TOTAL_NUMBER_OF_SYSTEMS + "  ";
 
