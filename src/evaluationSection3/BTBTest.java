@@ -217,6 +217,18 @@ public class BTBTest {
 			if (isSystemSchedulable(tasks, Ris))
 				sfnp++;
 
+			Ris = new_mrsp.getResponseTime(tasks, resources, false, false);
+			if (isSystemSchedulable(tasks, Ris))
+				smrsp1++;
+
+			Ris = fp.getResponseTime(tasks, resources, false, false);
+			if (isSystemSchedulable(tasks, Ris))
+				sfp1++;
+
+			Ris = fnp.getResponseTime(tasks, resources, false, false);
+			if (isSystemSchedulable(tasks, Ris))
+				sfnp1++;
+
 			System.out.println(3 + " " + 1 + " " + NoA + " times: " + i);
 		}
 

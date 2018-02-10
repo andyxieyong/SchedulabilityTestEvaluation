@@ -1,15 +1,10 @@
-
-pathMy="/home/shuai/Desktop/"
-pathServer = "/usr/userfs/z/zs673/"
-
-
-
-cd $pathServer"SchedulabilityTestEvaluation/result"
+cd /home/userfs/z/zs673/SchedulabilityTestEvaluation/result
 pwd
 
 rm -rf *.txt
-cd $pathServer"SchedulabilityTestEvaluation"
+cd /home/userfs/z/zs673/SchedulabilityTestEvaluation
 pwd
 
 
-LD_LIBRARY_PATH=src nohup java -cp $pathServer"SchedulabilityTestEvaluation/bin" evaluationSection4.ResourceOrientedAllocationTest &
+LD_LIBRARY_PATH=src nohup java -cp /home/userfs/z/zs673/SchedulabilityTestEvaluation/bin evaluationSection4.ResourceOrientedAllocationTest &
+zs673@csresearch1:~/SchedulabilityTestEvaluation$ 
