@@ -44,7 +44,7 @@ public class ResourceOrientedAllocationTest {
 	public static int TOTAL_PARTITIONS = 16;
 	public static boolean useRi = true;
 	public static boolean btbHit = true;
-	
+
 	static CS_LENGTH_RANGE range = CS_LENGTH_RANGE.MEDIUM_CS_LEN;
 	static int NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE = 3;
 	static int NUMBER_OF_TASKS_ON_EACH_PARTITION = 4;
@@ -56,7 +56,7 @@ public class ResourceOrientedAllocationTest {
 		ResourceOrientedAllocationTest test = new ResourceOrientedAllocationTest();
 
 		final CountDownLatch cslencountdown = new CountDownLatch(6);
-		for (int i = 1; i < 4; i++) {
+		for (int i = 1; i < 7; i++) {
 			final int cslen = i;
 			new Thread(new Runnable() {
 				@Override
@@ -68,45 +68,45 @@ public class ResourceOrientedAllocationTest {
 		}
 		cslencountdown.await();
 
-//		final CountDownLatch accesscountdown = new CountDownLatch(9);
-//		for (int i = 1; i < 42; i = i + 5) {
-//			final int access = i;
-//			new Thread(new Runnable() {
-//				@Override
-//				public void run() {
-//					test.experimentIncreasingContention(access);
-//					accesscountdown.countDown();
-//				}
-//			}).start();
-//		}
-//
-//		final CountDownLatch Taskcountdown = new CountDownLatch(9);
-//		for (int i = 1; i < 10; i++) {
-//			final int NoT = i;
-//			new Thread(new Runnable() {
-//				@Override
-//				public void run() {
-//					test.experimentIncreasingWorkLoad(NoT);
-//					Taskcountdown.countDown();
-//				}
-//			}).start();
-//		}
-//
-//		final CountDownLatch Processorcountdown = new CountDownLatch(11);
-//		for (int i = 4; i < 25; i = i + 2) {
-//			final int NoP = i;
-//			new Thread(new Runnable() {
-//				@Override
-//				public void run() {
-//					test.experimentIncreasingParallel(NoP);
-//					Processorcountdown.countDown();
-//				}
-//			}).start();
-//		}
-//
-//		Taskcountdown.await();
-//		accesscountdown.await();
-//		Processorcountdown.await();
+		final CountDownLatch accesscountdown = new CountDownLatch(9);
+		for (int i = 1; i < 42; i = i + 5) {
+			final int access = i;
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					test.experimentIncreasingContention(access);
+					accesscountdown.countDown();
+				}
+			}).start();
+		}
+
+		final CountDownLatch Taskcountdown = new CountDownLatch(9);
+		for (int i = 1; i < 10; i++) {
+			final int NoT = i;
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					test.experimentIncreasingWorkLoad(NoT);
+					Taskcountdown.countDown();
+				}
+			}).start();
+		}
+
+		final CountDownLatch Processorcountdown = new CountDownLatch(11);
+		for (int i = 4; i < 25; i = i + 2) {
+			final int NoP = i;
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					test.experimentIncreasingParallel(NoP);
+					Processorcountdown.countDown();
+				}
+			}).start();
+		}
+
+		Taskcountdown.await();
+		accesscountdown.await();
+		Processorcountdown.await();
 
 		ResultReader.schedreader();
 	}
