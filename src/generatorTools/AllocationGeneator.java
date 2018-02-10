@@ -18,7 +18,7 @@ public class AllocationGeneator {
 		else if (totalUtil / total_partitions <= 0.65)
 			maxUtilPerCore = 0.65;
 		else
-			maxUtilPerCore = 1;
+			maxUtilPerCore = totalUtil / total_partitions;
 
 		ArrayList<ArrayList<SporadicTask>> tasks;
 		switch (policy) {
