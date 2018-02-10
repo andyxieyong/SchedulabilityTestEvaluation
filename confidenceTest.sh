@@ -12,4 +12,4 @@ cd $pathServer"SchedulabilityTestEvaluation"
 pwd
 
 
-LD_LIBRARY_PATH=src nohup java -cp $pathServer"SchedulabilityTestEvaluation/bin" test.ConfidenceTest1000 &
+LD_LIBRARY_PATH=src nohup java -cp $pathServer"SchedulabilityTestEvaluation/bin" evaluationSection4.ResourceOrientedAllocationTest &
