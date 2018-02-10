@@ -7,7 +7,7 @@ import entity.SporadicTask;
 import generatorTools.PriorityGeneator;
 import utils.AnalysisUtils;
 
-public class MSRPIO {
+public class MSRPIO extends RuntimeCostAnalysis {
 
 	public long[][] getResponseTimeBySBPO(ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, boolean isprint) {
 		if (tasks == null)
@@ -71,7 +71,7 @@ public class MSRPIO {
 				sratingP += 2;
 			}
 		}
-		
+
 		for (int i = 0; i < tasks.size(); i++) {
 			tasks.get(i).sort((t1, t2) -> -Integer.compare(t1.priority, t2.priority));
 		}

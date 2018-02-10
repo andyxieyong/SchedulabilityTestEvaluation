@@ -7,7 +7,7 @@ import entity.SporadicTask;
 import generatorTools.PriorityGeneator;
 import utils.AnalysisUtils;
 
-public class MrsPIO {
+public class MrsPIO extends RuntimeCostAnalysis {
 
 	public long[][] getResponseTimeBySBPO(ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, boolean isprint) {
 		if (tasks == null)
@@ -225,6 +225,57 @@ public class MrsPIO {
 		return response_time;
 	}
 
+	public long[][] getResponseTimeDM(ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, boolean btbHit, boolean useRi,
+			boolean printDebug) {
+		if (tasks == null)
+			return null;
+
+		// assign priorities by Deadline Monotonic
+		tasks = new PriorityGeneator().assignPrioritiesByDM(tasks);
+
+		long count = 0;
+		boolean isEqual = false, missdeadline = false;
+		long[][] response_time = new AnalysisUtils().initResponseTime(tasks);
+
+		long npsection = 0;
+
+		for (int i = 0; i < resources.size(); i++) {
+			if (npsection < resources.get(i).csl)
+				npsection = resources.get(i).csl;
+		}
+
+		/* a huge busy window to get a fixed Ri */
+		while (!isEqual) {
+			isEqual = true;
+			long[][] response_time_plus = busyWindow(tasks, resources, response_time, AnalysisUtils.MrsP_PREEMPTION_AND_MIGRATION, npsection, btbHit, useRi);
+
+			for (int i = 0; i < response_time_plus.length; i++) {
+				for (int j = 0; j < response_time_plus[i].length; j++) {
+					if (response_time[i][j] != response_time_plus[i][j])
+						isEqual = false;
+
+					if (response_time_plus[i][j] > tasks.get(i).get(j).deadline)
+						missdeadline = true;
+
+				}
+			}
+
+			count++;
+			new AnalysisUtils().cloneList(response_time_plus, response_time);
+
+			if (missdeadline)
+				break;
+
+		}
+
+		if (printDebug) {
+			System.out.println("MrsP NP    after " + count + " tims of recursion, we got the response time.");
+			new AnalysisUtils().printResponseTime(response_time, tasks);
+		}
+
+		return response_time;
+	}
+
 	public long[][] getResponseTimeDM(ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, boolean mig, boolean np, boolean btbHit,
 			boolean useRi, boolean printDebug) {
 		if (tasks == null)
@@ -324,7 +375,7 @@ public class MrsPIO {
 		}
 		return response_time_plus;
 	}
-	
+
 	private long getResponseTimeForOneTask(SporadicTask caltask, ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, double oneMig,
 			long np, boolean btbHit) {
 
@@ -359,7 +410,7 @@ public class MrsPIO {
 
 	private long oneCalculation(SporadicTask task, ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, long[][] response_time, long Ri,
 			double oneMig, long np, boolean btbHit, boolean useRi) {
-		
+
 		task.indirectspin = 0;
 		task.implementation_overheads = 0;
 		task.migration_overheads_plus = 0;

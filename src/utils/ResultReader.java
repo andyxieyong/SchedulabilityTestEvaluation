@@ -17,6 +17,7 @@ public class ResultReader {
 
 		schedreader();
 		migReader();
+		priorityReader();
 	}
 
 	public static void schedreader() {
@@ -216,4 +217,82 @@ public class ResultReader {
 		writer.close();
 	}
 
+	public static void priorityReader() {
+		String result = "\n \n MSRP \n";
+
+		for (int bigSet = 1; bigSet < 10; bigSet++) {
+
+			for (int smallSet = 1; smallSet < 10; smallSet++) {
+				String filepath = "result/" + "MSRP 2" + " " + bigSet + " " + smallSet + ".txt";
+
+				List<String> lines = null;
+				try {
+					lines = Files.readAllLines(Paths.get(filepath), StandardCharsets.UTF_8);
+				} catch (IOException e) {
+				}
+				if (lines != null)
+					result += bigSet + "" + smallSet + " " + lines.get(0) + "\n";
+			}
+
+			result += "\n";
+
+		}
+		
+		result += "\n \n PWLP \n";
+
+		for (int bigSet = 1; bigSet < 10; bigSet++) {
+
+			for (int smallSet = 1; smallSet < 10; smallSet++) {
+				String filepath = "result/" + "PWLP 2" + " " + bigSet + " " + smallSet + ".txt";
+
+				List<String> lines = null;
+				try {
+					lines = Files.readAllLines(Paths.get(filepath), StandardCharsets.UTF_8);
+				} catch (IOException e) {
+				}
+				if (lines != null)
+					result += bigSet + "" + smallSet + " " + lines.get(0) + "\n";
+			}
+
+			result += "\n";
+
+		}
+		
+		result += "\n \n MrsP \n";
+
+		for (int bigSet = 1; bigSet < 10; bigSet++) {
+
+			for (int smallSet = 1; smallSet < 10; smallSet++) {
+				String filepath = "result/" + "MrsP 2" + " " + bigSet + " " + smallSet + ".txt";
+
+				List<String> lines = null;
+				try {
+					lines = Files.readAllLines(Paths.get(filepath), StandardCharsets.UTF_8);
+				} catch (IOException e) {
+				}
+				if (lines != null)
+					result += bigSet + "" + smallSet + " " + lines.get(0) + "\n";
+			}
+
+			result += "\n";
+
+		}
+
+
+		System.out.println(result);
+
+		PrintWriter writer = null;
+		try {
+			writer = new PrintWriter(new FileWriter(new File("result/all.txt"), false));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		writer.println(result);
+		writer.close();
+	}
 }

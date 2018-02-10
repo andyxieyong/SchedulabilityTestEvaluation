@@ -7,7 +7,7 @@ import entity.SporadicTask;
 import generatorTools.PriorityGeneator;
 import utils.AnalysisUtils;
 
-public class PWLPIO {
+public class PWLPIO extends RuntimeCostAnalysis {
 
 	public long[][] getResponseTimeBySBPO(ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, boolean isprint) {
 		if (tasks == null)
