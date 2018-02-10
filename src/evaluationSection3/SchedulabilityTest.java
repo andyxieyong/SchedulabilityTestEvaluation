@@ -39,7 +39,7 @@ public class SchedulabilityTest {
 		for (int i = 1; i < 42; i = i + 5)
 			experimentIncreasingContention(i);
 
-		for (int i = 2; i < 25; i = i + 2)
+		for (int i = 4; i < 25; i = i + 2)
 			experimentIncreasingParallelism(i);
 
 		ResultReader.schedreader();
