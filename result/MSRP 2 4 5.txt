@@ -1,2 +1,0 @@
-MSRP   DM: 0.0444    OPA: 0.0342    SBPO: 0.0471    OPA ok & DM fail: 12    OPA fail & DM ok: 114    OPA ok & SBPO fail: 0    OPA fail & SBPO ok: 129   SBPO ok & DM fail: 32   SBPO fail & DM ok: 5
-

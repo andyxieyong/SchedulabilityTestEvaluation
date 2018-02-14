@@ -1,2 +1,0 @@
-MrsP   DM: 0.4406    OPA: 0.3352    SBPO: 0.4525    OPA ok & DM fail: 83    OPA fail & DM ok: 1137    OPA ok & SBPO fail: 0    OPA fail & SBPO ok: 1173   SBPO ok & DM fail: 214   SBPO fail & DM ok: 95
-

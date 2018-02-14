@@ -1,2 +1,0 @@
-PWLP   DM: 0.9369    OPA: 0.9113    SBPO: 0.9361    OPA ok & DM fail: 2    OPA fail & DM ok: 258    OPA ok & SBPO fail: 0    OPA fail & SBPO ok: 248   SBPO ok & DM fail: 4   SBPO fail & DM ok: 12
-

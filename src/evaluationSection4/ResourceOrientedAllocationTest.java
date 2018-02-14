@@ -68,45 +68,45 @@ public class ResourceOrientedAllocationTest {
 		}
 		cslencountdown.await();
 
-		final CountDownLatch accesscountdown = new CountDownLatch(9);
-		for (int i = 1; i < 42; i = i + 5) {
-			final int access = i;
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					test.experimentIncreasingContention(access);
-					accesscountdown.countDown();
-				}
-			}).start();
-		}
-
-		final CountDownLatch Taskcountdown = new CountDownLatch(9);
-		for (int i = 1; i < 10; i++) {
-			final int NoT = i;
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					test.experimentIncreasingWorkLoad(NoT);
-					Taskcountdown.countDown();
-				}
-			}).start();
-		}
-
-		final CountDownLatch Processorcountdown = new CountDownLatch(11);
-		for (int i = 4; i < 25; i = i + 2) {
-			final int NoP = i;
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					test.experimentIncreasingParallel(NoP);
-					Processorcountdown.countDown();
-				}
-			}).start();
-		}
-
-		Taskcountdown.await();
-		accesscountdown.await();
-		Processorcountdown.await();
+//		final CountDownLatch accesscountdown = new CountDownLatch(9);
+//		for (int i = 1; i < 42; i = i + 5) {
+//			final int access = i;
+//			new Thread(new Runnable() {
+//				@Override
+//				public void run() {
+//					test.experimentIncreasingContention(access);
+//					accesscountdown.countDown();
+//				}
+//			}).start();
+//		}
+//
+//		final CountDownLatch Taskcountdown = new CountDownLatch(9);
+//		for (int i = 1; i < 10; i++) {
+//			final int NoT = i;
+//			new Thread(new Runnable() {
+//				@Override
+//				public void run() {
+//					test.experimentIncreasingWorkLoad(NoT);
+//					Taskcountdown.countDown();
+//				}
+//			}).start();
+//		}
+//
+//		final CountDownLatch Processorcountdown = new CountDownLatch(11);
+//		for (int i = 4; i < 25; i = i + 2) {
+//			final int NoP = i;
+//			new Thread(new Runnable() {
+//				@Override
+//				public void run() {
+//					test.experimentIncreasingParallel(NoP);
+//					Processorcountdown.countDown();
+//				}
+//			}).start();
+//		}
+//
+//		Taskcountdown.await();
+//		accesscountdown.await();
+//		Processorcountdown.await();
 
 		ResultReader.schedreader();
 	}
