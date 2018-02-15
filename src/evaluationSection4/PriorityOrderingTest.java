@@ -113,14 +113,26 @@ public class PriorityOrderingTest {
 		String result = "";
 		int RiDM = 0;
 		int OPA = 0;
-		int slackOPA = 0;
+		int RPA = 0;
+		int SBPO = 0;
 
 		int DMcannotOPAcan = 0;
 		int DMcanOPAcannot = 0;
-		int OPAcannotSBPOcan = 0;
-		int OPAcanSBPOcannot = 0;
-		int DMcannotSBPOAcan = 0;
+
+		int DMcannotRPAcan = 0;
+		int DMcanRPAcannot = 0;
+
+		int DMcannotSBPOcan = 0;
 		int DMcanSBPOcannot = 0;
+
+		int OPAcanRPAcannot = 0;
+		int OPAcannotRPAcan = 0;
+
+		int OPAcanSBPOcannot = 0;
+		int OPAcannotSBPOcan = 0;
+
+		int RPAcanSBPOcannot = 0;
+		int RPAcannotSBPOcan = 0;
 
 		for (int i = 0; i < TOTAL_NUMBER_OF_SYSTEMS; i++) {
 			ArrayList<SporadicTask> tasksToAlloc = generator.generateTasks();
@@ -128,23 +140,29 @@ public class PriorityOrderingTest {
 			generator.generateResourceUsage(tasksToAlloc, resources);
 			ArrayList<ArrayList<SporadicTask>> tasks = new AllocationGeneator().allocateTasks(tasksToAlloc, resources, generator.total_partitions, 0);
 
-			boolean DMok = false, OPAok = false, SBPOok = false;
+			boolean DMok = false, OPAok = false, RPAok = false, SBPOok = false;
 			Ris = analysis.getResponseTimeDM(tasks, resources, true, true, false);
 			if (isSystemSchedulable(tasks, Ris)) {
 				RiDM++;
 				DMok = true;
 			}
 
-			Ris = analysis.getResponseTimeBySBPO(tasks, resources, false);
+			Ris = analysis.getResponseTimeRPA(tasks, resources, false);
 			if (isSystemSchedulable(tasks, Ris)) {
-				slackOPA++;
-				SBPOok = true;
+				RPA++;
+				RPAok = true;
 			}
 
-			Ris = analysis.getResponseTimeByOPA(tasks, resources, false);
+			Ris = analysis.getResponseTimeOPA(tasks, resources, false);
 			if (isSystemSchedulable(tasks, Ris)) {
 				OPA++;
 				OPAok = true;
+			}
+
+			Ris = analysis.getResponseTimeSBPO(tasks, resources, false);
+			if (isSystemSchedulable(tasks, Ris)) {
+				SBPO++;
+				SBPOok = true;
 			}
 
 			if (!DMok && OPAok)
@@ -153,6 +171,25 @@ public class PriorityOrderingTest {
 			if (DMok && !OPAok)
 				DMcanOPAcannot++;
 
+			if (!DMok && RPAok)
+				DMcannotRPAcan++;
+
+			if (DMok && !RPAok)
+				DMcanRPAcannot++;
+
+			if (!DMok && SBPOok)
+				DMcannotSBPOcan++;
+
+			if (DMok && !RPAok)
+				DMcanSBPOcannot++;
+
+			if (OPAok && !RPAok) {
+				OPAcanRPAcannot++;
+			}
+
+			if (!OPAok && RPAok)
+				OPAcannotRPAcan++;
+
 			if (OPAok && !SBPOok) {
 				OPAcanSBPOcannot++;
 			}
@@ -160,20 +197,29 @@ public class PriorityOrderingTest {
 			if (!OPAok && SBPOok)
 				OPAcannotSBPOcan++;
 
-			if (!DMok && SBPOok)
-				DMcannotSBPOAcan++;
+			if (RPAok && !SBPOok) {
+				RPAcanSBPOcannot++;
+			}
 
-			if (DMok && !SBPOok)
-				DMcanSBPOcannot++;
+			if (!RPAok && SBPOok)
+				RPAcannotSBPOcan++;
 
 			System.out.println(name + " " + 2 + " " + 4 + " " + cs_len + " times: " + i);
 
 		}
 
 		result = name + "   DM: " + (double) RiDM / (double) TOTAL_NUMBER_OF_SYSTEMS + "    OPA: " + (double) OPA / (double) TOTAL_NUMBER_OF_SYSTEMS
-				+ "    SBPO: " + (double) slackOPA / (double) TOTAL_NUMBER_OF_SYSTEMS + "    OPA ok & DM fail: " + DMcannotOPAcan + "    OPA fail & DM ok: "
-				+ DMcanOPAcannot + "    OPA ok & SBPO fail: " + OPAcanSBPOcannot + "    OPA fail & SBPO ok: " + OPAcannotSBPOcan + "   SBPO ok & DM fail: "
-				+ DMcannotSBPOAcan + "   SBPO fail & DM ok: " + DMcanSBPOcannot + "\n";
+				+ "    RPA: " + (double) RPA / (double) TOTAL_NUMBER_OF_SYSTEMS + "    SBPO: " + (double) SBPO / (double) TOTAL_NUMBER_OF_SYSTEMS;
+
+		result += "    DMcannotOPAcan: " + DMcannotOPAcan + "    DMcanOPAcannot: " + DMcanOPAcannot + "    DMcannotRPAcan: " + DMcannotRPAcan
+				+ "    DMcanRPAcannot: " + DMcanRPAcannot + "    DMcannotSBPOcan: " + DMcannotSBPOcan + "    DMcanSBPOcannot: " + DMcanSBPOcannot
+
+				+ "    OPAcanRPAcannot: " + OPAcanRPAcannot + "    OPAcannotRPAcan: " + OPAcannotRPAcan + "   OPAcanSBPOcannot: " + OPAcanSBPOcannot
+				+ "   OPAcannotSBPOcan: " + OPAcannotSBPOcan
+
+				+ "   RPAcanSBPOcannot: " + RPAcanSBPOcannot + "   RPAcannotSBPOcan: " + RPAcannotSBPOcan
+
+				+ "\n";
 
 		writeSystem((name + " " + 2 + " " + 4 + " " + cs_len), result);
 	}

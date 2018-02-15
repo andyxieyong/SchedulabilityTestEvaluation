@@ -9,7 +9,194 @@ import utils.AnalysisUtils;
 
 public class PWLPIO extends RuntimeCostAnalysis {
 
-	public long[][] getResponseTimeBySBPO(ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, boolean isprint) {
+	public long[][] getResponseTimeSBPO(ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, boolean isprint) {
+		if (tasks == null)
+			return null;
+
+		int extendCal = 3;
+
+		// Default as deadline monotonic
+		tasks = new PriorityGeneator().assignPrioritiesByDM(tasks);
+
+		long npsection = 0;
+		for (int i = 0; i < resources.size(); i++) {
+			Resource resource = resources.get(i);
+			if (npsection < resource.csl)
+				npsection = resources.get(i).csl;
+		}
+
+		long[][] dummy_response_time = new long[tasks.size()][];
+		for (int i = 0; i < dummy_response_time.length; i++) {
+			dummy_response_time[i] = new long[tasks.get(i).size()];
+			for (int j = 0; j < tasks.get(i).size(); j++) {
+				dummy_response_time[i][j] = tasks.get(i).get(j).deadline;
+			}
+		}
+
+		// now we check each task. For each processor
+		for (int i = 0; i < tasks.size(); i++) {
+			ArrayList<SporadicTask> unassignedTasks = new ArrayList<>(tasks.get(i));
+			int sratingP = 500 - unassignedTasks.size() * 2;
+			int prioLevels = tasks.get(i).size();
+
+			// For each priority level
+			for (int currentLevel = 0; currentLevel < prioLevels; currentLevel++) {
+
+				int startingIndex = unassignedTasks.size() - 1;
+				for (int j = startingIndex; j >= 0; j--) {
+					SporadicTask task = unassignedTasks.get(j);
+					int originalP = task.priority;
+					task.priority = sratingP;
+
+					tasks.get(i).sort((t1, t2) -> -Integer.compare(t1.priority, t2.priority));
+
+					// Init response time of tasks in this partition
+					for (int k = 0; k < tasks.get(i).size(); k++) {
+						dummy_response_time[i][k] = tasks.get(i).get(k).WCET + tasks.get(i).get(k).pure_resource_execution_time;
+					}
+
+					boolean isEqual = false;
+					long[] dummy_response_time_plus = null;
+					/* a huge busy window to get a fixed Ri */
+					while (!isEqual) {
+						isEqual = true;
+						boolean should_finish = true;
+
+						dummy_response_time_plus = getResponseTimeForSBPO(task.partition, tasks, resources, true, extendCal, dummy_response_time, task);
+
+						for (int resposneTimeIndex = 0; resposneTimeIndex < dummy_response_time_plus.length; resposneTimeIndex++) {
+							if (dummy_response_time[i][resposneTimeIndex] != dummy_response_time_plus[resposneTimeIndex])
+								isEqual = false;
+
+							if (task != tasks.get(i).get(resposneTimeIndex)
+									&& dummy_response_time_plus[resposneTimeIndex] <= tasks.get(i).get(resposneTimeIndex).deadline * extendCal)
+								should_finish = false;
+						}
+
+						for (int resposneTimeIndex = 0; resposneTimeIndex < dummy_response_time[i].length; resposneTimeIndex++) {
+							dummy_response_time[i][resposneTimeIndex] = dummy_response_time_plus[resposneTimeIndex];
+						}
+
+						if (should_finish)
+							break;
+					}
+
+					long time = dummy_response_time_plus[tasks.get(i).indexOf(task)];
+					task.priority = originalP;
+					tasks.get(i).sort((t1, t2) -> -Integer.compare(t1.priority, t2.priority));
+
+					task.addition_slack_by_newOPA = task.deadline - time;
+				}
+
+				unassignedTasks.sort((t1, t2) -> -compareSlack(t1, t2));
+
+				if (isprint) {
+					for (int k = 0; k < unassignedTasks.size(); k++) {
+						SporadicTask task = unassignedTasks.get(k);
+						System.out.print("T" + task.id + ":  " + task.addition_slack_by_newOPA + " | " + task.deadline + " 	  ");
+					}
+					System.out.println();
+				}
+
+				for (int k = 0; k < unassignedTasks.size() - 1; k++) {
+					SporadicTask task1 = unassignedTasks.get(k);
+					SporadicTask task2 = unassignedTasks.get(k + 1);
+
+					if (task1.addition_slack_by_newOPA < task2.addition_slack_by_newOPA) {
+						System.err.println("newOPA reuslt error! in Task " + task1.id + " and task " + task2.id);
+						System.exit(-1);
+					}
+
+					if (task1.addition_slack_by_newOPA == task2.addition_slack_by_newOPA && task1.deadline < task2.deadline) {
+						System.err.println("newOPA reuslt error! in Task " + task1.id + " and task " + task2.id);
+						System.exit(-1);
+					}
+
+				}
+
+				unassignedTasks.get(0).priority = sratingP;
+				tasks.get(i).sort((t1, t2) -> -Integer.compare(t1.priority, t2.priority));
+				unassignedTasks.remove(0);
+
+				sratingP += 2;
+			}
+
+			tasks.get(i).sort((t1, t2) -> -Integer.compare(t1.priority, t2.priority));
+
+			// Init response time of tasks in this partition
+			for (int k = 0; k < tasks.get(i).size(); k++) {
+				dummy_response_time[i][k] = tasks.get(i).get(k).WCET + tasks.get(i).get(k).pure_resource_execution_time;
+			}
+
+			boolean isEqual = false;
+			long[] dummy_response_time_plus = null;
+			/* a huge busy window to get a fixed Ri */
+			while (!isEqual) {
+				isEqual = true;
+				boolean should_finish = true;
+
+				dummy_response_time_plus = getResponseTimeForOnePartition(i, tasks, resources, true, 1, dummy_response_time);
+
+				for (int resposneTimeIndex = 0; resposneTimeIndex < dummy_response_time_plus.length; resposneTimeIndex++) {
+					if (dummy_response_time[i][resposneTimeIndex] != dummy_response_time_plus[resposneTimeIndex])
+						isEqual = false;
+
+					if (dummy_response_time_plus[resposneTimeIndex] <= tasks.get(i).get(resposneTimeIndex).deadline)
+						should_finish = false;
+				}
+
+				for (int resposneTimeIndex = 0; resposneTimeIndex < dummy_response_time_plus.length; resposneTimeIndex++) {
+					if (dummy_response_time_plus[resposneTimeIndex] > tasks.get(i).get(resposneTimeIndex).deadline) {
+						dummy_response_time[i][resposneTimeIndex] = tasks.get(i).get(resposneTimeIndex).deadline;
+					} else {
+						dummy_response_time[i][resposneTimeIndex] = dummy_response_time_plus[resposneTimeIndex];
+					}
+				}
+
+				if (should_finish)
+					break;
+			}
+		}
+
+		for (int i = 0; i < tasks.size(); i++) {
+			tasks.get(i).sort((t1, t2) -> -Integer.compare(t1.priority, t2.priority));
+		}
+
+		long count = 0;
+		boolean isEqual = false, missdeadline = false;
+		long[][] response_time = new AnalysisUtils().initResponseTime(tasks);
+
+		/* a huge busy window to get a fixed Ri */
+		while (!isEqual) {
+			isEqual = true;
+			long[][] response_time_plus = busyWindow(tasks, resources, response_time, true, true);
+
+			for (int i = 0; i < response_time_plus.length; i++) {
+				for (int j = 0; j < response_time_plus[i].length; j++) {
+					if (response_time[i][j] != response_time_plus[i][j])
+						isEqual = false;
+					if (response_time_plus[i][j] > tasks.get(i).get(j).deadline)
+						missdeadline = true;
+
+				}
+			}
+
+			count++;
+			new AnalysisUtils().cloneList(response_time_plus, response_time);
+
+			if (missdeadline)
+				break;
+		}
+
+		if (isprint) {
+			System.out.println("FIFONP JAVA    after " + count + " tims of recursion, we got the response time.");
+			new AnalysisUtils().printResponseTime(response_time, tasks);
+		}
+
+		return response_time;
+	}
+
+	public long[][] getResponseTimeRPA(ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, boolean isprint) {
 		if (tasks == null)
 			return null;
 
@@ -62,6 +249,16 @@ public class PWLPIO extends RuntimeCostAnalysis {
 						System.exit(-1);
 					}
 
+				}
+
+				if (unassignedTasks.get(0).addition_slack_by_newOPA < 0) {
+					long[][] dummy_response_time = new long[tasks.size()][];
+					for (int h = 0; h < dummy_response_time.length; h++) {
+						dummy_response_time[h] = new long[tasks.get(h).size()];
+					}
+					dummy_response_time[0][0] = tasks.get(0).get(0).deadline + 1;
+
+					return dummy_response_time;
 				}
 
 				unassignedTasks.get(0).priority = sratingP;
@@ -140,7 +337,7 @@ public class PWLPIO extends RuntimeCostAnalysis {
 		return 0;
 	}
 
-	public long[][] getResponseTimeByOPA(ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, boolean isprint) {
+	public long[][] getResponseTimeOPA(ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, boolean isprint) {
 		if (tasks == null)
 			return null;
 
@@ -252,6 +449,59 @@ public class PWLPIO extends RuntimeCostAnalysis {
 		}
 
 		return response_time;
+	}
+
+	private long[] getResponseTimeForOnePartition(int partition, ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, boolean btbHit,
+			int extenstionCal, long[][] response_time) {
+
+		long[] response_time_plus = new long[tasks.get(partition).size()];
+
+		for (int i = 0; i < tasks.get(partition).size(); i++) {
+			SporadicTask task = tasks.get(partition).get(i);
+			if (response_time[partition][i] >= task.deadline * extenstionCal) {
+				response_time_plus[i] = task.deadline * extenstionCal;
+				continue;
+			}
+
+			task.indirectspin = 0;
+			task.implementation_overheads = 0;
+			task.implementation_overheads += AnalysisUtils.FULL_CONTEXT_SWTICH1;
+
+			task.spin = getSpinDelay(task, tasks, resources, response_time[partition][i], response_time, btbHit, true);
+			task.interference = highPriorityInterference(task, tasks, resources, response_time, response_time[partition][i], btbHit, true);
+			task.local = localBlocking(task, tasks, resources, response_time, response_time[partition][i], btbHit, true);
+			long implementation_overheads = (long) Math.ceil(task.implementation_overheads);
+
+			response_time_plus[i] = task.Ri = task.WCET + task.spin + task.interference + task.local + implementation_overheads;
+		}
+
+		return response_time_plus;
+	}
+
+	private long[] getResponseTimeForSBPO(int partition, ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, boolean btbHit,
+			int extenstionCal, long[][] response_time, SporadicTask calT) {
+
+		long[] response_time_plus = new long[tasks.get(partition).size()];
+
+		for (int i = 0; i < tasks.get(partition).size(); i++) {
+			SporadicTask task = tasks.get(partition).get(i);
+			if (response_time[partition][i] >= task.deadline * extenstionCal && task != calT) {
+				response_time_plus[i] = task.deadline * extenstionCal;
+				continue;
+			}
+			task.indirectspin = 0;
+			task.implementation_overheads = 0;
+			task.implementation_overheads += AnalysisUtils.FULL_CONTEXT_SWTICH1;
+
+			task.spin = getSpinDelay(task, tasks, resources, response_time[partition][i], response_time, btbHit, true);
+			task.interference = highPriorityInterference(task, tasks, resources, response_time, response_time[partition][i], btbHit, true);
+			task.local = localBlocking(task, tasks, resources, response_time, response_time[partition][i], btbHit, true);
+			long implementation_overheads = (long) Math.ceil(task.implementation_overheads);
+
+			response_time_plus[i] = task.Ri = task.WCET + task.spin + task.interference + task.local + implementation_overheads;
+		}
+
+		return response_time_plus;
 	}
 
 	private long[][] busyWindow(ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, long[][] response_time, boolean btbHit,
@@ -520,4 +770,5 @@ public class PWLPIO extends RuntimeCostAnalysis {
 		}
 		return indexR;
 	}
+
 }
