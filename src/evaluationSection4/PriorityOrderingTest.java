@@ -46,7 +46,7 @@ public class PriorityOrderingTest {
 				}
 			}).start();
 		}
-		msrpwork.await();
+		
 
 		PWLPIO pwlp = new PWLPIO();
 		final CountDownLatch pwlpwork = new CountDownLatch(6);
@@ -60,7 +60,7 @@ public class PriorityOrderingTest {
 				}
 			}).start();
 		}
-		pwlpwork.await();
+		
 
 		MrsPIO mrsp = new MrsPIO();
 		final CountDownLatch mrspwork = new CountDownLatch(6);
@@ -74,6 +74,9 @@ public class PriorityOrderingTest {
 				}
 			}).start();
 		}
+		
+		msrpwork.await();
+		pwlpwork.await();
 		mrspwork.await();
 
 		ResultReader.priorityReader();
