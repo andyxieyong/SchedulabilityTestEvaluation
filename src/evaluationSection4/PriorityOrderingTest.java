@@ -24,7 +24,7 @@ import utils.ResultReader;
 public class PriorityOrderingTest {
 	public static int MAX_PERIOD = 1000;
 	public static int MIN_PERIOD = 1;
-	public static int TOTAL_NUMBER_OF_SYSTEMS = 99999999;
+	public static int TOTAL_NUMBER_OF_SYSTEMS = 10000;
 	public static int TOTAL_PARTITIONS = 16;
 
 	static int NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE = 2;
@@ -37,52 +37,58 @@ public class PriorityOrderingTest {
 		MSRPIO msrp = new MSRPIO();
 		PWLPIO pwlp = new PWLPIO();
 		MrsPIO mrsp = new MrsPIO();
+
+		final CountDownLatch msrpwork = new CountDownLatch(6);
+		for (int i = 1; i < 7; i++) {
+			final int cslen = i;
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					test.experimentIncreasingCriticalSectionLength(msrp, cslen, "MSRP");
+					msrpwork.countDown();
+				}
+			}).start();
+		}
+		msrpwork.await();
 		
-//		final CountDownLatch msrpwork = new CountDownLatch(6);
-//		for (int i = 1; i < 7; i++) {
-//			final int cslen = i;
-//			new Thread(new Runnable() {
-//				@Override
-//				public void run() {
-//					test.experimentIncreasingCriticalSectionLength(msrp, cslen, "MSRP");
-//					msrpwork.countDown();
-//				}
-//			}).start();
-//		}
-//		msrpwork.await();
-		
-		test.experimentIncreasingCriticalSectionLength(msrp, 5, "MSRP");
-		test.experimentIncreasingCriticalSectionLength(pwlp, 5, "PWLP");
-		test.experimentIncreasingCriticalSectionLength(mrsp, 5, "MrsP");
-		
-//		final CountDownLatch pwlpwork = new CountDownLatch(6);
-//		for (int i = 1; i < 7; i++) {
-//			final int cslen = i;
-//			new Thread(new Runnable() {
-//				@Override
-//				public void run() {
-//					test.experimentIncreasingCriticalSectionLength(pwlp, cslen, "PWLP");
-//					pwlpwork.countDown();
-//				}
-//			}).start();
-//		}
-//		pwlpwork.await();
+		final CountDownLatch pwlpwork = new CountDownLatch(6);
+		for (int i = 1; i < 7; i++) {
+			final int cslen = i;
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					test.experimentIncreasingCriticalSectionLength(pwlp, cslen, "PWLP");
+					pwlpwork.countDown();
+				}
+			}).start();
+		}
+		pwlpwork.await();
+
+		final CountDownLatch mrspwork = new CountDownLatch(6);
+		for (int i = 1; i < 7; i++) {
+			final int cslen = i;
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					test.experimentIncreasingCriticalSectionLength(mrsp, cslen, "MrsP");
+					mrspwork.countDown();
+				}
+			}).start();
+		}
+		mrspwork.await();
+
+		ResultReader.priorityReader();
+
+//		for (int i = 0; i < 9999999; i++) {
+//			test.experimentIncreasingCriticalSectionLength(msrp, 5, "MSRP");
+//			test.experimentIncreasingCriticalSectionLength(pwlp, 5, "PWLP");
+//			test.experimentIncreasingCriticalSectionLength(mrsp, 5, "MrsP");
 //
-//		final CountDownLatch mrspwork = new CountDownLatch(6);
-//		for (int i = 1; i < 7; i++) {
-//			final int cslen = i;
-//			new Thread(new Runnable() {
-//				@Override
-//				public void run() {
-//					test.experimentIncreasingCriticalSectionLength(mrsp, cslen, "MrsP");
-//					mrspwork.countDown();
-//				}
-//			}).start();
+//			test.experimentIncreasingCriticalSectionLength(msrp, 6, "MSRP");
+//			test.experimentIncreasingCriticalSectionLength(pwlp, 6, "PWLP");
+//			test.experimentIncreasingCriticalSectionLength(mrsp, 6, "MrsP");
+//			System.out.println(i);
 //		}
-//		mrspwork.await();
-//
-//		ResultReader.priorityReader();
-		
 
 	}
 
