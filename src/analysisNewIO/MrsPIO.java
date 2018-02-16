@@ -64,9 +64,10 @@ public class MrsPIO extends RuntimeCostAnalysis {
 
 						dummy_response_time_plus = getResponseTimeForSBPO(task.partition, tasks, resources, AnalysisUtils.MrsP_PREEMPTION_AND_MIGRATION,
 								npsection, true, extendCal, dummy_response_time, task);
-
+				
 						for (int resposneTimeIndex = 0; resposneTimeIndex < dummy_response_time_plus.length; resposneTimeIndex++) {
-							if (dummy_response_time[i][resposneTimeIndex] != dummy_response_time_plus[resposneTimeIndex])
+							if (task != tasks.get(i).get(resposneTimeIndex)
+									&&dummy_response_time[i][resposneTimeIndex] != dummy_response_time_plus[resposneTimeIndex])
 								isEqual = false;
 
 							if (task != tasks.get(i).get(resposneTimeIndex)

@@ -9,11 +9,11 @@ import utils.AnalysisUtils;
 
 public class PWLPIO extends RuntimeCostAnalysis {
 
+	int extendCal = 3;
+
 	public long[][] getResponseTimeSBPO(ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, boolean isprint) {
 		if (tasks == null)
 			return null;
-
-		int extendCal = 3;
 
 		// Default as deadline monotonic
 		tasks = new PriorityGeneator().assignPrioritiesByDM(tasks);
@@ -55,6 +55,7 @@ public class PWLPIO extends RuntimeCostAnalysis {
 						dummy_response_time[i][k] = tasks.get(i).get(k).WCET + tasks.get(i).get(k).pure_resource_execution_time;
 					}
 
+					int count = 0;
 					boolean isEqual = false;
 					long[] dummy_response_time_plus = null;
 					/* a huge busy window to get a fixed Ri */
@@ -65,7 +66,8 @@ public class PWLPIO extends RuntimeCostAnalysis {
 						dummy_response_time_plus = getResponseTimeForSBPO(task.partition, tasks, resources, true, extendCal, dummy_response_time, task);
 
 						for (int resposneTimeIndex = 0; resposneTimeIndex < dummy_response_time_plus.length; resposneTimeIndex++) {
-							if (dummy_response_time[i][resposneTimeIndex] != dummy_response_time_plus[resposneTimeIndex])
+							if (task != tasks.get(i).get(resposneTimeIndex)
+									&&dummy_response_time[i][resposneTimeIndex] != dummy_response_time_plus[resposneTimeIndex])
 								isEqual = false;
 
 							if (task != tasks.get(i).get(resposneTimeIndex)
@@ -79,6 +81,11 @@ public class PWLPIO extends RuntimeCostAnalysis {
 
 						if (should_finish)
 							break;
+
+						count++;
+						if (count == 100000) {
+							System.err.println("error");
+						}
 					}
 
 					long time = dummy_response_time_plus[tasks.get(i).indexOf(task)];
@@ -128,6 +135,7 @@ public class PWLPIO extends RuntimeCostAnalysis {
 				dummy_response_time[i][k] = tasks.get(i).get(k).WCET + tasks.get(i).get(k).pure_resource_execution_time;
 			}
 
+			int count = 0;
 			boolean isEqual = false;
 			long[] dummy_response_time_plus = null;
 			/* a huge busy window to get a fixed Ri */
@@ -155,6 +163,11 @@ public class PWLPIO extends RuntimeCostAnalysis {
 
 				if (should_finish)
 					break;
+
+				count++;
+				if (count == 100000) {
+					System.err.println("error");
+				}
 			}
 		}
 
@@ -182,6 +195,10 @@ public class PWLPIO extends RuntimeCostAnalysis {
 			}
 
 			count++;
+			if (count == 100000) {
+				System.err.println("error");
+			}
+
 			new AnalysisUtils().cloneList(response_time_plus, response_time);
 
 			if (missdeadline)
@@ -463,11 +480,11 @@ public class PWLPIO extends RuntimeCostAnalysis {
 				continue;
 			}
 
-			task.indirectspin = 0;
+			task.spin_delay_by_preemptions = 0;
 			task.implementation_overheads = 0;
 			task.implementation_overheads += AnalysisUtils.FULL_CONTEXT_SWTICH1;
 
-			task.spin = getSpinDelay(task, tasks, resources, response_time[partition][i], response_time, btbHit, true);
+			task.spin = getSpinDelay(task, tasks, resources, response_time[partition][i], response_time, btbHit, true, null);
 			task.interference = highPriorityInterference(task, tasks, resources, response_time, response_time[partition][i], btbHit, true);
 			task.local = localBlocking(task, tasks, resources, response_time, response_time[partition][i], btbHit, true);
 			long implementation_overheads = (long) Math.ceil(task.implementation_overheads);
@@ -479,21 +496,21 @@ public class PWLPIO extends RuntimeCostAnalysis {
 	}
 
 	private long[] getResponseTimeForSBPO(int partition, ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, boolean btbHit,
-			int extenstionCal, long[][] response_time, SporadicTask calT) {
+			int extenstionCal, long[][] response_time, SporadicTask sbpoT) {
 
 		long[] response_time_plus = new long[tasks.get(partition).size()];
 
 		for (int i = 0; i < tasks.get(partition).size(); i++) {
 			SporadicTask task = tasks.get(partition).get(i);
-			if (response_time[partition][i] >= task.deadline * extenstionCal && task != calT) {
+			if (response_time[partition][i] >= task.deadline * extenstionCal && task != sbpoT) {
 				response_time_plus[i] = task.deadline * extenstionCal;
 				continue;
 			}
-			task.indirectspin = 0;
+			task.spin_delay_by_preemptions = 0;
 			task.implementation_overheads = 0;
 			task.implementation_overheads += AnalysisUtils.FULL_CONTEXT_SWTICH1;
 
-			task.spin = getSpinDelay(task, tasks, resources, response_time[partition][i], response_time, btbHit, true);
+			task.spin = getSpinDelay(task, tasks, resources, response_time[partition][i], response_time, btbHit, true, sbpoT);
 			task.interference = highPriorityInterference(task, tasks, resources, response_time, response_time[partition][i], btbHit, true);
 			task.local = localBlocking(task, tasks, resources, response_time, response_time[partition][i], btbHit, true);
 			long implementation_overheads = (long) Math.ceil(task.implementation_overheads);
@@ -524,7 +541,7 @@ public class PWLPIO extends RuntimeCostAnalysis {
 				task.implementation_overheads = 0;
 				task.implementation_overheads += AnalysisUtils.FULL_CONTEXT_SWTICH1;
 
-				task.spin = getSpinDelay(task, tasks, resources, response_time[i][j], response_time, btbHit, useRi);
+				task.spin = getSpinDelay(task, tasks, resources, response_time[i][j], response_time, btbHit, useRi, null);
 				task.interference = highPriorityInterference(task, tasks, resources, response_time, response_time[i][j], btbHit, useRi);
 				task.local = localBlocking(task, tasks, resources, response_time, response_time[i][j], btbHit, useRi);
 
@@ -577,7 +594,7 @@ public class PWLPIO extends RuntimeCostAnalysis {
 		task.implementation_overheads = 0;
 		task.implementation_overheads += AnalysisUtils.FULL_CONTEXT_SWTICH1;
 
-		task.spin = getSpinDelay(task, tasks, resources, Ri, response_time, btbHit, useRi);
+		task.spin = getSpinDelay(task, tasks, resources, Ri, response_time, btbHit, useRi, null);
 		task.interference = highPriorityInterference(task, tasks, resources, response_time, Ri, btbHit, useRi);
 		task.local = localBlocking(task, tasks, resources, response_time, Ri, btbHit, useRi);
 
@@ -588,7 +605,7 @@ public class PWLPIO extends RuntimeCostAnalysis {
 	}
 
 	private long getSpinDelay(SporadicTask task, ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, long time, long[][] Ris,
-			boolean btbHit, boolean useRi) {
+			boolean btbHit, boolean useRi, SporadicTask sbpoT) {
 		long spin = 0;
 		ArrayList<ArrayList<Long>> requestsLeftOnRemoteP = new ArrayList<>();
 		ArrayList<Resource> fifop_resources = new ArrayList<>();
@@ -610,6 +627,8 @@ public class PWLPIO extends RuntimeCostAnalysis {
 
 		task.implementation_overheads += preemptions * (AnalysisUtils.FIFOP_CANCEL);
 
+		long dummyPreemptionSpin = 0;
+		long dummySpin = spin;
 		while (preemptions > 0) {
 
 			long max_delay = 0;
@@ -623,6 +642,7 @@ public class PWLPIO extends RuntimeCostAnalysis {
 
 			if (max_delay > 0) {
 				spin += max_delay;
+				dummyPreemptionSpin += max_delay;
 				for (int i = 0; i < requestsLeftOnRemoteP.get(max_delay_resource_index).size(); i++) {
 					requestsLeftOnRemoteP.get(max_delay_resource_index).set(i, requestsLeftOnRemoteP.get(max_delay_resource_index).get(i) - 1);
 					if (requestsLeftOnRemoteP.get(max_delay_resource_index).get(i) < 1) {
@@ -634,6 +654,28 @@ public class PWLPIO extends RuntimeCostAnalysis {
 				request_by_preemptions++;
 			} else
 				break;
+
+			if (sbpoT != null) {
+				if (task != sbpoT) {
+					if (dummyPreemptionSpin > task.deadline * extendCal || dummySpin > task.deadline * extendCal)
+						break;
+				} else {
+					// boolean canFinish = true;
+					// for (int i = 0; i < tasks.get(task.partition).size();
+					// i++) {
+					// if (task != tasks.get(task.partition).get(i) &&
+					// Ris[task.partition][i] <
+					// tasks.get(task.partition).get(i).deadline * extendCal) {
+					// canFinish = false;
+					// }
+					// }
+
+					if (dummyPreemptionSpin > dummySpin)
+						break;
+
+				}
+			}
+
 		}
 
 		task.spin_delay_by_preemptions = request_by_preemptions;
