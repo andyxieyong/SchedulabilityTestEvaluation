@@ -8,9 +8,6 @@ import generatorTools.PriorityGeneator;
 import utils.AnalysisUtils;
 
 public class PWLPIO extends RuntimeCostAnalysis {
-
-	int extendCal = 3;
-
 	public long[][] getResponseTimeSBPO(ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, boolean isprint) {
 		if (tasks == null)
 			return null;
@@ -239,10 +236,20 @@ public class PWLPIO extends RuntimeCostAnalysis {
 					task.priority = originalP;
 					tasks.get(i).sort((t1, t2) -> -Integer.compare(t1.priority, t2.priority));
 
-					task.addition_slack_by_newOPA = task.deadline - time;
+					task.addition_slack_by_newOPA = time <= task.deadline ? task.deadline - time : -1;
 				}
 
 				unassignedTasks.sort((t1, t2) -> -compareSlack(t1, t2));
+				
+				if (unassignedTasks.get(0).addition_slack_by_newOPA < 0) {
+					long[][] dummy_response_time = new long[tasks.size()][];
+					for (int h = 0; h < dummy_response_time.length; h++) {
+						dummy_response_time[h] = new long[tasks.get(h).size()];
+					}
+					dummy_response_time[0][0] = tasks.get(0).get(0).deadline + 1;
+
+					return dummy_response_time;
+				}
 
 				if (isprint) {
 					for (int k = 0; k < unassignedTasks.size(); k++) {
@@ -266,16 +273,6 @@ public class PWLPIO extends RuntimeCostAnalysis {
 						System.exit(-1);
 					}
 
-				}
-
-				if (unassignedTasks.get(0).addition_slack_by_newOPA < 0) {
-					long[][] dummy_response_time = new long[tasks.size()][];
-					for (int h = 0; h < dummy_response_time.length; h++) {
-						dummy_response_time[h] = new long[tasks.get(h).size()];
-					}
-					dummy_response_time[0][0] = tasks.get(0).get(0).deadline + 1;
-
-					return dummy_response_time;
 				}
 
 				unassignedTasks.get(0).priority = sratingP;
@@ -409,16 +406,39 @@ public class PWLPIO extends RuntimeCostAnalysis {
 			}
 		}
 
-		long[][] response_time = new long[tasks.size()][];
-		for (int j = 0; j < tasks.size(); j++) {
-			response_time[j] = new long[tasks.get(j).size()];
-			for (int k = 0; k < tasks.get(j).size(); k++) {
-				response_time[j][k] = tasks.get(j).get(k).Ri;
+
+		for (int i = 0; i < tasks.size(); i++) {
+			tasks.get(i).sort((t1, t2) -> -Integer.compare(t1.priority, t2.priority));
+		}
+
+		long count = 0;
+		boolean isEqual = false, missdeadline = false;
+		long[][] response_time = new AnalysisUtils().initResponseTime(tasks);
+
+		/* a huge busy window to get a fixed Ri */
+		while (!isEqual) {
+			isEqual = true;
+			long[][] response_time_plus = busyWindow(tasks, resources, response_time, true, true);
+
+			for (int i = 0; i < response_time_plus.length; i++) {
+				for (int j = 0; j < response_time_plus[i].length; j++) {
+					if (response_time[i][j] != response_time_plus[i][j])
+						isEqual = false;
+					if (response_time_plus[i][j] > tasks.get(i).get(j).deadline)
+						missdeadline = true;
+
+				}
 			}
+
+			count++;
+			new AnalysisUtils().cloneList(response_time_plus, response_time);
+
+			if (missdeadline)
+				break;
 		}
 
 		if (isprint) {
-			System.out.println("OPA, we got the response time.");
+			System.out.println("FIFONP JAVA    after " + count + " tims of recursion, we got the response time.");
 			new AnalysisUtils().printResponseTime(response_time, tasks);
 		}
 

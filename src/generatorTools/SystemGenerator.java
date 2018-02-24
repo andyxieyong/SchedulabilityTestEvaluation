@@ -81,7 +81,7 @@ public class SystemGenerator {
 	 * generate task sets for multiprocessor fully partitioned fixed-priority
 	 * system
 	 */
-	public ArrayList<SporadicTask> generateTasks() {
+	public ArrayList<SporadicTask> generateTasks(boolean allocationProtect) {
 		ArrayList<SporadicTask> tasks = null;
 		while (tasks == null) {
 			tasks = generateT();
@@ -92,7 +92,7 @@ public class SystemGenerator {
 			// 2) == null
 			// && allocation.allocateTasks(tasks, null, total_partitions, 3) ==
 			// null))
-			if (tasks != null && allocation.allocateTasks(tasks, null, total_partitions, 0) == null)
+			if (allocationProtect && tasks != null && allocation.allocateTasks(tasks, null, total_partitions, 0) == null)
 				tasks = null;
 		}
 		return tasks;
@@ -237,7 +237,7 @@ public class SystemGenerator {
 
 	public void generateResourceUsage(ArrayList<SporadicTask> tasks, ArrayList<Resource> resources) {
 		while (tasks == null)
-			tasks = generateTasks();
+			tasks = generateTasks(true);
 
 		int fails = 0;
 		Random ran = new Random();
@@ -246,9 +246,9 @@ public class SystemGenerator {
 		/* Generate resource usage */
 		for (long l = 0; l < number_of_resource_requested_tasks; l++) {
 			if (fails > 1000) {
-				tasks = generateTasks();
+				tasks = generateTasks(true);
 				while (tasks == null)
-					tasks = generateTasks();
+					tasks = generateTasks(true);
 				l = 0;
 				fails++;
 			}

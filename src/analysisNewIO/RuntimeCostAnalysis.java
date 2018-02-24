@@ -7,6 +7,8 @@ import entity.SporadicTask;
 
 public abstract class RuntimeCostAnalysis {
 	
+	int extendCal = 5;
+	
 	public abstract long[][] getResponseTimeSBPO(ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, boolean isprint);
 	
 	public abstract long[][] getResponseTimeRPA(ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, boolean isprint);

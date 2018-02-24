@@ -620,6 +620,8 @@ public class AllocationGeneator {
 		}
 
 		ArrayList<ArrayList<SporadicTask>> tasks = NF(sortedTasks, partitions, maxUtilPerCore);
+		if(tasks == null)
+			return null;
 
 		cleanTasks.sort((p1, p2) -> -Double.compare(p1.util, p2.util));
 
@@ -695,7 +697,8 @@ public class AllocationGeneator {
 		}
 
 		ArrayList<ArrayList<SporadicTask>> tasks = NF(sortedT, partitions, maxUtilPerCore);
-
+		if(tasks == null)
+			return null;
 		unallocT.sort((p1, p2) -> -Double.compare(p1.util, p2.util));
 
 		// init util array
@@ -773,6 +776,8 @@ public class AllocationGeneator {
 		}
 
 		ArrayList<ArrayList<SporadicTask>> tasks = NF(sortedT, partitions, maxUtilPerCore);
+		if(tasks == null)
+			return null;
 
 		unallocT.sort((p1, p2) -> -Double.compare(p1.util, p2.util));
 

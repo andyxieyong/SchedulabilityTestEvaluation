@@ -24,7 +24,7 @@ public class ResultReader {
 		String result = "Work Load \n";
 		for (int bigSet = 1; bigSet < 10; bigSet++) {
 
-			for (int smallSet = 1; smallSet < 10; smallSet++) {
+			for (int smallSet = 1; smallSet < 20; smallSet++) {
 				String filepath = "result/" + "1" + " " + bigSet + " " + smallSet + ".txt";
 
 				List<String> lines = null;
@@ -123,7 +123,7 @@ public class ResultReader {
 			// result += "access: " + (2 + (bigSet - 1) * 3) + " and rsf: " +
 			// (.2 + (bigSet - 1) * .3) + "\n";
 
-			for (int smallSet = 1; smallSet < 10; smallSet++) {
+			for (int smallSet = 1; smallSet < 20; smallSet++) {
 				String filepath = "result/" + "mig 1" + " " + bigSet + " " + smallSet + ".txt";
 
 				List<String> lines = null;

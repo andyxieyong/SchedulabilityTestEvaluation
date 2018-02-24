@@ -65,7 +65,7 @@ public class testAllocation {
 		for (int i = 0; i < TOTAL_NUMBER_OF_SYSTEMS; i++) {
 			ArrayList<SporadicTask> tasksToAlloc = null;
 			ArrayList<Resource> resources = null;
-			tasksToAlloc = generator.generateTasks();
+			tasksToAlloc = generator.generateTasks(true);
 			resources = generator.generateResources();
 
 			generator.generateResourceUsage(tasksToAlloc, resources);
