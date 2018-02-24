@@ -8,6 +8,8 @@ import entity.SporadicTask;
 public class AllocationGeneator {
 	public ArrayList<ArrayList<SporadicTask>> allocateTasks(ArrayList<SporadicTask> tasksToAllocate, ArrayList<Resource> resources, int total_partitions,
 			int policy) {
+		
+		int Osize = tasksToAllocate.size();
 
 		double totalUtil = 0.1 * (double) tasksToAllocate.size();
 		double maxUtilPerCore = 0;
@@ -99,6 +101,18 @@ public class AllocationGeneator {
 			}
 
 		}
+		
+		if(tasks != null) {
+			int Nsize = 0;
+			for(int i=0;i<tasks.size();i++) {
+				Nsize += tasks.get(i).size();
+			}
+			
+			if(Osize != Nsize) {
+				System.err.println("Allocation error!");
+			}
+		}
+
 
 		return tasks;
 	}
@@ -620,7 +634,7 @@ public class AllocationGeneator {
 		}
 
 		ArrayList<ArrayList<SporadicTask>> tasks = NF(sortedTasks, partitions, maxUtilPerCore);
-		if(tasks == null)
+		if (tasks == null)
 			return null;
 
 		cleanTasks.sort((p1, p2) -> -Double.compare(p1.util, p2.util));
@@ -697,7 +711,7 @@ public class AllocationGeneator {
 		}
 
 		ArrayList<ArrayList<SporadicTask>> tasks = NF(sortedT, partitions, maxUtilPerCore);
-		if(tasks == null)
+		if (tasks == null)
 			return null;
 		unallocT.sort((p1, p2) -> -Double.compare(p1.util, p2.util));
 
@@ -776,7 +790,7 @@ public class AllocationGeneator {
 		}
 
 		ArrayList<ArrayList<SporadicTask>> tasks = NF(sortedT, partitions, maxUtilPerCore);
-		if(tasks == null)
+		if (tasks == null)
 			return null;
 
 		unallocT.sort((p1, p2) -> -Double.compare(p1.util, p2.util));

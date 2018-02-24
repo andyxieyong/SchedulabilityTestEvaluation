@@ -24,7 +24,7 @@ public class ResultReader {
 		String result = "Work Load \n";
 		for (int bigSet = 1; bigSet < 10; bigSet++) {
 
-			for (int smallSet = 1; smallSet < 20; smallSet++) {
+			for (int smallSet = 1; smallSet < 100; smallSet++) {
 				String filepath = "result/" + "1" + " " + bigSet + " " + smallSet + ".txt";
 
 				List<String> lines = null;
