@@ -237,7 +237,7 @@ public class ResultReader {
 			result += "\n";
 
 		}
-		
+
 		result += "\n \n PWLP \n";
 
 		for (int bigSet = 1; bigSet < 10; bigSet++) {
@@ -257,7 +257,7 @@ public class ResultReader {
 			result += "\n";
 
 		}
-		
+
 		result += "\n \n MrsP \n";
 
 		for (int bigSet = 1; bigSet < 10; bigSet++) {
@@ -277,7 +277,6 @@ public class ResultReader {
 			result += "\n";
 
 		}
-
 
 		System.out.println(result);
 

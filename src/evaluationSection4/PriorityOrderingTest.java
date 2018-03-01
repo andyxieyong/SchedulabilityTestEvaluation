@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
 
 import analysisNewIO.MSRPIO;
 import analysisNewIO.MrsPIO;
@@ -18,11 +19,12 @@ import generatorTools.AllocationGeneator;
 import generatorTools.SystemGenerator;
 import utils.AnalysisUtils.CS_LENGTH_RANGE;
 import utils.AnalysisUtils.RESOURCES_RANGE;
+import utils.ResultReader;
 
 public class PriorityOrderingTest {
 	public static int MAX_PERIOD = 1000;
 	public static int MIN_PERIOD = 1;
-	public static int TOTAL_NUMBER_OF_SYSTEMS = 1;
+	public static int TOTAL_NUMBER_OF_SYSTEMS = 1000;
 	public static int TOTAL_PARTITIONS = 16;
 
 	static int NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE = 2;
@@ -36,57 +38,57 @@ public class PriorityOrderingTest {
 		PWLPIO pwlp = new PWLPIO();
 		MrsPIO mrsp = new MrsPIO();
 
-		// final CountDownLatch msrpwork = new CountDownLatch(6);
-		// for (int i = 1; i < 7; i++) {
-		// final int cslen = i;
-		// new Thread(new Runnable() {
-		// @Override
-		// public void run() {
-		// test.experimentIncreasingCriticalSectionLength(msrp, cslen, "MSRP");
-		// msrpwork.countDown();
-		// }
-		// }).start();
-		// }
-		// msrpwork.await();
-
-		// final CountDownLatch pwlpwork = new CountDownLatch(6);
-		// for (int i = 1; i < 7; i++) {
-		// final int cslen = i;
-		// new Thread(new Runnable() {
-		// @Override
-		// public void run() {
-		// test.experimentIncreasingCriticalSectionLength(pwlp, cslen, "PWLP");
-		// pwlpwork.countDown();
-		// }
-		// }).start();
-		// }
-		// pwlpwork.await();
-		//
-		// final CountDownLatch mrspwork = new CountDownLatch(6);
-		// for (int i = 1; i < 2; i++) {
-		// final int cslen = i;
-		// new Thread(new Runnable() {
-		// @Override
-		// public void run() {
-		// test.experimentIncreasingCriticalSectionLength(mrsp, cslen, "MrsP");
-		// mrspwork.countDown();
-		// }
-		// }).start();
-		// }
-		// mrspwork.await();
-		//
-		// ResultReader.priorityReader();
-
-		for (int i = 0; i < 9999999; i++) {
-			test.experimentIncreasingCriticalSectionLength(msrp, 5, "MSRP");
-			test.experimentIncreasingCriticalSectionLength(pwlp, 5, "PWLP");
-			test.experimentIncreasingCriticalSectionLength(mrsp, 5, "MrsP");
-
-			test.experimentIncreasingCriticalSectionLength(msrp, 6, "MSRP");
-			test.experimentIncreasingCriticalSectionLength(pwlp, 6, "PWLP");
-			test.experimentIncreasingCriticalSectionLength(mrsp, 6, "MrsP");
-			System.out.println(i);
+		final CountDownLatch msrpwork = new CountDownLatch(6);
+		for (int i = 1; i < 7; i++) {
+			final int cslen = i;
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					test.experimentIncreasingCriticalSectionLength(msrp, cslen, "MSRP");
+					msrpwork.countDown();
+				}
+			}).start();
 		}
+		msrpwork.await();
+
+		final CountDownLatch pwlpwork = new CountDownLatch(6);
+		for (int i = 1; i < 7; i++) {
+			final int cslen = i;
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					test.experimentIncreasingCriticalSectionLength(pwlp, cslen, "PWLP");
+					pwlpwork.countDown();
+				}
+			}).start();
+		}
+		pwlpwork.await();
+
+		final CountDownLatch mrspwork = new CountDownLatch(6);
+		for (int i = 1; i < 2; i++) {
+			final int cslen = i;
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					test.experimentIncreasingCriticalSectionLength(mrsp, cslen, "MrsP");
+					mrspwork.countDown();
+				}
+			}).start();
+		}
+		mrspwork.await();
+
+		ResultReader.priorityReader();
+
+		// for (int i = 0; i < 9999999; i++) {
+		// test.experimentIncreasingCriticalSectionLength(msrp, 5, "MSRP");
+		// test.experimentIncreasingCriticalSectionLength(pwlp, 5, "PWLP");
+		// test.experimentIncreasingCriticalSectionLength(mrsp, 5, "MrsP");
+		//
+		// test.experimentIncreasingCriticalSectionLength(msrp, 6, "MSRP");
+		// test.experimentIncreasingCriticalSectionLength(pwlp, 6, "PWLP");
+		// test.experimentIncreasingCriticalSectionLength(mrsp, 6, "MrsP");
+		// System.out.println(i);
+		// }
 
 	}
 

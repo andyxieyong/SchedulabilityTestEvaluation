@@ -38,8 +38,8 @@ public class ResourceOrientedAllocationSuccessTest {
 
 		for (int i = 60; i < 80; i++)
 			test.experimentIncreasingWorkLoad(i);
-		
-		for (int i = 2; i < 25; i=i+2)
+
+		for (int i = 2; i < 25; i = i + 2)
 			test.experimentIncreasingParallel(i);
 
 		ResultReader.schedreader();
@@ -75,7 +75,7 @@ public class ResourceOrientedAllocationSuccessTest {
 
 	public void experimentIncreasingWorkLoad(int NoT) {
 		String result = "";
-		
+
 		int[] allocOK = new int[allocSize];
 		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, true, TOTAL_PARTITIONS, NoT, RESOURCE_SHARING_FACTOR, range,
 				RESOURCES_RANGE.PARTITIONS, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE, false);

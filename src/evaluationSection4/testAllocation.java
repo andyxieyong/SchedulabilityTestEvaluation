@@ -71,9 +71,12 @@ public class testAllocation {
 			generator.generateResourceUsage(tasksToAlloc, resources);
 
 			allocGeneator.allocateTasks(tasksToAlloc, resources, generator.total_partitions, 4);
-			allocGeneator.allocateTasks(tasksToAlloc, resources, generator.total_partitions, 5);
-			allocGeneator.allocateTasks(tasksToAlloc, resources, generator.total_partitions, 6);
-			allocGeneator.allocateTasks(tasksToAlloc, resources, generator.total_partitions, 7);
+			// allocGeneator.allocateTasks(tasksToAlloc, resources,
+			// generator.total_partitions, 5);
+			// allocGeneator.allocateTasks(tasksToAlloc, resources,
+			// generator.total_partitions, 6);
+			// allocGeneator.allocateTasks(tasksToAlloc, resources,
+			// generator.total_partitions, 7);
 
 			System.out.println("times: " + i);
 		}

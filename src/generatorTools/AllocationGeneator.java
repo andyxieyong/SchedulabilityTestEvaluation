@@ -8,7 +8,7 @@ import entity.SporadicTask;
 public class AllocationGeneator {
 	public ArrayList<ArrayList<SporadicTask>> allocateTasks(ArrayList<SporadicTask> tasksToAllocate, ArrayList<Resource> resources, int total_partitions,
 			int policy) {
-		
+
 		int Osize = tasksToAllocate.size();
 
 		double totalUtil = 0.1 * (double) tasksToAllocate.size();
@@ -101,18 +101,17 @@ public class AllocationGeneator {
 			}
 
 		}
-		
-		if(tasks != null) {
+
+		if (tasks != null) {
 			int Nsize = 0;
-			for(int i=0;i<tasks.size();i++) {
+			for (int i = 0; i < tasks.size(); i++) {
 				Nsize += tasks.get(i).size();
 			}
-			
-			if(Osize != Nsize) {
+
+			if (Osize != Nsize) {
 				System.err.println("Allocation error!");
 			}
 		}
-
 
 		return tasks;
 	}
@@ -495,11 +494,12 @@ public class AllocationGeneator {
 		 * Now, order the unallocatable bundles and tasks in each bundle via
 		 * increasing utilisation
 		 */
-		taskBundles.sort((l1, l2) -> {
-			Double tu1 = l1.stream().mapToDouble(t -> t.util).sum();
-			Double tu2 = l2.stream().mapToDouble(t -> t.util).sum();
-			return Double.compare(tu1, tu2);
-		});
+		// taskBundles.sort((l1, l2) -> {
+		// Double tu1 = l1.stream().mapToDouble(t -> t.util).sum();
+		// Double tu2 = l2.stream().mapToDouble(t -> t.util).sum();
+		// return Double.compare(tu1, tu2);
+		// });
+		taskBundles.sort((t1, t2) -> compareSlack(t1, t2, resources));
 		for (int i = 0; i < taskBundles.size(); i++) {
 			taskBundles.get(i).sort((t1, t2) -> Double.compare(t1.util, t2.util));
 		}
@@ -556,6 +556,81 @@ public class AllocationGeneator {
 		}
 
 		return tasks;
+	}
+
+	private int compareSlack(ArrayList<SporadicTask> t1, ArrayList<SporadicTask> t2, ArrayList<Resource> res) {
+		double costT1 = 0, costT2 = 0;
+
+		ArrayList<Resource> res1 = new ArrayList<>();
+		ArrayList<Resource> res2 = new ArrayList<>();
+
+		for (int i = 0; i < t1.size(); i++) {
+			SporadicTask task = t1.get(i);
+			ArrayList<Integer> resource_index = task.resource_required_index;
+			for (int j = 0; j < resource_index.size(); j++) {
+				Resource resource = res.get(resource_index.get(j));
+				if (!res1.contains(resource))
+					res1.add(resource);
+			}
+		}
+
+		for (int i = 0; i < t2.size(); i++) {
+			SporadicTask task = t2.get(i);
+			ArrayList<Integer> resource_index = task.resource_required_index;
+			for (int j = 0; j < resource_index.size(); j++) {
+				Resource resource = res.get(resource_index.get(j));
+				if (!res2.contains(resource))
+					res2.add(resource);
+			}
+		}
+
+		for (int i = 0; i < res1.size(); i++) {
+			Resource resource = res1.get(i);
+			ArrayList<SporadicTask> tasks = resource.requested_tasks;
+			long minT = 1000;
+
+			for (int j = 0; j < tasks.size(); j++) {
+				if (minT > tasks.get(j).period)
+					minT = tasks.get(j).period;
+			}
+			costT1 += (double) resource.csl / (double) minT;
+		}
+
+		for (int i = 0; i < res2.size(); i++) {
+			Resource resource = res2.get(i);
+			ArrayList<SporadicTask> tasks = resource.requested_tasks;
+			long minT = 1000;
+
+			for (int j = 0; j < tasks.size(); j++) {
+				if (minT > tasks.get(j).period)
+					minT = tasks.get(j).period;
+			}
+			costT2 += (double) resource.csl / (double) minT;
+		}
+
+		if (costT1 <= costT2) {
+			return -1;
+		}
+
+		if (costT1 > costT2) {
+			return 1;
+		}
+
+		// if (costT1 == costT1) {
+		// if (deadline1 < deadline2)
+		// return -1;
+		// if (deadline1 > deadline2)
+		// return 1;
+		// if (deadline1 == deadline2)
+		// return 0;
+		// }
+
+		// System.err
+		// .println("Slack comparator error!" + " slack1: " + slack1 + "
+		// deadline1: " + deadline1 + " slack2: " + slack2 + " deadline2: " +
+		// deadline2);
+		System.exit(-1);
+		return 0;
 	}
 
 	private boolean isContain(Resource res1, Resource res2) {

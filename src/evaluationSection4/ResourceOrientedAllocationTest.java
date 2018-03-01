@@ -20,7 +20,6 @@ import utils.AnalysisUtils.CS_LENGTH_RANGE;
 import utils.AnalysisUtils.RESOURCES_RANGE;
 import utils.ResultReader;
 
-
 public class ResourceOrientedAllocationTest {
 	public static int TOTAL_NUMBER_OF_SYSTEMS = 1000;
 
@@ -31,7 +30,7 @@ public class ResourceOrientedAllocationTest {
 	public static boolean btbHit = true;
 
 	static CS_LENGTH_RANGE range = CS_LENGTH_RANGE.LONG_CSLEN;
-	static int NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE = 1;
+	static int NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE = 3;
 	static int NUMBER_OF_TASKS_ON_EACH_PARTITION = 4;
 	static double RESOURCE_SHARING_FACTOR = 0.3;
 
@@ -40,31 +39,33 @@ public class ResourceOrientedAllocationTest {
 	public static void main(String[] args) throws Exception {
 		ResourceOrientedAllocationTest test = new ResourceOrientedAllocationTest();
 
-		// final CountDownLatch cslencountdown = new CountDownLatch(6);
-		// for (int i = 1; i < 7; i++) {
-		// final int cslen = i;
-		// new Thread(new Runnable() {
-		// @Override
-		// public void run() {
-		// test.experimentIncreasingCriticalSectionLength(cslen);
-		// cslencountdown.countDown();
-		// }
-		// }).start();
-		// }
-		// cslencountdown.await();
+		// test.experimentIncreasingCriticalSectionLength(3);
 
-		final CountDownLatch accesscountdown = new CountDownLatch(9);
-		for (int i = 1; i < 42; i = i + 5) {
-			final int access = i;
+		final CountDownLatch cslencountdown = new CountDownLatch(6);
+		for (int i = 1; i < 7; i++) {
+			final int cslen = i;
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
-					test.experimentIncreasingContention(access);
-					accesscountdown.countDown();
+					test.experimentIncreasingCriticalSectionLength(cslen);
+					cslencountdown.countDown();
 				}
 			}).start();
 		}
-		accesscountdown.await();
+		cslencountdown.await();
+
+		// final CountDownLatch accesscountdown = new CountDownLatch(9);
+		// for (int i = 1; i < 42; i = i + 5) {
+		// final int access = i;
+		// new Thread(new Runnable() {
+		// @Override
+		// public void run() {
+		// test.experimentIncreasingContention(access);
+		// accesscountdown.countDown();
+		// }
+		// }).start();
+		// }
+		// accesscountdown.await();
 
 		// final CountDownLatch Taskcountdown = new CountDownLatch(9);
 		// for (int i = 1; i < 10; i++) {

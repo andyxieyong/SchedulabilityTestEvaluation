@@ -32,9 +32,10 @@ public class PWLPIO extends RuntimeCostAnalysis {
 
 		// now we check each task. For each processor
 		for (int i = 0; i < tasks.size(); i++) {
-			ArrayList<SporadicTask> unassignedTasks = new ArrayList<>(tasks.get(i));
+			int partition = i;
+			ArrayList<SporadicTask> unassignedTasks = new ArrayList<>(tasks.get(partition));
 			int sratingP = 500 - unassignedTasks.size() * 2;
-			int prioLevels = tasks.get(i).size();
+			int prioLevels = tasks.get(partition).size();
 
 			// For each priority level
 			for (int currentLevel = 0; currentLevel < prioLevels; currentLevel++) {
@@ -45,11 +46,11 @@ public class PWLPIO extends RuntimeCostAnalysis {
 					int originalP = task.priority;
 					task.priority = sratingP;
 
-					tasks.get(i).sort((t1, t2) -> -Integer.compare(t1.priority, t2.priority));
+					tasks.get(partition).sort((t1, t2) -> -Integer.compare(t1.priority, t2.priority));
 
 					// Init response time of tasks in this partition
-					for (int k = 0; k < tasks.get(i).size(); k++) {
-						dummy_response_time[i][k] = tasks.get(i).get(k).WCET + tasks.get(i).get(k).pure_resource_execution_time;
+					for (int k = 0; k < tasks.get(partition).size(); k++) {
+						dummy_response_time[partition][k] = tasks.get(partition).get(k).WCET + tasks.get(partition).get(k).pure_resource_execution_time;
 					}
 
 					int count = 0;
@@ -63,17 +64,17 @@ public class PWLPIO extends RuntimeCostAnalysis {
 						dummy_response_time_plus = getResponseTimeForSBPO(task.partition, tasks, resources, true, extendCal, dummy_response_time, task);
 
 						for (int resposneTimeIndex = 0; resposneTimeIndex < dummy_response_time_plus.length; resposneTimeIndex++) {
-							if (task != tasks.get(i).get(resposneTimeIndex)
-									&&dummy_response_time[i][resposneTimeIndex] != dummy_response_time_plus[resposneTimeIndex])
+							if (task != tasks.get(partition).get(resposneTimeIndex)
+									&& dummy_response_time[partition][resposneTimeIndex] != dummy_response_time_plus[resposneTimeIndex])
 								isEqual = false;
 
-							if (task != tasks.get(i).get(resposneTimeIndex)
-									&& dummy_response_time_plus[resposneTimeIndex] <= tasks.get(i).get(resposneTimeIndex).deadline * extendCal)
+							if (task != tasks.get(partition).get(resposneTimeIndex)
+									&& dummy_response_time_plus[resposneTimeIndex] <= tasks.get(partition).get(resposneTimeIndex).deadline * extendCal)
 								should_finish = false;
 						}
 
-						for (int resposneTimeIndex = 0; resposneTimeIndex < dummy_response_time[i].length; resposneTimeIndex++) {
-							dummy_response_time[i][resposneTimeIndex] = dummy_response_time_plus[resposneTimeIndex];
+						for (int resposneTimeIndex = 0; resposneTimeIndex < dummy_response_time[partition].length; resposneTimeIndex++) {
+							dummy_response_time[partition][resposneTimeIndex] = dummy_response_time_plus[resposneTimeIndex];
 						}
 
 						if (should_finish)
@@ -85,9 +86,9 @@ public class PWLPIO extends RuntimeCostAnalysis {
 						}
 					}
 
-					long time = dummy_response_time_plus[tasks.get(i).indexOf(task)];
+					long time = dummy_response_time_plus[tasks.get(partition).indexOf(task)];
 					task.priority = originalP;
-					tasks.get(i).sort((t1, t2) -> -Integer.compare(t1.priority, t2.priority));
+					tasks.get(partition).sort((t1, t2) -> -Integer.compare(t1.priority, t2.priority));
 
 					task.addition_slack_by_newOPA = task.deadline - time;
 				}
@@ -119,17 +120,17 @@ public class PWLPIO extends RuntimeCostAnalysis {
 				}
 
 				unassignedTasks.get(0).priority = sratingP;
-				tasks.get(i).sort((t1, t2) -> -Integer.compare(t1.priority, t2.priority));
+				tasks.get(partition).sort((t1, t2) -> -Integer.compare(t1.priority, t2.priority));
 				unassignedTasks.remove(0);
 
 				sratingP += 2;
 			}
 
-			tasks.get(i).sort((t1, t2) -> -Integer.compare(t1.priority, t2.priority));
+			tasks.get(partition).sort((t1, t2) -> -Integer.compare(t1.priority, t2.priority));
 
 			// Init response time of tasks in this partition
-			for (int k = 0; k < tasks.get(i).size(); k++) {
-				dummy_response_time[i][k] = tasks.get(i).get(k).WCET + tasks.get(i).get(k).pure_resource_execution_time;
+			for (int k = 0; k < tasks.get(partition).size(); k++) {
+				dummy_response_time[partition][k] = tasks.get(partition).get(k).WCET + tasks.get(partition).get(k).pure_resource_execution_time;
 			}
 
 			int count = 0;
@@ -140,21 +141,21 @@ public class PWLPIO extends RuntimeCostAnalysis {
 				isEqual = true;
 				boolean should_finish = true;
 
-				dummy_response_time_plus = getResponseTimeForOnePartition(i, tasks, resources, true, 1, dummy_response_time);
+				dummy_response_time_plus = getResponseTimeForOnePartition(partition, tasks, resources, true, 1, dummy_response_time);
 
 				for (int resposneTimeIndex = 0; resposneTimeIndex < dummy_response_time_plus.length; resposneTimeIndex++) {
-					if (dummy_response_time[i][resposneTimeIndex] != dummy_response_time_plus[resposneTimeIndex])
+					if (dummy_response_time[partition][resposneTimeIndex] != dummy_response_time_plus[resposneTimeIndex])
 						isEqual = false;
 
-					if (dummy_response_time_plus[resposneTimeIndex] <= tasks.get(i).get(resposneTimeIndex).deadline)
+					if (dummy_response_time_plus[resposneTimeIndex] <= tasks.get(partition).get(resposneTimeIndex).deadline)
 						should_finish = false;
 				}
 
 				for (int resposneTimeIndex = 0; resposneTimeIndex < dummy_response_time_plus.length; resposneTimeIndex++) {
-					if (dummy_response_time_plus[resposneTimeIndex] > tasks.get(i).get(resposneTimeIndex).deadline) {
-						dummy_response_time[i][resposneTimeIndex] = tasks.get(i).get(resposneTimeIndex).deadline;
+					if (dummy_response_time_plus[resposneTimeIndex] > tasks.get(partition).get(resposneTimeIndex).deadline) {
+						dummy_response_time[partition][resposneTimeIndex] = tasks.get(partition).get(resposneTimeIndex).deadline;
 					} else {
-						dummy_response_time[i][resposneTimeIndex] = dummy_response_time_plus[resposneTimeIndex];
+						dummy_response_time[partition][resposneTimeIndex] = dummy_response_time_plus[resposneTimeIndex];
 					}
 				}
 
@@ -240,7 +241,7 @@ public class PWLPIO extends RuntimeCostAnalysis {
 				}
 
 				unassignedTasks.sort((t1, t2) -> -compareSlack(t1, t2));
-				
+
 				if (unassignedTasks.get(0).addition_slack_by_newOPA < 0) {
 					long[][] dummy_response_time = new long[tasks.size()][];
 					for (int h = 0; h < dummy_response_time.length; h++) {
@@ -405,7 +406,6 @@ public class PWLPIO extends RuntimeCostAnalysis {
 				sratingP += 2;
 			}
 		}
-
 
 		for (int i = 0; i < tasks.size(); i++) {
 			tasks.get(i).sort((t1, t2) -> -Integer.compare(t1.priority, t2.priority));
