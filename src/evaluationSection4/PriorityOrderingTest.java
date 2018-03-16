@@ -27,10 +27,6 @@ public class PriorityOrderingTest {
 	public static int TOTAL_NUMBER_OF_SYSTEMS = 1000;
 	public static int TOTAL_PARTITIONS = 16;
 
-	static int NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE = 2;
-	static int NUMBER_OF_TASKS_ON_EACH_PARTITION = 3;
-	static double RESOURCE_SHARING_FACTOR = 0.4;
-
 	public static void main(String[] args) throws Exception {
 		PriorityOrderingTest test = new PriorityOrderingTest();
 
@@ -44,7 +40,7 @@ public class PriorityOrderingTest {
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
-					test.experimentIncreasingCriticalSectionLength(msrp, cslen, "MSRP");
+					test.PriorityOrder(msrp, cslen, "MSRP");
 					msrpwork.countDown();
 				}
 			}).start();
@@ -57,7 +53,7 @@ public class PriorityOrderingTest {
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
-					test.experimentIncreasingCriticalSectionLength(pwlp, cslen, "PWLP");
+					test.PriorityOrder(pwlp, cslen, "PWLP");
 					pwlpwork.countDown();
 				}
 			}).start();
@@ -70,7 +66,7 @@ public class PriorityOrderingTest {
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
-					test.experimentIncreasingCriticalSectionLength(mrsp, cslen, "MrsP");
+					test.PriorityOrder(mrsp, cslen, "MrsP");
 					mrspwork.countDown();
 				}
 			}).start();
@@ -92,7 +88,11 @@ public class PriorityOrderingTest {
 
 	}
 
-	public void experimentIncreasingCriticalSectionLength(RuntimeCostAnalysis analysis, int cs_len, String name) {
+	public void PriorityOrder(RuntimeCostAnalysis analysis, int cs_len, String name) {
+		int NoA = 2;
+		int NoT = 3;
+		double Rsf = 0.4;
+
 		final CS_LENGTH_RANGE cs_range;
 		switch (cs_len) {
 		case 1:
@@ -118,8 +118,8 @@ public class PriorityOrderingTest {
 			break;
 		}
 
-		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, true, TOTAL_PARTITIONS, TOTAL_PARTITIONS * NUMBER_OF_TASKS_ON_EACH_PARTITION,
-				RESOURCE_SHARING_FACTOR, cs_range, RESOURCES_RANGE.PARTITIONS, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE, false);
+		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, true, TOTAL_PARTITIONS, TOTAL_PARTITIONS * NoT, Rsf, cs_range,
+				RESOURCES_RANGE.PARTITIONS, NoA, false);
 
 		long[][] Ris;
 		String result = "";
