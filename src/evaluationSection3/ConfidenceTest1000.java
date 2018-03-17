@@ -110,40 +110,40 @@ public class ConfidenceTest1000 {
 		// }
 		// });
 
-		Thread btb1 = new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				test.BTBH(11);
-				downLatch.countDown();
-			}
-		});
-		Thread btb2 = new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				test.BTBH(26);
-				downLatch.countDown();
-			}
-		});
-
-		Thread overheads1 = new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				test.overheads(2);
-				downLatch.countDown();
-			}
-		});
-
-		Thread overheads2 = new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				test.overheads(4);
-				downLatch.countDown();
-			}
-		});
+		// Thread btb1 = new Thread(new Runnable() {
+		//
+		// @Override
+		// public void run() {
+		// test.BTBH(11);
+		// downLatch.countDown();
+		// }
+		// });
+		// Thread btb2 = new Thread(new Runnable() {
+		//
+		// @Override
+		// public void run() {
+		// test.BTBH(26);
+		// downLatch.countDown();
+		// }
+		// });
+		//
+		// Thread overheads1 = new Thread(new Runnable() {
+		//
+		// @Override
+		// public void run() {
+		// test.overheads(2);
+		// downLatch.countDown();
+		// }
+		// });
+		//
+		// Thread overheads2 = new Thread(new Runnable() {
+		//
+		// @Override
+		// public void run() {
+		// test.overheads(4);
+		// downLatch.countDown();
+		// }
+		// });
 
 		// t1.start();
 		// t2.start();
@@ -157,75 +157,75 @@ public class ConfidenceTest1000 {
 		// p1.start();
 		// p2.start();
 
-		btb1.start();
-		btb2.start();
+		// btb1.start();
+		// btb2.start();
+		//
+		// overheads1.start();
+		// overheads2.start();
 
-		overheads1.start();
-		overheads2.start();
+		// new Thread(new Runnable() {
+		// @Override
+		// public void run() {
+		// test.allocationcslenmsrp(3);
+		// downLatch.countDown();
+		// }
+		// }).start();
+		//
+		// new Thread(new Runnable() {
+		// @Override
+		// public void run() {
+		// test.allocationcslenmsrp(5);
+		// downLatch.countDown();
+		// }
+		// }).start();
+
+//		new Thread(new Runnable() {
+//			@Override
+//			public void run() {
+//				test.taskallocationaccessmsrp(6);
+//				downLatch.countDown();
+//			}
+//		}).start();
+//
+//		new Thread(new Runnable() {
+//			@Override
+//			public void run() {
+//				test.taskallocationaccessmsrp(16);
+//				downLatch.countDown();
+//			}
+//		}).start();
+
+		// MSRPIO msrp = new MSRPIO();
+		PWLPIO pwlp = new PWLPIO();
+
+		// new Thread(new Runnable() {
+		// @Override
+		// public void run() {
+		// test.PriorityOrder(msrp, 1, "MSRP");
+		// downLatch.countDown();
+		// }
+		// }).start();
+		//
+		// new Thread(new Runnable() {
+		// @Override
+		// public void run() {
+		// test.PriorityOrder(msrp, 6, "MSRP");
+		// downLatch.countDown();
+		// }
+		// }).start();
+
+//		new Thread(new Runnable() {
+//			@Override
+//			public void run() {
+//				test.PriorityOrder(pwlp, 2, "PWLP");
+//				downLatch.countDown();
+//			}
+//		}).start();
 
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				test.allocationcslenmsrp(3);
-				downLatch.countDown();
-			}
-		}).start();
-
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				test.allocationcslenmsrp(5);
-				downLatch.countDown();
-			}
-		}).start();
-
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				test.taskallocationaccessmrsp(6);
-				downLatch.countDown();
-			}
-		}).start();
-
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				test.taskallocationaccessmrsp(16);
-				downLatch.countDown();
-			}
-		}).start();
-
-		MSRPIO msrp = new MSRPIO();
-		MrsPIO mrsp = new MrsPIO();
-
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				test.PriorityOrder(msrp, 1, "MSRP");
-				downLatch.countDown();
-			}
-		}).start();
-
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				test.PriorityOrder(msrp, 6, "MSRP");
-				downLatch.countDown();
-			}
-		}).start();
-
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				test.PriorityOrder(mrsp, 2, "MrsP");
-				downLatch.countDown();
-			}
-		}).start();
-
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				test.PriorityOrder(mrsp, 5, "MrsP");
+				test.PriorityOrder(pwlp, 5, "PWLP");
 				downLatch.countDown();
 			}
 		}).start();
@@ -869,7 +869,7 @@ public class ConfidenceTest1000 {
 		writeSystem((2 + " " + 3 + " " + cs_len), result);
 	}
 
-	public void taskallocationaccessmrsp(int NoA) {
+	public void taskallocationaccessmsrp(int NoA) {
 		boolean useRi = true;
 		boolean btbHit = true;
 
@@ -886,7 +886,7 @@ public class ConfidenceTest1000 {
 		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, true, TOTAL_PARTITIONS, not * TOTAL_PARTITIONS, rsf, rangeee,
 				RESOURCES_RANGE.PARTITIONS, NoA, false);
 
-		MrsPIO mrsp = new MrsPIO();
+		MSRPIO mrsp = new MSRPIO();
 
 		for (int j = 0; j < NUMBER_OF_TIMES; j++) {
 			wfsmrsp = ffsmrsp = bfsmrsp = nfsmrsp = rrfsmrsp = rlfsmrsp = rldfsmrsp = rlifsmrsp = 0;
@@ -912,42 +912,42 @@ public class ConfidenceTest1000 {
 				}
 
 				ArrayList<ArrayList<SporadicTask>> tasksWF = allocGeneator.allocateTasks(tasksToAlloc, resources, generator.total_partitions, 0);
-				Ris = mrsp.getResponseTimeDM(tasksWF, resources, true, true, btbHit, useRi, false);
+				Ris = mrsp.getResponseTimeDM(tasksWF, resources, btbHit, useRi, false);
 				if (isSystemSchedulable(tasksWF, Ris))
 					wfsmrsp++;
 
 				ArrayList<ArrayList<SporadicTask>> tasksBF = allocGeneator.allocateTasks(tasksToAlloc, resources, generator.total_partitions, 1);
-				Ris = mrsp.getResponseTimeDM(tasksBF, resources, true, true, btbHit, useRi, false);
+				Ris = mrsp.getResponseTimeDM(tasksBF, resources, btbHit, useRi, false);
 				if (isSystemSchedulable(tasksBF, Ris))
 					bfsmrsp++;
 
 				ArrayList<ArrayList<SporadicTask>> tasksFF = allocGeneator.allocateTasks(tasksToAlloc, resources, generator.total_partitions, 2);
-				Ris = mrsp.getResponseTimeDM(tasksFF, resources, true, true, btbHit, useRi, false);
+				Ris = mrsp.getResponseTimeDM(tasksFF, resources, btbHit, useRi, false);
 				if (isSystemSchedulable(tasksFF, Ris))
 					ffsmrsp++;
 
 				ArrayList<ArrayList<SporadicTask>> tasksNF = allocGeneator.allocateTasks(tasksToAlloc, resources, generator.total_partitions, 3);
-				Ris = mrsp.getResponseTimeDM(tasksNF, resources, true, true, btbHit, useRi, false);
+				Ris = mrsp.getResponseTimeDM(tasksNF, resources, btbHit, useRi, false);
 				if (isSystemSchedulable(tasksNF, Ris))
 					nfsmrsp++;
 
 				ArrayList<ArrayList<SporadicTask>> tasksSPA = allocGeneator.allocateTasks(tasksToAlloc, resources, generator.total_partitions, 4);
-				Ris = mrsp.getResponseTimeDM(tasksSPA, resources, true, true, btbHit, useRi, false);
+				Ris = mrsp.getResponseTimeDM(tasksSPA, resources, btbHit, useRi, false);
 				if (isSystemSchedulable(tasksSPA, Ris))
 					rlfsmrsp++;
 
 				ArrayList<ArrayList<SporadicTask>> tasksRCF = allocGeneator.allocateTasks(tasksToAlloc, resources, generator.total_partitions, 5);
-				Ris = mrsp.getResponseTimeDM(tasksRCF, resources, true, true, btbHit, useRi, false);
+				Ris = mrsp.getResponseTimeDM(tasksRCF, resources, btbHit, useRi, false);
 				if (isSystemSchedulable(tasksRCF, Ris))
 					rrfsmrsp++;
 
 				ArrayList<ArrayList<SporadicTask>> tasksRLFL = allocGeneator.allocateTasks(tasksToAlloc, resources, generator.total_partitions, 6);
-				Ris = mrsp.getResponseTimeDM(tasksRLFL, resources, true, true, btbHit, useRi, false);
+				Ris = mrsp.getResponseTimeDM(tasksRLFL, resources, btbHit, useRi, false);
 				if (isSystemSchedulable(tasksRLFL, Ris))
 					rldfsmrsp++;
 
 				ArrayList<ArrayList<SporadicTask>> tasksRLFS = allocGeneator.allocateTasks(tasksToAlloc, resources, generator.total_partitions, 7);
-				Ris = mrsp.getResponseTimeDM(tasksRLFS, resources, true, true, btbHit, useRi, false);
+				Ris = mrsp.getResponseTimeDM(tasksRLFS, resources, btbHit, useRi, false);
 				if (isSystemSchedulable(tasksRLFS, Ris))
 					rlifsmrsp++;
 
