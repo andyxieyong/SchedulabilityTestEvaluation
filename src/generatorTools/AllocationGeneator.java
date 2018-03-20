@@ -122,6 +122,8 @@ public class AllocationGeneator {
 			tasksToAllocate.get(i).partition = -1;
 		}
 
+		tasksToAllocate.sort((p1, p2) -> -Double.compare(p1.util, p2.util));
+
 		// Init allocated tasks array
 		ArrayList<ArrayList<SporadicTask>> tasks = new ArrayList<>();
 		for (int i = 0; i < partitions; i++) {
@@ -175,6 +177,8 @@ public class AllocationGeneator {
 		for (int i = 0; i < tasksToAllocate.size(); i++) {
 			tasksToAllocate.get(i).partition = -1;
 		}
+		tasksToAllocate.sort((p1, p2) -> -Double.compare(p1.util, p2.util));
+
 		ArrayList<ArrayList<SporadicTask>> tasks = new ArrayList<>();
 		for (int i = 0; i < partitions; i++) {
 			ArrayList<SporadicTask> task = new ArrayList<>();
@@ -223,6 +227,8 @@ public class AllocationGeneator {
 		for (int i = 0; i < tasksToAllocate.size(); i++) {
 			tasksToAllocate.get(i).partition = -1;
 		}
+		tasksToAllocate.sort((p1, p2) -> -Double.compare(p1.util, p2.util));
+
 		ArrayList<ArrayList<SporadicTask>> tasks = new ArrayList<>();
 		for (int i = 0; i < partitions; i++) {
 			ArrayList<SporadicTask> task = new ArrayList<>();
@@ -264,6 +270,8 @@ public class AllocationGeneator {
 		for (int i = 0; i < tasksToAllocate.size(); i++) {
 			tasksToAllocate.get(i).partition = -1;
 		}
+		tasksToAllocate.sort((p1, p2) -> -Double.compare(p1.util, p2.util));
+
 		ArrayList<ArrayList<SporadicTask>> tasks = new ArrayList<>();
 		for (int i = 0; i < partitions; i++) {
 			ArrayList<SporadicTask> task = new ArrayList<>();

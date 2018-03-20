@@ -36,7 +36,7 @@ public class ResourceOrientedAllocationSuccessTest {
 	public static void main(String[] args) throws Exception {
 		ResourceOrientedAllocationSuccessTest test = new ResourceOrientedAllocationSuccessTest();
 
-		for (int i = 60; i < 80; i++)
+		for (int i = 16; i < 161; i=i+16)
 			test.experimentIncreasingWorkLoad(i);
 
 		for (int i = 2; i < 25; i = i + 2)
