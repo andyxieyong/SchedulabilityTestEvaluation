@@ -14,6 +14,7 @@ import analysisNewIO.MrsPIO;
 import analysisNewIO.PWLPIO;
 import entity.Resource;
 import entity.SporadicTask;
+import generatorTools.AllocationGeneator;
 import generatorTools.SimpleSystemGenerator;
 import utils.AnalysisUtils.CS_LENGTH_RANGE;
 import utils.AnalysisUtils.RESOURCES_RANGE;
@@ -96,28 +97,41 @@ public class dominance {
 		int fpcanmrspcannot = 0;
 		int fpcannotmrspcan = 0;
 
-		for (int i = 0; i < TOTAL_NUMBER_OF_SYSTEMS; i++) {
+		for (int count = 0; count < TOTAL_NUMBER_OF_SYSTEMS; count++) {
 			ArrayList<SporadicTask> tasksToAlloc = generator.generateTasks();
 			ArrayList<Resource> resources = generator.generateResources();
-			ArrayList<ArrayList<SporadicTask>> tasks = generator.generateResourceUsage(tasksToAlloc, resources);
+			generator.generateResourceUsage(tasksToAlloc, resources);
 
 			boolean fnpOK = false, fpOK = false, mrspOK = false;
-			Ris = fnpIO.getResponseTimeDM(tasks, resources, true, true, false);
-			if (isSystemSchedulable(tasks, Ris)) {
-				sfnp++;
-				fnpOK = true;
-			}
+			for (int i = 0; i < 8; i++) {
+				ArrayList<ArrayList<SporadicTask>> allocTask = new AllocationGeneator().allocateTasks(tasksToAlloc, resources, generator.total_partitions, i);
 
-			Ris = fpIO.getResponseTimeDM(tasks, resources, true, true, false);
-			if (isSystemSchedulable(tasks, Ris)) {
-				sfp++;
-				fpOK = true;
-			}
+				if (!fnpOK) {
+					Ris = fnpIO.getResponseTimeDM(allocTask, resources, true, true, false);
+					if (isSystemSchedulable(allocTask, Ris)) {
+						sfnp++;
+						fnpOK = true;
+					}
+				}
 
-			Ris = mrspIO.getResponseTimeDM(tasks, resources, true, true, true, true, false);
-			if (isSystemSchedulable(tasks, Ris)) {
-				smrsp++;
-				mrspOK = true;
+				if (!fpOK) {
+					Ris = fpIO.getResponseTimeDM(allocTask, resources, true, true, false);
+					if (isSystemSchedulable(allocTask, Ris)) {
+						sfp++;
+						fpOK = true;
+					}
+				}
+
+				if (!mrspOK) {
+					Ris = mrspIO.getResponseTimeDM(allocTask, resources, true, true, true, true, false);
+					if (isSystemSchedulable(allocTask, Ris)) {
+						smrsp++;
+						mrspOK = true;
+					}
+				}
+
+				if (fnpOK && fpOK && mrspOK)
+					break;
 			}
 
 			if (fnpOK && !fpOK) {
@@ -139,7 +153,7 @@ public class dominance {
 				fpcannotmrspcan++;
 			}
 
-			System.out.println(2 + " " + 1 + " " + cs_len + " times: " + i);
+			System.out.println(2 + " " + 1 + " " + cs_len + " times: " + count);
 		}
 
 		result += (double) sfnp / (double) TOTAL_NUMBER_OF_SYSTEMS + " " + (double) sfp / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
@@ -152,6 +166,8 @@ public class dominance {
 	}
 
 	public boolean isSystemSchedulable(ArrayList<ArrayList<SporadicTask>> tasks, long[][] Ris) {
+		if (tasks == null)
+			return false;
 		for (int i = 0; i < tasks.size(); i++) {
 			for (int j = 0; j < tasks.get(i).size(); j++) {
 				if (tasks.get(i).get(j).deadline < Ris[i][j])

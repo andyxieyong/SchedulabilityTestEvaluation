@@ -11,16 +11,27 @@ public class AllocationGeneator {
 
 		int Osize = tasksToAllocate.size();
 
-		double totalUtil = 0.1 * (double) tasksToAllocate.size();
+//		double totalUtil = 0.1 * (double) tasksToAllocate.size();
+//		double maxUtilPerCore = 0;
+//		if (totalUtil / total_partitions <= 0.5)
+//			maxUtilPerCore = 0.5;
+//		else if (totalUtil / total_partitions <= 0.6)
+//			maxUtilPerCore = 0.6;
+//		else if (totalUtil / total_partitions <= 0.65)
+//			maxUtilPerCore = 0.65;
+//		else
+//			maxUtilPerCore = totalUtil / total_partitions;
+		
+		double totalUtil = 0.1 * tasksToAllocate.size();
 		double maxUtilPerCore = 0;
-		if (totalUtil / total_partitions <= 0.5)
+		if (totalUtil / total_partitions < 0.5)
 			maxUtilPerCore = 0.5;
-		else if (totalUtil / total_partitions <= 0.6)
+		else if (totalUtil / total_partitions < 0.6)
 			maxUtilPerCore = 0.6;
-		else if (totalUtil / total_partitions <= 0.65)
+		else if (totalUtil / total_partitions < 0.65)
 			maxUtilPerCore = 0.65;
 		else
-			maxUtilPerCore = totalUtil / total_partitions;
+			maxUtilPerCore = totalUtil / total_partitions <= 0.9 ? (totalUtil / total_partitions) + 0.05 : 1;
 
 		ArrayList<ArrayList<SporadicTask>> tasks;
 		switch (policy) {
