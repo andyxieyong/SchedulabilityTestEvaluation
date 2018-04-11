@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import entity.SporadicTask;
 
 public class AnalysisUtils {
+	
+	public static final int EXTEND_CAL = 5;
 	public static final int MAX_PRIORITY = 1000;
 
 	/* define how long the critical section can be */

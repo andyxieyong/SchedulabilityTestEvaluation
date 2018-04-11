@@ -1,1 +1,0 @@
-0.671 0.702 0.698    MSRPcan PWLPcannot 28    MSRPcannot PWLPcan 59    MSRPcan MrsPcannot 33    MSRPcannot MrsPcan 60    PWLPcan MrsPcannot 29    PWLPcannot MrsPcan 25
