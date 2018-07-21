@@ -254,10 +254,7 @@ public class MrsPNew {
 		return spin_delay;
 	}
 
-	/*
-	 * gives the number of requests from remote partitions for a resource that
-	 * is required by the given task.
-	 */
+
 	private int getNoSpinDelay(SporadicTask task, Resource resource, ArrayList<ArrayList<SporadicTask>> tasks, long[][] Ris, long Ri, boolean btbHit) {
 		int number_of_spin_dealy = 0;
 
@@ -282,7 +279,11 @@ public class MrsPNew {
 		}
 		return number_of_spin_dealy;
 	}
-
+	
+	/*
+	 * gives the number of requests from remote partitions for a resource that
+	 * is required by the given task.
+	 */
 	private int getNoRRemote(Resource resource, ArrayList<SporadicTask> tasks, long[] Ris, long Ri, boolean btbHit) {
 		int number_of_request_by_Remote_P = 0;
 
