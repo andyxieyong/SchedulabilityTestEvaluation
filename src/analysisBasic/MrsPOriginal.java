@@ -81,7 +81,7 @@ public class MrsPOriginal {
 	 * Calculate the local high priority tasks' interference for a given task t.
 	 * CI is a set of computation time of local tasks, including spin delay.
 	 */
-	private long highPriorityInterference(SporadicTask t, ArrayList<ArrayList<SporadicTask>> allTasks, long Ri) {
+	protected long highPriorityInterference(SporadicTask t, ArrayList<ArrayList<SporadicTask>> allTasks, long Ri) {
 		long interference = 0;
 		int partition = t.partition;
 		ArrayList<SporadicTask> tasks = allTasks.get(partition);
@@ -128,7 +128,7 @@ public class MrsPOriginal {
 	}
 
 	/*
-	 * gives a set of resources that can cause local blocking for a given task
+	 * Gives a set of resources that can cause local blocking for a given task
 	 */
 	private ArrayList<Resource> getLocalBlockingResources(SporadicTask task, ArrayList<Resource> resources) {
 		ArrayList<Resource> localBlockingResources = new ArrayList<>();

@@ -54,7 +54,8 @@ public class SimpleSystemGenerator {
 		return tasks;
 	}
 
-	private ArrayList<ArrayList<SporadicTask>> WorstFitAllocation(ArrayList<SporadicTask> tasksToAllocate, int partitions) {
+	// It is protected to be used in subclass (nested system generator)
+	protected ArrayList<ArrayList<SporadicTask>> WorstFitAllocation(ArrayList<SporadicTask> tasksToAllocate, int partitions) {
 		// clear tasks' partitions
 		for (int i = 0; i < tasksToAllocate.size(); i++) {
 			tasksToAllocate.get(i).partition = -1;

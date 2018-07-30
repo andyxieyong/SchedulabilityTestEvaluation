@@ -58,7 +58,8 @@ public class SporadicTask {
 
 	@Override
 	public String toString() {
-		return "T" + this.id + " : T = " + this.period + ", C = " + this.WCET + ", PRET: " + this.pure_resource_execution_time + ", D = " + this.deadline
+		return "T" + this.id + " : T = " + this.period + ", C = " + this.WCET + ", PRET: " + this.pure_resource_execution_time
+				+", spin = " + spin + ", D = " + this.deadline
 				+ ", Priority = " + this.priority + ", Partition = " + this.partition;
 	}
 

@@ -1,13 +1,1 @@
 /native/
-/analysisBasic/
-/analysisILP/
-/analysisNew/
-/analysisNewIO/
-/entity/
-/evaluationSection3/
-/evaluationSection4/
-/generatorTools/
-/javaToC/
-/libglpk.so.40.1.0
-/libmipsolverc.so
-/utils/
