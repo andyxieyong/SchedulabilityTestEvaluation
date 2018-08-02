@@ -255,14 +255,16 @@ public class MrsPNew {
 	}
 
 
+	/* Calculates the number of remote spin delay to be accounted for on the access analysis */
 	private int getNoSpinDelay(SporadicTask task, Resource resource, ArrayList<ArrayList<SporadicTask>> tasks, long[][] Ris, long Ri, boolean btbHit) {
 		int number_of_spin_dealy = 0;
 
 		for (int i = 0; i < tasks.size(); i++) {
 			if (i != task.partition) {
-				/* For each remote partition */
+				/* For each remote partition, number of requests (Np) */
 				int number_of_request_by_Remote_P = 0;
 				for (int j = 0; j < tasks.get(i).size(); j++) {
+					/* Calculate the number of accesses by each remote task on P */
 					if (tasks.get(i).get(j).resource_required_index.contains(resource.id - 1)) {
 						SporadicTask remote_task = tasks.get(i).get(j);
 						int indexR = getIndexRInTask(remote_task, resource);
@@ -270,9 +272,13 @@ public class MrsPNew {
 						number_of_request_by_Remote_P += number_of_release * remote_task.number_of_access_in_one_release.get(indexR);
 					}
 				}
+
+				/* HP tasks requests during the period of study (Nh)*/
 				int getNoRFromHP = getNoRFromHP(resource, task, tasks.get(task.partition), Ris[task.partition], Ri, btbHit);
+				/* Remaining requests on processor P (NSp) */
 				int possible_spin_delay = number_of_request_by_Remote_P - getNoRFromHP < 0 ? 0 : number_of_request_by_Remote_P - getNoRFromHP;
 
+				/* Spin delay in P is min(number_of_requests, NSp), to be added to total spin delay */
 				int NoRFromT = task.number_of_access_in_one_release.get(getIndexRInTask(task, resource));
 				number_of_spin_dealy += Integer.min(possible_spin_delay, NoRFromT);
 			}

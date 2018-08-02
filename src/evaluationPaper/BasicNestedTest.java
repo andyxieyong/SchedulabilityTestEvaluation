@@ -2,6 +2,7 @@ package evaluationPaper;
 
 import analysisBasic.*;
 import analysisNew.MSRPNew;
+import analysisNew.MrsPNestedNew;
 import analysisNew.MrsPNew;
 import analysisNew.PWLPNew;
 import entity.NestedResource;
@@ -25,7 +26,7 @@ public class BasicNestedTest {
 
 	public static void main(String[] args) throws InterruptedException {
 
-		for (int i = 3; i < 10; i++)
+		for (int i = 1; i < 10; i++)
 			experimentIncreasingWorkLoad(i);
 
 /*		for (int i = 1; i < 7; i++)
@@ -46,6 +47,7 @@ public class BasicNestedTest {
 
 		long[][] Ris;
 		MrsPNested nested_mrsp = new MrsPNested();
+		MrsPNestedNew new_mrsp = new MrsPNestedNew();
 		MSRPNested nested_msrp = new MSRPNested();
 		RTAWithoutBlockingNested nested_noblocking = new RTAWithoutBlockingNested();
 
@@ -54,6 +56,7 @@ public class BasicNestedTest {
 				CS_LENGTH_RANGE.SHORT_CS_LEN, RESOURCES_RANGE.PARTITIONS, RESOURCE_SHARING_FACTOR, NUMBER_OF_MAX_ACCESS_TO_ONE_RESOURCE);
 
 		String result = "";
+		int smrsp = 0;
 		int smrspOld = 0;
 		int smsrpOld = 0;
 		int sNoBlocking = 0;
@@ -72,6 +75,10 @@ public class BasicNestedTest {
 					smrspOld++;
 				}
 
+				Ris = new_mrsp.getNestedResponseTime(tasks, resources, false);
+				if (isSystemSchedulable(tasks, Ris))
+					smrsp++;
+
 				Ris = nested_msrp.getNestedResponseTime(tasks, resources, false);
 				if (isSystemSchedulable(tasks, Ris)) {
 					smsrpOld++;
@@ -85,6 +92,7 @@ public class BasicNestedTest {
 
 		result += (double) smsrpOld / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
 				+ (double) smrspOld / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
+				+ (double) smrsp    / (double) TOTAL_NUMBER_OF_SYSTEMS + " "
 				+ (double) sNoBlocking / (double) TOTAL_NUMBER_OF_SYSTEMS + "\n";
 
 		writeSystem((1 + " " + 1 + " " + NoT), result);
