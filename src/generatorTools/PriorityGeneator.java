@@ -13,6 +13,7 @@ public class PriorityGeneator {
 		}
 
 		ArrayList<ArrayList<SporadicTask>> tasks = new ArrayList<>(tasksToAssgin);
+		/* For each partition, assign priorities */
 		for (int i = 0; i < tasks.size(); i++) {
 			new PriorityGeneator().deadlineMonotonicPriorityAssignment(tasks.get(i), tasks.get(i).size());
 		}
