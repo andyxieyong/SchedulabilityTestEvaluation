@@ -60,18 +60,18 @@ public class PriorityOrderingTest {
 		}
 		pwlpwork.await();
 
-		final CountDownLatch mrspwork = new CountDownLatch(6);
-		for (int i = 1; i < 2; i++) {
-			final int cslen = i;
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					test.PriorityOrder(mrsp, cslen, "MrsP");
-					mrspwork.countDown();
-				}
-			}).start();
-		}
-		mrspwork.await();
+//		final CountDownLatch mrspwork = new CountDownLatch(1);
+//		for (int i = 1; i < 2; i++) {
+//			final int cslen = i;
+//			new Thread(new Runnable() {
+//				@Override
+//				public void run() {
+//					test.PriorityOrder(mrsp, cslen, "MrsP");
+//					mrspwork.countDown();
+//				}
+//			}).start();
+//		}
+//		mrspwork.await();
 
 		ResultReader.priorityReader();
 
