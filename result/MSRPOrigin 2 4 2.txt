@@ -1,0 +1,2 @@
+MSRPOrigin   DM: 0.713    OPA: 0.633    RPA: 0.571    SBPO: 0.0    DMcannotOPAcan: 0    DMcanOPAcannot: 80    DMcannotRPAcan: 0    DMcanRPAcannot: 142    DMcannotSBPOcan: 0    DMcanSBPOcannot: 713    OPAcanRPAcannot: 62    OPAcannotRPAcan: 0   OPAcanSBPOcannot: 633   OPAcannotSBPOcan: 0   RPAcanSBPOcannot: 571   RPAcannotSBPOcan: 0
+
