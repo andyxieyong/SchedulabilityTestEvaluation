@@ -237,6 +237,26 @@ public class ResultReader {
 			result += "\n";
 
 		}
+		
+		result += "\n \n MSRP original \n";
+
+		for (int bigSet = 1; bigSet < 10; bigSet++) {
+
+			for (int smallSet = 1; smallSet < 10; smallSet++) {
+				String filepath = "result/" + "MSRPOrigin 2" + " " + bigSet + " " + smallSet + ".txt";
+
+				List<String> lines = null;
+				try {
+					lines = Files.readAllLines(Paths.get(filepath), StandardCharsets.UTF_8);
+				} catch (IOException e) {
+				}
+				if (lines != null)
+					result += bigSet + "" + smallSet + " " + lines.get(0) + "\n";
+			}
+
+			result += "\n";
+
+		}
 
 		result += "\n \n PWLP \n";
 

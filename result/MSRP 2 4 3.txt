@@ -1,2 +1,2 @@
-MSRP   DM: 0.421    OPA: 0.458    RPA: 0.458    SBPO: 0.458    DMcannotOPAcan: 37    DMcanOPAcannot: 0    DMcannotRPAcan: 37    DMcanRPAcannot: 0    DMcannotSBPOcan: 37    DMcanSBPOcannot: 0    OPAcanRPAcannot: 0    OPAcannotRPAcan: 0   OPAcanSBPOcannot: 0   OPAcannotSBPOcan: 0   RPAcanSBPOcannot: 0   RPAcannotSBPOcan: 0
+MSRP   DM: 0.569    OPA: 0.5    RPA: 0.5    SBPO: 0.574    DMcannotOPAcan: 2    DMcanOPAcannot: 71    DMcannotRPAcan: 2    DMcanRPAcannot: 71    DMcannotSBPOcan: 6    DMcanSBPOcannot: 1    OPAcanRPAcannot: 0    OPAcannotRPAcan: 0   OPAcanSBPOcannot: 0   OPAcannotSBPOcan: 74   RPAcanSBPOcannot: 0   RPAcannotSBPOcan: 74
 

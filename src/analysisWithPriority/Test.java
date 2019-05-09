@@ -24,39 +24,58 @@ public class Test {
 	public static int TOTAL_PARTITIONS = 16;
 
 	public static void main(String[] args) throws Exception {
-//		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, true, TOTAL_PARTITIONS, TOTAL_PARTITIONS * 3, 0.3, CS_LENGTH_RANGE.Random,
-//				RESOURCES_RANGE.PARTITIONS, 2, false);
-//		ArrayList<SporadicTask> tasksToAlloc = generator.generateTasks(true);
-//		ArrayList<Resource> resources = generator.generateResources();
-//		generator.generateResourceUsage(tasksToAlloc, resources);
-//		ArrayList<ArrayList<SporadicTask>> tasks = new AllocationGeneator().allocateTasks(tasksToAlloc, resources, generator.total_partitions, 0);
-//
-//		MSRP msrp = new MSRP();
-//		long[][] Ris = msrp.getResponseTimeDM(tasks, resources, true, true, false);
-//		if (isSystemSchedulable(tasks, Ris)) {
-//			System.out.println("System Schedulable");
-//		}
-//		else {
-//			System.out.println("System NOT schedulable");
-//		}
+		// SystemGenerator generator = new SystemGenerator(MIN_PERIOD,
+		// MAX_PERIOD, true, TOTAL_PARTITIONS, TOTAL_PARTITIONS * 3, 0.3,
+		// CS_LENGTH_RANGE.Random,
+		// RESOURCES_RANGE.PARTITIONS, 2, false);
+		// ArrayList<SporadicTask> tasksToAlloc = generator.generateTasks(true);
+		// ArrayList<Resource> resources = generator.generateResources();
+		// generator.generateResourceUsage(tasksToAlloc, resources);
+		// ArrayList<ArrayList<SporadicTask>> tasks = new
+		// AllocationGeneator().allocateTasks(tasksToAlloc, resources,
+		// generator.total_partitions, 0);
+		//
+		// MSRP msrp = new MSRP();
+		// long[][] Ris = msrp.getResponseTimeDM(tasks, resources, true, true,
+		// false);
+		// if (isSystemSchedulable(tasks, Ris)) {
+		// System.out.println("System Schedulable");
+		// }
+		// else {
+		// System.out.println("System NOT schedulable");
+		// }
 
-		 Test test = new Test();
-		 MSRP msrp = new MSRP();
-		 PWLP pwlp = new PWLP();
-		 MrsP mrsp = new MrsP();
+		Test test = new Test();
+		MSRPNew msrp = new MSRPNew();
+		MSRPOriginalBTB msrpOriginBtb = new MSRPOriginalBTB();
+		PWLPNew pwlp = new PWLPNew();
+		MrsPNew mrsp = new MrsPNew();
+
+		final CountDownLatch msrpwork = new CountDownLatch(6);
+		for (int i = 1; i < 7; i++) {
+			final int cslen = i;
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					test.PriorityOrder(msrp, cslen, "MSRP");
+					msrpwork.countDown();
+				}
+			}).start();
+		}
+		msrpwork.await();
 		
-		 final CountDownLatch msrpwork = new CountDownLatch(6);
-		 for (int i = 1; i < 7; i++) {
-		 final int cslen = i;
-		 new Thread(new Runnable() {
-		 @Override
-		 public void run() {
-		 test.PriorityOrder(msrp, cslen, "MSRP");
-		 msrpwork.countDown();
-		 }
-		 }).start();
-		 }
-		 msrpwork.await();
+		final CountDownLatch msrporigin = new CountDownLatch(6);
+		for (int i = 1; i < 7; i++) {
+			final int cslen = i;
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					test.PriorityOrderOriginal(msrpOriginBtb, cslen, "MSRPOrigin");
+					msrporigin.countDown();
+				}
+			}).start();
+		}
+		msrporigin.await();
 		//
 		// final CountDownLatch pwlpwork = new CountDownLatch(6);
 		// for (int i = 1; i < 7; i++) {
@@ -129,8 +148,8 @@ public class Test {
 			break;
 		}
 
-		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, true, TOTAL_PARTITIONS, TOTAL_PARTITIONS * NoT, Rsf, cs_range,
-				RESOURCES_RANGE.PARTITIONS, NoA, false);
+		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, true, TOTAL_PARTITIONS, TOTAL_PARTITIONS * NoT, Rsf,
+				cs_range, RESOURCES_RANGE.PARTITIONS, NoA, false);
 
 		long[][] Ris;
 		String result = "";
@@ -161,10 +180,11 @@ public class Test {
 			ArrayList<SporadicTask> tasksToAlloc = generator.generateTasks(true);
 			ArrayList<Resource> resources = generator.generateResources();
 			generator.generateResourceUsage(tasksToAlloc, resources);
-			ArrayList<ArrayList<SporadicTask>> tasks = new AllocationGeneator().allocateTasks(tasksToAlloc, resources, generator.total_partitions, 0);
+			ArrayList<ArrayList<SporadicTask>> tasks = new AllocationGeneator().allocateTasks(tasksToAlloc, resources,
+					generator.total_partitions, 0);
 
 			boolean DMok = false, OPAok = false, RPAok = false, SBPOok = false;
-			Ris = analysis.getResponseTimeDM(tasks, resources, MSRP.btbhit, MSRP.useri, false);
+			Ris = analysis.getResponseTimeDM(tasks, resources, MSRPNew.btbhit, MSRPNew.useri, false);
 			if (isSystemSchedulable(tasks, Ris)) {
 				DM++;
 				DMok = true;
@@ -231,13 +251,155 @@ public class Test {
 
 		}
 
-		result = name + "   DM: " + (double) DM / (double) TOTAL_NUMBER_OF_SYSTEMS + "    OPA: " + (double) OPA / (double) TOTAL_NUMBER_OF_SYSTEMS + "    RPA: "
-				+ (double) RPA / (double) TOTAL_NUMBER_OF_SYSTEMS + "    SBPO: " + (double) SBPO / (double) TOTAL_NUMBER_OF_SYSTEMS;
+		result = name + "   DM: " + (double) DM / (double) TOTAL_NUMBER_OF_SYSTEMS + "    OPA: "
+				+ (double) OPA / (double) TOTAL_NUMBER_OF_SYSTEMS + "    RPA: " + (double) RPA / (double) TOTAL_NUMBER_OF_SYSTEMS
+				+ "    SBPO: " + (double) SBPO / (double) TOTAL_NUMBER_OF_SYSTEMS;
 
-		result += "    DMcannotOPAcan: " + DMcannotOPAcan + "    DMcanOPAcannot: " + DMcanOPAcannot + "    DMcannotRPAcan: " + DMcannotRPAcan
-				+ "    DMcanRPAcannot: " + DMcanRPAcannot + "    DMcannotSBPOcan: " + DMcannotSBPOcan + "    DMcanSBPOcannot: " + DMcanSBPOcannot
-				+ "    OPAcanRPAcannot: " + OPAcanRPAcannot + "    OPAcannotRPAcan: " + OPAcannotRPAcan + "   OPAcanSBPOcannot: " + OPAcanSBPOcannot
-				+ "   OPAcannotSBPOcan: " + OPAcannotSBPOcan + "   RPAcanSBPOcannot: " + RPAcanSBPOcannot + "   RPAcannotSBPOcan: " + RPAcannotSBPOcan + "\n";
+		result += "    DMcannotOPAcan: " + DMcannotOPAcan + "    DMcanOPAcannot: " + DMcanOPAcannot + "    DMcannotRPAcan: "
+				+ DMcannotRPAcan + "    DMcanRPAcannot: " + DMcanRPAcannot + "    DMcannotSBPOcan: " + DMcannotSBPOcan
+				+ "    DMcanSBPOcannot: " + DMcanSBPOcannot + "    OPAcanRPAcannot: " + OPAcanRPAcannot + "    OPAcannotRPAcan: "
+				+ OPAcannotRPAcan + "   OPAcanSBPOcannot: " + OPAcanSBPOcannot + "   OPAcannotSBPOcan: " + OPAcannotSBPOcan
+				+ "   RPAcanSBPOcannot: " + RPAcanSBPOcannot + "   RPAcannotSBPOcan: " + RPAcannotSBPOcan + "\n";
+
+		writeSystem((name + " " + 2 + " " + 4 + " " + cs_len), result);
+	}
+	
+	public void PriorityOrderOriginal(MSRPOriginalBTB analysis, int cs_len, String name) {
+		int NoA = 2;
+		int NoT = 3;
+		double Rsf = 0.4;
+
+		final CS_LENGTH_RANGE cs_range;
+		switch (cs_len) {
+		case 1:
+			cs_range = CS_LENGTH_RANGE.VERY_SHORT_CS_LEN;
+			break;
+		case 2:
+			cs_range = CS_LENGTH_RANGE.SHORT_CS_LEN;
+			break;
+		case 3:
+			cs_range = CS_LENGTH_RANGE.MEDIUM_CS_LEN;
+			break;
+		case 4:
+			cs_range = CS_LENGTH_RANGE.LONG_CSLEN;
+			break;
+		case 5:
+			cs_range = CS_LENGTH_RANGE.VERY_LONG_CSLEN;
+			break;
+		case 6:
+			cs_range = CS_LENGTH_RANGE.Random;
+			break;
+		default:
+			cs_range = null;
+			break;
+		}
+
+		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, true, TOTAL_PARTITIONS, TOTAL_PARTITIONS * NoT, Rsf,
+				cs_range, RESOURCES_RANGE.PARTITIONS, NoA, false);
+
+		long[][] Ris;
+		String result = "";
+		int DM = 0;
+		int OPA = 0;
+		int RPA = 0;
+		int SBPO = 0;
+
+		int DMcannotOPAcan = 0;
+		int DMcanOPAcannot = 0;
+
+		int DMcannotRPAcan = 0;
+		int DMcanRPAcannot = 0;
+
+		int DMcannotSBPOcan = 0;
+		int DMcanSBPOcannot = 0;
+
+		int OPAcanRPAcannot = 0;
+		int OPAcannotRPAcan = 0;
+
+		int OPAcanSBPOcannot = 0;
+		int OPAcannotSBPOcan = 0;
+
+		int RPAcanSBPOcannot = 0;
+		int RPAcannotSBPOcan = 0;
+
+		for (int i = 0; i < TOTAL_NUMBER_OF_SYSTEMS; i++) {
+			ArrayList<SporadicTask> tasksToAlloc = generator.generateTasks(true);
+			ArrayList<Resource> resources = generator.generateResources();
+			generator.generateResourceUsage(tasksToAlloc, resources);
+			ArrayList<ArrayList<SporadicTask>> tasks = new AllocationGeneator().allocateTasks(tasksToAlloc, resources,
+					generator.total_partitions, 0);
+
+			boolean DMok = false, OPAok = false, RPAok = false, SBPOok = false;
+			Ris = analysis.getResponseTime(tasks, resources, false, false, false);
+			if (isSystemSchedulable(tasks, Ris)) {
+				DM++;
+				DMok = true;
+			}
+
+			Ris = analysis.getResponseTime(tasks, resources, true, false, false);
+			if (isSystemSchedulable(tasks, Ris)) {
+				RPA++;
+				RPAok = true;
+			}
+
+			Ris = analysis.getResponseTime(tasks, resources, true, true, false);
+			if (isSystemSchedulable(tasks, Ris)) {
+				OPA++;
+				OPAok = true;
+			}
+
+			if (!DMok && OPAok)
+				DMcannotOPAcan++;
+
+			if (DMok && !OPAok)
+				DMcanOPAcannot++;
+
+			if (!DMok && RPAok)
+				DMcannotRPAcan++;
+
+			if (DMok && !RPAok)
+				DMcanRPAcannot++;
+
+			if (!DMok && SBPOok)
+				DMcannotSBPOcan++;
+
+			if (DMok && !SBPOok)
+				DMcanSBPOcannot++;
+
+			if (OPAok && !RPAok) {
+				OPAcanRPAcannot++;
+			}
+
+			if (!OPAok && RPAok)
+				OPAcannotRPAcan++;
+
+			if (OPAok && !SBPOok) {
+				OPAcanSBPOcannot++;
+			}
+
+			if (!OPAok && SBPOok)
+				OPAcannotSBPOcan++;
+
+			if (RPAok && !SBPOok) {
+				RPAcanSBPOcannot++;
+			}
+
+			if (!RPAok && SBPOok)
+				RPAcannotSBPOcan++;
+
+			System.out.println(name + " " + 2 + " " + 4 + " " + cs_len + " times: " + i);
+
+		}
+
+		result = name + "   DM: " + (double) DM / (double) TOTAL_NUMBER_OF_SYSTEMS + "    OPA: "
+				+ (double) OPA / (double) TOTAL_NUMBER_OF_SYSTEMS + "    RPA: " + (double) RPA / (double) TOTAL_NUMBER_OF_SYSTEMS
+				+ "    SBPO: " + (double) SBPO / (double) TOTAL_NUMBER_OF_SYSTEMS;
+
+		result += "    DMcannotOPAcan: " + DMcannotOPAcan + "    DMcanOPAcannot: " + DMcanOPAcannot + "    DMcannotRPAcan: "
+				+ DMcannotRPAcan + "    DMcanRPAcannot: " + DMcanRPAcannot + "    DMcannotSBPOcan: " + DMcannotSBPOcan
+				+ "    DMcanSBPOcannot: " + DMcanSBPOcannot + "    OPAcanRPAcannot: " + OPAcanRPAcannot + "    OPAcannotRPAcan: "
+				+ OPAcannotRPAcan + "   OPAcanSBPOcannot: " + OPAcanSBPOcannot + "   OPAcannotSBPOcan: " + OPAcannotSBPOcan
+				+ "   RPAcanSBPOcannot: " + RPAcanSBPOcannot + "   RPAcannotSBPOcan: " + RPAcannotSBPOcan + "\n";
 
 		writeSystem((name + " " + 2 + " " + 4 + " " + cs_len), result);
 	}
