@@ -662,7 +662,7 @@ public class MSRPNew extends RuntimeCostAnalysis {
 			Resource resource = resources.get(hpTask.resource_required_index.get(i));
 
 			int number_of_higher_request = getNoRFromHP(hpTask, resource, allTasks.get(hpTask.partition), Ris[hpTask.partition], Ri, btbHit, useRi);
-			int number_of_request_with_btb = ((int) Math.ceil((double) (Ri + (btbHit ? (useRi ? Rihp : hpTask.deadline) : 0)) / (double) hpTask.period)
+			int number_of_request_with_btb = ((int) Math.ceil((double) (Ri /*+ (btbHit ? (useRi ? Rihp : hpTask.deadline) : 0)*/) / (double) hpTask.period)
 					+ setOne) * hpTask.number_of_access_in_one_release.get(i);
 
 			BTBhit += number_of_request_with_btb * resource.csl;
@@ -760,7 +760,7 @@ public class MSRPNew extends RuntimeCostAnalysis {
 			if (tasks.get(i).priority > priority && tasks.get(i).resource_required_index.contains(resource.id - 1)) {
 				SporadicTask hpTask = tasks.get(i);
 				int indexR = getIndexRInTask(hpTask, resource);
-				number_of_request_by_HP += (Math.ceil((double) (Ri + (btbHit ? (useRi ? Ris[i] : hpTask.deadline) : 0)) / (double) hpTask.period) + setOne)
+				number_of_request_by_HP += (Math.ceil((double) (Ri /*+ (btbHit ? (useRi ? Ris[i] : hpTask.deadline) : 0)*/) / (double) hpTask.period) + setOne)
 						* hpTask.number_of_access_in_one_release.get(indexR);
 			}
 		}

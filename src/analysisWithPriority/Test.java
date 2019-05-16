@@ -63,19 +63,23 @@ public class Test {
 			}).start();
 		}
 		msrpwork.await();
-		
-		final CountDownLatch msrporigin = new CountDownLatch(6);
-		for (int i = 1; i < 7; i++) {
-			final int cslen = i;
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					test.PriorityOrderOriginal(msrpOriginBtb, cslen, "MSRPOrigin");
-					msrporigin.countDown();
-				}
-			}).start();
+
+		while (true) {
+			test.PriorityOrder(msrp, 3, "MSRP");
 		}
-		msrporigin.await();
+
+		// final CountDownLatch msrporigin = new CountDownLatch(6);
+		// for (int i = 1; i < 7; i++) {
+		// final int cslen = i;
+		// new Thread(new Runnable() {
+		// @Override
+		// public void run() {
+		// test.PriorityOrderOriginal(msrpOriginBtb, cslen, "MSRPOrigin");
+		// msrporigin.countDown();
+		// }
+		// }).start();
+		// }
+		// msrporigin.await();
 		//
 		// final CountDownLatch pwlpwork = new CountDownLatch(6);
 		// for (int i = 1; i < 7; i++) {
@@ -103,7 +107,7 @@ public class Test {
 		// }
 		// mrspwork.await();
 
-		ResultReader.priorityReader();
+//		ResultReader.priorityReader();
 
 		// for (int i = 0; i < 9999999; i++) {
 		// test.experimentIncreasingCriticalSectionLength(msrp, 5, "MSRP");
@@ -148,8 +152,8 @@ public class Test {
 			break;
 		}
 
-		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, true, TOTAL_PARTITIONS, TOTAL_PARTITIONS * NoT, Rsf,
-				cs_range, RESOURCES_RANGE.PARTITIONS, NoA, false);
+		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, true, TOTAL_PARTITIONS, TOTAL_PARTITIONS * NoT, Rsf, cs_range,
+				RESOURCES_RANGE.PARTITIONS, NoA, false);
 
 		long[][] Ris;
 		String result = "";
@@ -180,8 +184,7 @@ public class Test {
 			ArrayList<SporadicTask> tasksToAlloc = generator.generateTasks(true);
 			ArrayList<Resource> resources = generator.generateResources();
 			generator.generateResourceUsage(tasksToAlloc, resources);
-			ArrayList<ArrayList<SporadicTask>> tasks = new AllocationGeneator().allocateTasks(tasksToAlloc, resources,
-					generator.total_partitions, 0);
+			ArrayList<ArrayList<SporadicTask>> tasks = new AllocationGeneator().allocateTasks(tasksToAlloc, resources, generator.total_partitions, 0);
 
 			boolean DMok = false, OPAok = false, RPAok = false, SBPOok = false;
 			Ris = analysis.getResponseTimeDM(tasks, resources, MSRPNew.btbhit, MSRPNew.useri, false);
@@ -190,22 +193,27 @@ public class Test {
 				DMok = true;
 			}
 
-			Ris = analysis.getResponseTimeRPA(tasks, resources, false);
-			if (isSystemSchedulable(tasks, Ris)) {
-				RPA++;
-				RPAok = true;
-			}
-
-			Ris = analysis.getResponseTimeOPA(tasks, resources, false);
-			if (isSystemSchedulable(tasks, Ris)) {
-				OPA++;
-				OPAok = true;
-			}
+			// Ris = analysis.getResponseTimeRPA(tasks, resources, false);
+			// if (isSystemSchedulable(tasks, Ris)) {
+			// RPA++;
+			// RPAok = true;
+			// }
+			//
+			// Ris = analysis.getResponseTimeOPA(tasks, resources, false);
+			// if (isSystemSchedulable(tasks, Ris)) {
+			// OPA++;
+			// OPAok = true;
+			// }
 
 			Ris = analysis.getResponseTimeSBPO(tasks, resources, false);
 			if (isSystemSchedulable(tasks, Ris)) {
 				SBPO++;
 				SBPOok = true;
+			}
+
+			if (SBPOok && !DMok) {
+				System.out.println("found!!!");
+				System.exit(-1);
 			}
 
 			if (!DMok && OPAok)
@@ -251,19 +259,17 @@ public class Test {
 
 		}
 
-		result = name + "   DM: " + (double) DM / (double) TOTAL_NUMBER_OF_SYSTEMS + "    OPA: "
-				+ (double) OPA / (double) TOTAL_NUMBER_OF_SYSTEMS + "    RPA: " + (double) RPA / (double) TOTAL_NUMBER_OF_SYSTEMS
-				+ "    SBPO: " + (double) SBPO / (double) TOTAL_NUMBER_OF_SYSTEMS;
+		result = name + "   DM: " + (double) DM / (double) TOTAL_NUMBER_OF_SYSTEMS + "    OPA: " + (double) OPA / (double) TOTAL_NUMBER_OF_SYSTEMS + "    RPA: "
+				+ (double) RPA / (double) TOTAL_NUMBER_OF_SYSTEMS + "    SBPO: " + (double) SBPO / (double) TOTAL_NUMBER_OF_SYSTEMS;
 
-		result += "    DMcannotOPAcan: " + DMcannotOPAcan + "    DMcanOPAcannot: " + DMcanOPAcannot + "    DMcannotRPAcan: "
-				+ DMcannotRPAcan + "    DMcanRPAcannot: " + DMcanRPAcannot + "    DMcannotSBPOcan: " + DMcannotSBPOcan
-				+ "    DMcanSBPOcannot: " + DMcanSBPOcannot + "    OPAcanRPAcannot: " + OPAcanRPAcannot + "    OPAcannotRPAcan: "
-				+ OPAcannotRPAcan + "   OPAcanSBPOcannot: " + OPAcanSBPOcannot + "   OPAcannotSBPOcan: " + OPAcannotSBPOcan
-				+ "   RPAcanSBPOcannot: " + RPAcanSBPOcannot + "   RPAcannotSBPOcan: " + RPAcannotSBPOcan + "\n";
+		result += "    DMcannotOPAcan: " + DMcannotOPAcan + "    DMcanOPAcannot: " + DMcanOPAcannot + "    DMcannotRPAcan: " + DMcannotRPAcan
+				+ "    DMcanRPAcannot: " + DMcanRPAcannot + "    DMcannotSBPOcan: " + DMcannotSBPOcan + "    DMcanSBPOcannot: " + DMcanSBPOcannot
+				+ "    OPAcanRPAcannot: " + OPAcanRPAcannot + "    OPAcannotRPAcan: " + OPAcannotRPAcan + "   OPAcanSBPOcannot: " + OPAcanSBPOcannot
+				+ "   OPAcannotSBPOcan: " + OPAcannotSBPOcan + "   RPAcanSBPOcannot: " + RPAcanSBPOcannot + "   RPAcannotSBPOcan: " + RPAcannotSBPOcan + "\n";
 
 		writeSystem((name + " " + 2 + " " + 4 + " " + cs_len), result);
 	}
-	
+
 	public void PriorityOrderOriginal(MSRPOriginalBTB analysis, int cs_len, String name) {
 		int NoA = 2;
 		int NoT = 3;
@@ -294,8 +300,8 @@ public class Test {
 			break;
 		}
 
-		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, true, TOTAL_PARTITIONS, TOTAL_PARTITIONS * NoT, Rsf,
-				cs_range, RESOURCES_RANGE.PARTITIONS, NoA, false);
+		SystemGenerator generator = new SystemGenerator(MIN_PERIOD, MAX_PERIOD, true, TOTAL_PARTITIONS, TOTAL_PARTITIONS * NoT, Rsf, cs_range,
+				RESOURCES_RANGE.PARTITIONS, NoA, false);
 
 		long[][] Ris;
 		String result = "";
@@ -326,8 +332,7 @@ public class Test {
 			ArrayList<SporadicTask> tasksToAlloc = generator.generateTasks(true);
 			ArrayList<Resource> resources = generator.generateResources();
 			generator.generateResourceUsage(tasksToAlloc, resources);
-			ArrayList<ArrayList<SporadicTask>> tasks = new AllocationGeneator().allocateTasks(tasksToAlloc, resources,
-					generator.total_partitions, 0);
+			ArrayList<ArrayList<SporadicTask>> tasks = new AllocationGeneator().allocateTasks(tasksToAlloc, resources, generator.total_partitions, 0);
 
 			boolean DMok = false, OPAok = false, RPAok = false, SBPOok = false;
 			Ris = analysis.getResponseTime(tasks, resources, false, false, false);
@@ -391,15 +396,13 @@ public class Test {
 
 		}
 
-		result = name + "   DM: " + (double) DM / (double) TOTAL_NUMBER_OF_SYSTEMS + "    OPA: "
-				+ (double) OPA / (double) TOTAL_NUMBER_OF_SYSTEMS + "    RPA: " + (double) RPA / (double) TOTAL_NUMBER_OF_SYSTEMS
-				+ "    SBPO: " + (double) SBPO / (double) TOTAL_NUMBER_OF_SYSTEMS;
+		result = name + "   DM: " + (double) DM / (double) TOTAL_NUMBER_OF_SYSTEMS + "    OPA: " + (double) OPA / (double) TOTAL_NUMBER_OF_SYSTEMS + "    RPA: "
+				+ (double) RPA / (double) TOTAL_NUMBER_OF_SYSTEMS + "    SBPO: " + (double) SBPO / (double) TOTAL_NUMBER_OF_SYSTEMS;
 
-		result += "    DMcannotOPAcan: " + DMcannotOPAcan + "    DMcanOPAcannot: " + DMcanOPAcannot + "    DMcannotRPAcan: "
-				+ DMcannotRPAcan + "    DMcanRPAcannot: " + DMcanRPAcannot + "    DMcannotSBPOcan: " + DMcannotSBPOcan
-				+ "    DMcanSBPOcannot: " + DMcanSBPOcannot + "    OPAcanRPAcannot: " + OPAcanRPAcannot + "    OPAcannotRPAcan: "
-				+ OPAcannotRPAcan + "   OPAcanSBPOcannot: " + OPAcanSBPOcannot + "   OPAcannotSBPOcan: " + OPAcannotSBPOcan
-				+ "   RPAcanSBPOcannot: " + RPAcanSBPOcannot + "   RPAcannotSBPOcan: " + RPAcannotSBPOcan + "\n";
+		result += "    DMcannotOPAcan: " + DMcannotOPAcan + "    DMcanOPAcannot: " + DMcanOPAcannot + "    DMcannotRPAcan: " + DMcannotRPAcan
+				+ "    DMcanRPAcannot: " + DMcanRPAcannot + "    DMcannotSBPOcan: " + DMcannotSBPOcan + "    DMcanSBPOcannot: " + DMcanSBPOcannot
+				+ "    OPAcanRPAcannot: " + OPAcanRPAcannot + "    OPAcannotRPAcan: " + OPAcannotRPAcan + "   OPAcanSBPOcannot: " + OPAcanSBPOcannot
+				+ "   OPAcannotSBPOcan: " + OPAcannotSBPOcan + "   RPAcanSBPOcannot: " + RPAcanSBPOcannot + "   RPAcannotSBPOcan: " + RPAcannotSBPOcan + "\n";
 
 		writeSystem((name + " " + 2 + " " + 4 + " " + cs_len), result);
 	}
