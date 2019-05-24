@@ -3,6 +3,7 @@ package evaluationSection3;
 import java.util.ArrayList;
 
 import analysisILP.FIFOLinearC;
+import analysisNew.HolisticMSRP;
 import analysisNew.MSRPNew;
 import analysisNew.PWLPNew;
 import entity.Resource;
@@ -26,7 +27,7 @@ public class IdenticalTest {
 	public static void main(String[] args) {
 		FIFOLinearC fp_c = new FIFOLinearC();
 		PWLPNew fp_java = new PWLPNew();
-		MSRPNew fnp_java = new MSRPNew();
+		HolisticMSRP fnp_java = new HolisticMSRP();
 		long[][] r1, r2, r3, r4;
 
 		SimpleSystemGenerator generator = new SimpleSystemGenerator(MIN_PERIOD, MAX_PERIOD, TOTAL_PARTITIONS,
@@ -53,7 +54,7 @@ public class IdenticalTest {
 			}
 
 			r3 = fp_c.getResponseTime(tasks, resources, false, false);
-			r4 = fnp_java.getResponseTime(tasks, resources, false);
+			r4 = fnp_java.getResponseTimeDM(tasks, resources,true, true, false);
 			boolean isEqual2 = isEqual(r3, r4, true);
 
 			if (!isEqual2 && isSystemSchedulable(tasks, r3) && isSystemSchedulable(tasks, r4)) {
